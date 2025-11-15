@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatPrice } from '../../utils/dataHelpers';
+import { getFirebaseImageUrl, getPlaceholderImage } from '../../utils/imageHelpers';
 
 /**
  * ProductCard Component
@@ -60,7 +61,9 @@ const ProductCard = ({ product }) => {
         {/* Product Image */}
         {!imageError ? (
           <img
-            src={product.images[0]}
+            src={product.images && product.images.length > 0 
+              ? getFirebaseImageUrl(product.images[0]) 
+              : getPlaceholderImage()}
             alt={product.title}
             loading="lazy"
             onLoad={handleImageLoad}

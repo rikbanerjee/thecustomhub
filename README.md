@@ -170,7 +170,7 @@ Products are defined in `src/data/products.json` as an array of product objects:
     "category": "Apparel & Accessories > Clothing > Clothing Tops > T-Shirts",
     "type": "Clothing",
     "tags": ["tag1", "tag2", "tag3"],
-    "images": ["https://cdn.shopify.com/..."],
+    "images": ["https://storage.googleapis.com/thecustomhub-efb8a.firebasestorage.app/images/FILENAME.jpg"],
     "variants": [
       {
         "sku": "",
@@ -180,7 +180,7 @@ Products are defined in `src/data/products.json` as an array of product objects:
         "price": 18.99,
         "compareAtPrice": null,
         "inventoryQty": 10,
-        "variantImg": "https://cdn.shopify.com/..."
+        "variantImg": "https://storage.googleapis.com/thecustomhub-efb8a.firebasestorage.app/images/FILENAME.jpg"
       }
     ],
     "externalLinks": {
@@ -250,6 +250,58 @@ To import products from Shopify:
 5. Categories will be automatically extracted on next build
 
 **Note**: No need to manually create or update categories - they are generated automatically!
+
+## 🖼️ Image Hosting
+
+### Firebase Storage Setup
+
+All product images are hosted on **Firebase Storage** instead of Shopify CDN.
+
+**Base URL**: `https://storage.googleapis.com/thecustomhub-efb8a.firebasestorage.app/images/`
+
+**Image URL Format**: 
+```
+https://storage.googleapis.com/thecustomhub-efb8a.firebasestorage.app/images/{FILENAME}
+```
+
+### Image Configuration
+
+Image handling is centralized in `src/config/images.js`:
+- **Base URL**: Stored as constant for easy updates
+- **Helper Functions**: Convert Shopify URLs to Firebase URLs automatically
+- **Placeholder Images**: Fallback for broken or missing images
+
+### Image Helper Utilities
+
+Located in `src/utils/imageHelpers.js`, provides:
+- `getFirebaseImageUrl(url)` - Converts any image URL to Firebase format
+- `processProductImages(images)` - Batch convert product image arrays
+- `processVariantImage(variantImg)` - Convert variant image URLs
+- `getPlaceholderImage()` - Returns fallback image URL
+- `validateImageUrl(url)` - Validates and returns fallback if invalid
+
+### Migration from Shopify CDN
+
+All product images have been migrated from Shopify CDN to Firebase Storage:
+- ✅ Product `images` arrays use Firebase URLs
+- ✅ Variant `variantImg` fields use Firebase URLs
+- ✅ Components automatically handle URL conversion with fallbacks
+- ✅ Error handling with placeholder images for broken links
+
+### Adding New Images
+
+1. Upload image files to Firebase Storage in the `/images/` folder
+2. Use the filename (e.g., `DussheraArrow.jpg`) directly in products.json
+3. Image helpers will automatically construct the full Firebase Storage URL
+4. Example: `"images": ["DussheraArrow.jpg"]` → Automatically becomes the full Firebase URL
+
+### Image Components
+
+All image-displaying components use the helper functions:
+- **ProductCard**: Uses `getFirebaseImageUrl()` with error handling
+- **ProductDetail**: Main images and thumbnails use Firebase URLs
+- **CategoryCard**: Category images from products use Firebase URLs
+- **Data Helpers**: Category image extraction uses Firebase URLs
 
 ## 🎨 Styling & Design
 

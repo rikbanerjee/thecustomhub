@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { getFirebaseImageUrl, getPlaceholderImage } from '../../utils/imageHelpers';
 
 /**
  * CategoryCard Component
@@ -35,7 +36,7 @@ const CategoryCard = ({ category }) => {
         
         {category.image && !imageError ? (
           <img 
-            src={category.image} 
+            src={getFirebaseImageUrl(category.image)} 
             alt={category.name}
             loading="lazy"
             onLoad={handleImageLoad}

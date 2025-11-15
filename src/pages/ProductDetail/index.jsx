@@ -8,6 +8,8 @@ import {
   getRelatedProducts, 
   formatPrice 
 } from '../../utils/dataHelpers';
+import { getFirebaseImageUrl, getPlaceholderImage, processVariantImage } from '../../utils/imageHelpers';
+import { FIREBASE_STORAGE_BASE_URL } from '../../config/images';
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -18,6 +20,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [imageZoom, setImageZoom] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+  const [imageLoadStatus, setImageLoadStatus] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +32,53 @@ const ProductDetail = () => {
       const foundProduct = getProductById(productId);
       if (foundProduct) {
         setProduct(foundProduct);
+        
+        // ===== DEBUG LOGGING =====
+        // Check if this is the specific product we're debugging
+        const isDebugProduct = productId === 'taang-maat-karo-bengali-tshirt';
+        
+        if (isDebugProduct) {
+          console.group('🔍 DEBUG: Product Image Loading - taang-maat-karo-bengali-tshirt');
+          console.log('Product ID:', productId);
+          console.log('Product Object:', JSON.stringify(foundProduct, null, 2));
+          console.log('Firebase Storage Base URL:', FIREBASE_STORAGE_BASE_URL);
+          
+          // Log product images
+          if (foundProduct.images && Array.isArray(foundProduct.images)) {
+            console.log('\n📸 Product Images Array:', foundProduct.images);
+            foundProduct.images.forEach((imgUrl, idx) => {
+              const firebaseUrl = getFirebaseImageUrl(imgUrl);
+              console.log(`  Image ${idx}:`, {
+                original: imgUrl,
+                converted: firebaseUrl,
+                isFirebase: imgUrl.includes('storage.googleapis.com'),
+                filename: imgUrl.split('/').pop()
+              });
+            });
+          } else {
+            console.warn('⚠️ No images array found in product');
+          }
+          
+          // Log variant images
+          if (foundProduct.variants && Array.isArray(foundProduct.variants)) {
+            console.log('\n🎨 Variant Images:');
+            foundProduct.variants.forEach((variant, idx) => {
+              if (variant.variantImg) {
+                const firebaseUrl = getFirebaseImageUrl(variant.variantImg);
+                console.log(`  Variant ${idx} (${variant.option1 || 'N/A'}):`, {
+                  original: variant.variantImg,
+                  converted: firebaseUrl,
+                  isFirebase: variant.variantImg.includes('storage.googleapis.com'),
+                  filename: variant.variantImg.split('/').pop()
+                });
+              }
+            });
+          }
+          
+          console.groupEnd();
+        }
+        // ===== END DEBUG LOGGING =====
+        
         // Get related products
         const related = getRelatedProducts(productId, 4);
         setRelatedProducts(related);
@@ -43,6 +93,7 @@ const ProductDetail = () => {
     fetchData();
     // Reset to first image when product changes
     setSelectedImage(0);
+    setImageLoadStatus({});
   }, [productId, navigate]);
 
   // Handle image zoom on mouse move
@@ -199,7 +250,27 @@ const ProductDetail = () => {
               >
                 <div className="aspect-square bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center relative overflow-hidden">
                   <img
-                    src={product.images[selectedImage]}
+                    src={(() => {
+                      const originalUrl = product.images && product.images.length > 0
+                        ? (product.images[selectedImage] || product.images[0])
+                        : null;
+                      const finalUrl = originalUrl 
+                        ? getFirebaseImageUrl(originalUrl)
+                        : getPlaceholderImage();
+                      
+                      // Debug logging
+                      const isDebugProduct = productId === 'taang-maat-karo-bengali-tshirt';
+                      if (isDebugProduct) {
+                        console.log('🖼️ Main Image Render:', {
+                          selectedIndex: selectedImage,
+                          originalUrl,
+                          finalUrl,
+                          imageKey: `main-${selectedImage}`
+                        });
+                      }
+                      
+                      return finalUrl;
+                    })()}
                     alt={`${product.title} - Image ${selectedImage + 1}`}
                     className={`max-h-full max-w-full object-contain p-8 transition-transform duration-300 ${
                       imageZoom ? 'scale-150' : 'scale-100'
@@ -207,6 +278,46 @@ const ProductDetail = () => {
                     style={imageZoom ? {
                       transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
                     } : {}}
+                    onLoad={(e) => {
+                      const imgKey = `main-${selectedImage}`;
+                      setImageLoadStatus(prev => ({ ...prev, [imgKey]: 'success' }));
+                      
+                      const isDebugProduct = productId === 'taang-maat-karo-bengali-tshirt';
+                      if (isDebugProduct) {
+                        console.log('✅ Image Loaded Successfully:', {
+                          src: e.target.src,
+                          naturalWidth: e.target.naturalWidth,
+                          naturalHeight: e.target.naturalHeight,
+                          imageKey: imgKey
+                        });
+                      }
+                    }}
+                    onError={(e) => {
+                      const imgKey = `main-${selectedImage}`;
+                      setImageLoadStatus(prev => ({ ...prev, [imgKey]: 'error' }));
+                      
+                      const isDebugProduct = productId === 'taang-maat-karo-bengali-tshirt';
+                      if (isDebugProduct) {
+                        console.error('❌ Failed to Load Image:', {
+                          failedUrl: e.target.src,
+                          attemptedSrc: e.target.src,
+                          imageKey: imgKey,
+                          imageElement: e.target
+                        });
+                        
+                        // Try to fetch the image to see what error we get
+                        fetch(e.target.src, { method: 'HEAD' })
+                          .then(response => {
+                            console.error('  HTTP Status:', response.status, response.statusText);
+                            console.error('  Headers:', Object.fromEntries(response.headers.entries()));
+                          })
+                          .catch(fetchError => {
+                            console.error('  Fetch Error:', fetchError);
+                          });
+                      }
+                      
+                      e.target.src = getPlaceholderImage();
+                    }}
                   />
                   
                   {/* Stock Badge */}
@@ -232,7 +343,7 @@ const ProductDetail = () => {
               </div>
               
               {/* Thumbnail Carousel */}
-              {product.images.length > 1 && (
+              {product.images && product.images.length > 1 && (
                 <div className="grid grid-cols-4 gap-2">
                   {product.images.map((image, index) => (
                     <button
@@ -246,9 +357,46 @@ const ProductDetail = () => {
                       aria-label={`View image ${index + 1}`}
                     >
                       <img
-                        src={image}
+                        src={(() => {
+                          const finalUrl = getFirebaseImageUrl(image);
+                          
+                          // Debug logging
+                          const isDebugProduct = productId === 'taang-maat-karo-bengali-tshirt';
+                          if (isDebugProduct) {
+                            console.log(`🖼️ Thumbnail ${index} Render:`, {
+                              originalUrl: image,
+                              finalUrl,
+                              imageKey: `thumb-${index}`
+                            });
+                          }
+                          
+                          return finalUrl;
+                        })()}
                         alt={`${product.title} thumbnail ${index + 1}`}
                         className="max-h-full max-w-full object-contain p-2"
+                        onLoad={(e) => {
+                          const imgKey = `thumb-${index}`;
+                          setImageLoadStatus(prev => ({ ...prev, [imgKey]: 'success' }));
+                          
+                          const isDebugProduct = productId === 'taang-maat-karo-bengali-tshirt';
+                          if (isDebugProduct) {
+                            console.log(`✅ Thumbnail ${index} Loaded:`, e.target.src);
+                          }
+                        }}
+                        onError={(e) => {
+                          const imgKey = `thumb-${index}`;
+                          setImageLoadStatus(prev => ({ ...prev, [imgKey]: 'error' }));
+                          
+                          const isDebugProduct = productId === 'taang-maat-karo-bengali-tshirt';
+                          if (isDebugProduct) {
+                            console.error(`❌ Thumbnail ${index} Failed:`, {
+                              failedUrl: e.target.src,
+                              imageKey: imgKey
+                            });
+                          }
+                          
+                          e.target.src = getPlaceholderImage();
+                        }}
                       />
                     </button>
                   ))}
@@ -391,6 +539,105 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
+
+          {/* Debug Section - Only for taang-maat-karo-bengali-tshirt */}
+          {productId === 'taang-maat-karo-bengali-tshirt' && product && (
+            <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg shadow-sm p-6 mb-12 animate-fade-in">
+              <h2 className="text-2xl font-bold mb-4 text-yellow-900">🐛 Debug Information</h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-semibold mb-2 text-yellow-800">Product Images ({product.images?.length || 0})</h3>
+                  <div className="bg-white rounded p-4 space-y-2 max-h-60 overflow-y-auto">
+                    {product.images && product.images.length > 0 ? (
+                      product.images.map((imgUrl, idx) => {
+                        const firebaseUrl = getFirebaseImageUrl(imgUrl);
+                        const status = imageLoadStatus[`thumb-${idx}`] || imageLoadStatus[`main-${idx}`] || 'loading';
+                        const statusColor = status === 'success' ? 'text-green-600' : status === 'error' ? 'text-red-600' : 'text-gray-500';
+                        const statusIcon = status === 'success' ? '✅' : status === 'error' ? '❌' : '⏳';
+                        
+                        return (
+                          <div key={idx} className="border-b border-gray-200 pb-2 last:border-0">
+                            <div className="flex items-start gap-2">
+                              <span className="font-mono text-xs">{statusIcon}</span>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-sm font-semibold mb-1">
+                                  Image {idx} <span className={statusColor}>({status})</span>
+                                </div>
+                                <div className="text-xs text-gray-600 break-all">
+                                  <div className="font-semibold">Original:</div>
+                                  <div className="mb-1">{imgUrl}</div>
+                                  <div className="font-semibold">Firebase URL:</div>
+                                  <div className="mb-1">{firebaseUrl}</div>
+                                  <div className="font-semibold">Filename:</div>
+                                  <div>{imgUrl.split('/').pop()}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="text-red-600">⚠️ No images found</div>
+                    )}
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold mb-2 text-yellow-800">Variant Images ({product.variants?.filter(v => v.variantImg).length || 0})</h3>
+                  <div className="bg-white rounded p-4 space-y-2 max-h-60 overflow-y-auto">
+                    {product.variants && product.variants.length > 0 ? (
+                      product.variants.map((variant, idx) => {
+                        if (!variant.variantImg) return null;
+                        const firebaseUrl = getFirebaseImageUrl(variant.variantImg);
+                        
+                        return (
+                          <div key={idx} className="border-b border-gray-200 pb-2 last:border-0">
+                            <div className="text-sm font-semibold mb-1">
+                              Variant {idx} ({variant.option1 || 'N/A'})
+                            </div>
+                            <div className="text-xs text-gray-600 break-all">
+                              <div className="font-semibold">Original:</div>
+                              <div className="mb-1">{variant.variantImg}</div>
+                              <div className="font-semibold">Firebase URL:</div>
+                              <div className="mb-1">{firebaseUrl}</div>
+                              <div className="font-semibold">Filename:</div>
+                              <div>{variant.variantImg.split('/').pop()}</div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="text-gray-600">No variant images</div>
+                    )}
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold mb-2 text-yellow-800">Configuration</h3>
+                  <div className="bg-white rounded p-4 text-xs">
+                    <div className="mb-2">
+                      <span className="font-semibold">Firebase Base URL:</span>
+                      <div className="font-mono break-all">{FIREBASE_STORAGE_BASE_URL}</div>
+                    </div>
+                    <div className="mb-2">
+                      <span className="font-semibold">Selected Image Index:</span> {selectedImage}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Image Load Status:</span>
+                      <pre className="mt-1 bg-gray-100 p-2 rounded overflow-auto text-xs">
+                        {JSON.stringify(imageLoadStatus, null, 2)}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 text-xs text-yellow-700">
+                💡 Check browser console for detailed logging. This debug panel will only appear for this product.
+              </div>
+            </div>
+          )}
 
           {/* Detailed Description Section */}
           <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-12 animate-fade-in" style={{ animationDelay: '200ms' }}>

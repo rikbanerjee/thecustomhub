@@ -8,6 +8,7 @@
  */
 
 import productsData from '../data/products.json';
+import { getFirebaseImageUrl } from './imageHelpers';
 
 /**
  * Get all products from the data store
@@ -215,7 +216,9 @@ export const getAllCategories = () => {
         id: categoryId,
         name: type,
         description: `Browse our collection of ${type.toLowerCase()}`,
-        image: product.images && product.images[0] ? product.images[0] : '',
+        image: product.images && product.images[0] 
+          ? getFirebaseImageUrl(product.images[0]) 
+          : '',
         productCount: 0
       });
     }
@@ -226,7 +229,7 @@ export const getAllCategories = () => {
     
     // Update image if current category image is empty
     if (!category.image && product.images && product.images[0]) {
-      category.image = product.images[0];
+      category.image = getFirebaseImageUrl(product.images[0]);
     }
   });
   
