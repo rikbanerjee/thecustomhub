@@ -1,27 +1,238 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary-50: #fef2f2;
-  --color-primary-100: #fee2e2;
-  --color-primary-200: #fecaca;
-  --color-primary-300: #fca5a5;
-  --color-primary-400: #f87171;
-  --color-primary-500: #ef4444;
-  --color-primary-600: #dc2626;
-  --color-primary-700: #b91c1c;
-  --color-primary-800: #991b1b;
-  --color-primary-900: #7f1d1d;
-  
-  --color-secondary-50: #f0f9ff;
-  --color-secondary-100: #e0f2fe;
-  --color-secondary-200: #bae6fd;
-  --color-secondary-300: #7dd3fc;
-  --color-secondary-400: #38bdf8;
-  --color-secondary-500: #0ea5e9;
-  --color-secondary-600: #0284c7;
-  --color-secondary-700: #0369a1;
-  --color-secondary-800: #075985;
-  --color-secondary-900: #0c4a6e;
+/* --------------------------------------------------------------------------
+ * Refined Heritage Design System
+ * Global tokens + utilities shared across all components/pages
+ * ------------------------------------------------------------------------ */
+
+/* CSS variables for colors, typography, spacing, radius, shadows */
+:root {
+  /* Color palette - Earthy & Sophisticated */
+  --color-deep-brown: #2c1810; /* primary brand */
+  --color-warm-taupe: #8b7355; /* secondary brand */
+  --color-golden-tan: #c9a67c; /* accent */
+  --color-sage-green: #9caf88; /* success/eco */
+
+  --color-warm-white: #fffbf5; /* primary background */
+  --color-cream: #faf7f2;      /* section background */
+  --color-soft-gray: #e8e4df;  /* borders/dividers */
+  --color-charcoal: #3a3a3a;   /* primary text */
+  --color-light-gray: #6b6b6b; /* secondary text */
+
+  /* Typography */
+  --font-heading: "Cormorant Garamond", "Times New Roman", serif;
+  --font-body: "Work Sans", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  --heading-letter-spacing: 0.5px;
+  --button-letter-spacing: 1px;
+
+  /* Type scale (desktop base) */
+  --text-h1: 3.625rem;
+  --text-h2: 2.625rem;
+  --text-h3: 2rem;
+  --text-h4: 1.5rem;
+  --text-h5: 1.25rem;
+  --text-body-lg: 1.1875rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.9375rem;
+  --text-caption: 0.8125rem;
+  --text-button: 0.875rem;
+
+  /* Line heights */
+  --lh-heading-tight: 1.2;
+  --lh-heading: 1.4;
+  --lh-body: 1.7;
+
+  /* Spacing system (8px base) */
+  --space-0-5: 0.25rem; /* 4px */
+  --space-1: 0.5rem;    /* 8px */
+  --space-1-5: 0.75rem; /* 12px */
+  --space-2: 1rem;      /* 16px */
+  --space-3: 1.5rem;    /* 24px */
+  --space-4: 2rem;      /* 32px */
+  --space-5: 2.5rem;    /* 40px */
+
+  /* Radius */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-strong: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Global base styles */
+body {
+  background-color: var(--color-warm-white);
+  color: var(--color-charcoal);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--lh-heading);
+  color: var(--color-deep-brown);
+}
+
+/* Utility class when headings need to be applied to non-heading elements */
+.heading-font {
+  font-family: var(--font-heading);
+  letter-spacing: var(--heading-letter-spacing);
+}
+
+/* Container utility shared across pages */
+.container-custom {
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Card surface */
+.card {
+  background-color: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-soft-gray);
+  box-shadow: var(--shadow-soft);
+  transition:
+    box-shadow 200ms ease,
+    transform 200ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Buttons */
+.btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--button-letter-spacing);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease,
+    transform 150ms ease;
+}
+
+.btn-base:focus-visible {
+  outline: 2px solid var(--color-golden-tan);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--button-letter-spacing);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease,
+    transform 150ms ease;
+  background-color: var(--color-deep-brown);
+  color: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:hover {
+  background-color: #1f120b;
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--button-letter-spacing);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease,
+    transform 150ms ease;
+  background-color: var(--color-warm-taupe);
+  color: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-secondary:hover {
+  background-color: #6d5a40;
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--button-letter-spacing);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease,
+    transform 150ms ease;
+  background-color: transparent;
+  color: var(--color-deep-brown);
+  border: 1.5px solid var(--color-deep-brown);
+}
+
+.btn-outline:hover {
+  background-color: rgba(44, 24, 16, 0.04);
+}
+
+/* Section backgrounds */
+.section-soft {
+  background: linear-gradient(
+    135deg,
+    var(--color-cream),
+    var(--color-warm-white)
+  );
+}
+
+.section-contrast {
+  background-color: var(--color-deep-brown);
+  color: #ffffff;
 }
 
 /* Custom animations */
@@ -38,6 +249,11 @@
 
 .animate-fade-in {
   animation: fade-in 0.5s ease-out;
+}
+
+/* Simple page transition for route changes */
+.page-transition {
+  animation: fade-in 0.4s ease-out;
 }
 
 /* Line clamp utility for older browsers */

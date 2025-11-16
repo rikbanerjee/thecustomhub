@@ -75,7 +75,7 @@ const Header = () => {
   return (
     <>
       <header 
-        className={`bg-white sticky top-0 z-50 transition-shadow duration-300 ${
+        className={`bg-primary-50/90 backdrop-blur sticky top-0 z-50 border-b border-soft-gray transition-shadow duration-300 ${
           isScrolled ? 'shadow-md' : 'shadow-sm'
         }`}
       >
@@ -84,7 +84,7 @@ const Header = () => {
             {/* Logo */}
             <Link 
               to="/" 
-              className="text-2xl md:text-3xl font-bold text-primary-600 hover:text-primary-700 transition-colors"
+              className="text-2xl md:text-3xl font-bold heading-font text-primary-600 hover:text-primary-700 transition-colors"
               onClick={closeMobileMenu}
             >
               The Custom Hub

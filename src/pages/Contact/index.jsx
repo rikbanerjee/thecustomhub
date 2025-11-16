@@ -223,7 +223,7 @@ const Contact = () => {
         canonical="https://thecustomhub.com/contact"
       />
 
-      <div className="min-h-screen py-8 bg-gray-50">
+      <div className="min-h-screen py-8 bg-primary-50 page-transition">
         <div className="container-custom">
           <div className="max-w-6xl mx-auto">
             {/* Page Header */}

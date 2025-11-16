@@ -3,30 +3,39 @@ export default {
   theme: {
     extend: {
       colors: {
+        /* Refined Heritage palette mapped into Tailwind tokens */
         primary: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
+          50: '#fffbf5', // warm white
+          100: '#faf7f2', // cream
+          200: '#e8e4df', // soft gray
+          300: '#d6cbbd',
+          400: '#c9a67c', // golden tan accent
+          500: '#8b7355', // warm taupe
+          600: '#2c1810', // deep brown (primary brand)
+          700: '#24120b',
+          800: '#1b0e08',
+          900: '#120804',
         },
         secondary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          50: '#f5f7f3',
+          100: '#e3eadc',
+          200: '#c7d4b9',
+          300: '#9caf88', // sage green
+          400: '#7f986d',
+          500: '#627c53',
+          600: '#4c6142',
+          700: '#394933',
+          800: '#273324',
+          900: '#182017',
         },
+        accent: '#c9a67c',
+        charcoal: '#3a3a3a',
+        'light-gray': '#6b6b6b',
+        'soft-gray': '#e8e4df',
+      },
+      fontFamily: {
+        heading: ['"Cormorant Garamond"', 'Times New Roman', 'serif'],
+        body: ['"Work Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
       },
     },
   },

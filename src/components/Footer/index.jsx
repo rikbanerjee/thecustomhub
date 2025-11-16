@@ -9,12 +9,12 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-white mt-auto">
+    <footer className="bg-primary-600 text-white mt-auto">
       <div className="container-custom py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About / Brand */}
           <div>
-            <h3 className="text-xl font-bold mb-4">The Custom Hub</h3>
+            <h3 className="text-xl font-bold mb-4 heading-font tracking-wide">The Custom Hub</h3>
             <p className="text-gray-400 mb-4 leading-relaxed">
               Celebrating Bengali and Bollywood cultural heritage through unique, 
               high-quality merchandise.

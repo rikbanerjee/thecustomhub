@@ -112,7 +112,7 @@ const SearchResults = () => {
         canonical={`https://thecustomhub.com/search?q=${encodeURIComponent(searchQuery)}`}
       />
 
-      <div className="min-h-screen py-8 bg-gray-50">
+      <div className="min-h-screen py-8 bg-primary-50 page-transition">
         <div className="container-custom">
           {/* Page Header */}
           <div className="mb-8">

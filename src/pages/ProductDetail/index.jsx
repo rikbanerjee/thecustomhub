@@ -115,7 +115,7 @@ const ProductDetail = () => {
           title="Product Not Found - The Custom Hub"
         />
         
-        <div className="min-h-screen py-8">
+        <div className="min-h-screen py-8 page-transition">
           <div className="container-custom">
             <div className="text-center py-16">
               <div className="text-6xl mb-6">🔍</div>
@@ -139,7 +139,7 @@ const ProductDetail = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen py-8 bg-gray-50">
+      <div className="min-h-screen py-8 bg-primary-50 page-transition">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Image skeleton */}

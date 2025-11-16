@@ -44,12 +44,12 @@ const Home = () => {
         canonical="https://thecustomhub.com/"
       />
 
-      <div className="min-h-screen">
+      <div className="min-h-screen page-transition">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20 md:py-28">
+        <section className="bg-gradient-to-r from-primary-600 to-primary-500 text-white py-20 md:py-28">
           <div className="container-custom">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
+              <h1 className="heading-font text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 animate-fade-in">
                 Celebrate Your Heritage
               </h1>
               <p className="text-xl md:text-2xl mb-4 text-primary-50 animate-fade-in" style={{ animationDelay: '100ms' }}>
@@ -121,10 +121,10 @@ const Home = () => {
         )}
 
         {/* Categories Section */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 section-soft">
           <div className="container-custom">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="heading-font text-3xl md:text-4xl font-semibold mb-4">
                 Shop by Category
               </h2>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -164,7 +164,7 @@ const Home = () => {
         <section className="py-16 bg-white">
           <div className="container-custom">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="heading-font text-3xl md:text-4xl font-semibold mb-4">
                 Featured Products
               </h2>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -195,7 +195,7 @@ const Home = () => {
             <div className="max-w-4xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                  <h2 className="heading-font text-3xl md:text-4xl font-semibold mb-6">
                     About The Custom Hub
                   </h2>
                   <p className="text-lg text-gray-700 mb-6 leading-relaxed">
@@ -241,10 +241,10 @@ const Home = () => {
         </section>
 
         {/* Call-to-Action Section */}
-        <section className="py-16 bg-gradient-to-r from-secondary-600 to-secondary-700 text-white">
+        <section className="py-16 bg-gradient-to-r from-secondary-600 to-secondary-500 text-white">
           <div className="container-custom">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <h2 className="heading-font text-3xl md:text-4xl font-semibold mb-6">
                 Ready to Celebrate Your Heritage?
               </h2>
               <p className="text-xl mb-8 text-secondary-50">
@@ -274,7 +274,7 @@ const Home = () => {
         <section className="py-16 bg-white border-t border-gray-200">
           <div className="container-custom">
             <div className="max-w-2xl mx-auto text-center">
-              <h3 className="text-2xl font-bold mb-4">Stay Updated</h3>
+              <h3 className="heading-font text-2xl font-semibold mb-4">Stay Updated</h3>
               <p className="text-gray-600 mb-6">
                 Subscribe to our newsletter for exclusive offers and new product announcements
               </p>

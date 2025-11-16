@@ -20,13 +20,13 @@ const Layout = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-primary-50">
       {/* Site Header - Sticky navigation */}
       <Header />
       
       {/* Main Content Area */}
       <main 
-        className="flex-grow"
+        className="flex-grow page-transition"
         role="main"
         id="main-content"
       >

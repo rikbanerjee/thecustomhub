@@ -105,7 +105,7 @@ const CategoryPage = () => {
           title="Category Not Found - The Custom Hub"
         />
         
-        <div className="min-h-screen py-8">
+        <div className="min-h-screen py-8 page-transition">
           <div className="container-custom">
             <div className="text-center py-16">
               <div className="text-6xl mb-6">🔍</div>
@@ -135,7 +135,7 @@ const CategoryPage = () => {
         />
       )}
 
-      <div className="min-h-screen py-8 bg-gray-50">
+      <div className="min-h-screen py-8 bg-primary-50 page-transition">
         <div className="container-custom">
           {/* Breadcrumb */}
           <nav className="mb-6 text-sm" aria-label="Breadcrumb">
