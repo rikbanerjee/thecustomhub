@@ -16,8 +16,9 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4 heading-font tracking-wide">The Custom Hub</h3>
             <p className="text-gray-400 mb-4 leading-relaxed">
-              Celebrating Bengali and Bollywood cultural heritage through unique, 
-              high-quality merchandise.
+              Celebrating Indian cultural heritage through unique, 
+              high-quality merchandise. From Bengali traditions to Tamil heritage, 
+              Punjabi festivals to Marathi celebrations - we honor the rich diversity of Indian culture.
             </p>
             <p className="text-sm text-gray-500">
               Authentic products for cultural enthusiasts

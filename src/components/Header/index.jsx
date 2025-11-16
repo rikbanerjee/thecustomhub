@@ -226,7 +226,7 @@ const Header = () => {
               <div className="max-w-2xl mx-auto">
                 <SearchBar 
                   onSearch={handleSearch}
-                  placeholder="Search Bengali and Bollywood merchandise..."
+                  placeholder="Search Indian cultural merchandise..."
                   showSuggestions={true}
                   maxSuggestions={6}
                 />

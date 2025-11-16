@@ -218,8 +218,8 @@ const Contact = () => {
       {/* SEO Meta Tags */}
       <SEO 
         title="Contact Us - The Custom Hub"
-        description="Get in touch with The Custom Hub for questions about Bengali and Bollywood merchandise, custom orders, or bulk purchases. We're here to help!"
-        keywords="contact, customer service, custom orders, bulk orders, Bengali merchandise inquiry"
+        description="Get in touch with The Custom Hub for questions about Indian cultural merchandise and Bollywood products, custom orders, or bulk purchases. We're here to help!"
+        keywords="contact, customer service, custom orders, bulk orders, Indian merchandise inquiry"
         canonical="https://thecustomhub.com/contact"
       />
 
@@ -232,7 +232,7 @@ const Contact = () => {
                 Contact Us
               </h1>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                Have questions about our Bengali and Bollywood merchandise or need help with a custom order? 
+                Have questions about our Indian cultural merchandise and Bollywood products or need help with a custom order? 
                 We'd love to hear from you!
               </p>
             </div>
@@ -590,7 +590,7 @@ const Contact = () => {
                   <ul className="space-y-3 text-sm text-gray-700">
                     <li className="flex items-start">
                       <span className="text-primary-600 mr-2 font-bold">✓</span>
-                      <span>Authentic Bengali & Bollywood merchandise</span>
+                      <span>Authentic Indian cultural merchandise & Bollywood products</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary-600 mr-2 font-bold">✓</span>

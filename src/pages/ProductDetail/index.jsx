@@ -211,7 +211,7 @@ const ProductDetail = () => {
       <SEO 
         title={`${product.title} - ${categoryInfo?.name || 'Products'} | The Custom Hub`}
         description={description.short}
-        keywords={`${product.title}, ${product.tags?.join(', ')}, Bengali merchandise, Bollywood products`}
+        keywords={`${product.title}, ${product.tags?.join(', ')}, Indian merchandise, Bollywood products, Indian cultural items`}
         canonical={`https://thecustomhub.com/product/${productId}`}
       />
 

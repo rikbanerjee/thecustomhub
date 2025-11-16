@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import SEO from '../../components/SEO';
 import ProductGrid from '../../components/ProductGrid';
 import CategoryCard from '../../components/CategoryCard';
+import HeroCarousel from '../../components/HeroCarousel';
 import { getAllCategories, getFeaturedProducts, getProductStats } from '../../utils/dataHelpers';
 
 const Home = () => {
@@ -36,55 +37,71 @@ const Home = () => {
     <>
       {/* SEO Meta Tags */}
       <SEO 
-        title="The Custom Hub - Bengali & Bollywood Cultural Merchandise"
-        description="Discover unique Bengali and Bollywood cultural merchandise. Shop authentic Indian and American cultural products including apparel, home decor, and accessories."
-        keywords="Bengali merchandise, Bollywood products, Indian cultural items, NRI gifts, Durga Puja, cultural apparel"
+        title="The Custom Hub - Indian Cultural Merchandise & Bollywood Products"
+        description="Discover unique Indian cultural merchandise and Bollywood products. Shop authentic Indian cultural items including apparel, home decor, and accessories for the Indian diaspora."
+        keywords="Indian merchandise, Bollywood products, Indian cultural items, NRI gifts, Indian festivals, cultural apparel, Indian diaspora"
         ogTitle="The Custom Hub - Celebrate Your Heritage"
-        ogDescription="Unique Bengali and Bollywood cultural merchandise"
+        ogDescription="Unique Indian cultural merchandise and Bollywood products"
         canonical="https://thecustomhub.com/"
       />
 
       <div className="min-h-screen page-transition">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-primary-600 to-primary-500 text-white py-20 md:py-28">
-          <div className="container-custom">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="heading-font text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 animate-fade-in">
-                Celebrate Your Heritage
-              </h1>
-              <p className="text-xl md:text-2xl mb-4 text-primary-50 animate-fade-in" style={{ animationDelay: '100ms' }}>
-                Discover unique Bengali and Bollywood cultural merchandise
-              </p>
-              <p className="text-lg md:text-xl mb-8 text-primary-100 animate-fade-in" style={{ animationDelay: '200ms' }}>
-                {stats && (
-                  <>
-                    Shop from {stats.totalProducts}+ products across {stats.totalCategories} categories
-                  </>
-                )}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '300ms' }}>
-                {categories.length > 0 && (
-                  <>
-                    <Link 
-                      to={`/category/${categories[0]?.id}`} 
-                      className="btn-secondary inline-block"
-                    >
-                      Shop {categories[0]?.name}
-                    </Link>
-                    {categories.length > 1 && (
-                      <Link 
-                        to={`/category/${categories[1]?.id}`} 
-                        className="bg-white text-primary-600 hover:bg-primary-50 font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block"
-                      >
-                        Browse {categories[1]?.name}
-                      </Link>
-                    )}
-                  </>
-                )}
+        {/* Hero Carousel Section */}
+        {!loading && categories.length > 0 && (
+          <HeroCarousel
+            slides={[
+              {
+                title: 'Celebrate Your Heritage',
+                subtitle: 'Discover unique Indian cultural merchandise and Bollywood products',
+                description: stats ? `Shop from ${stats.totalProducts}+ products across ${stats.totalCategories} categories` : '',
+                background: 'linear-gradient(135deg, var(--color-deep-brown) 0%, var(--color-warm-taupe) 100%)',
+                cta: [
+                  { text: `Shop ${categories[0]?.name}`, link: `/category/${categories[0]?.id}` },
+                  ...(categories.length > 1 ? [{ text: `Browse ${categories[1]?.name}`, link: `/category/${categories[1]?.id}` }] : [])
+                ]
+              },
+              {
+                title: 'Authentic Cultural Treasures',
+                subtitle: 'Handpicked products that honor Indian traditions',
+                description: 'From Durga Puja merchandise to vintage Bollywood posters, each piece tells a story',
+                background: 'linear-gradient(135deg, var(--color-warm-taupe) 0%, var(--color-golden-tan) 100%)',
+                cta: [
+                  { text: 'Explore Collection', link: '/' },
+                  { text: 'Learn More', link: '/contact' }
+                ]
+              },
+              {
+                title: 'Perfect Gifts for Every Occasion',
+                subtitle: 'Share the beauty of Indian culture and Bollywood heritage',
+                description: 'Whether for yourself or a loved one, find the perfect cultural gift',
+                background: 'linear-gradient(135deg, var(--color-deep-brown) 0%, #5a4a3a 100%)',
+                cta: [
+                  { text: 'Browse Gifts', link: '/category/gifts' },
+                  { text: 'Custom Orders', link: '/contact' }
+                ]
+              }
+            ]}
+            autoRotateInterval={5000}
+            showDots={true}
+            showArrows={true}
+          />
+        )}
+        
+        {/* Fallback Hero Section (if carousel not ready) */}
+        {loading && (
+          <section className="bg-gradient-to-r from-primary-600 to-primary-500 text-white py-20 md:py-28">
+            <div className="container-custom">
+              <div className="max-w-4xl mx-auto text-center">
+                <h1 className="heading-font text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 animate-fade-in">
+                  Celebrate Your Heritage
+                </h1>
+                <p className="text-xl md:text-2xl mb-4 text-primary-50 animate-fade-in" style={{ animationDelay: '100ms' }}>
+                  Discover unique Indian cultural merchandise and Bollywood products
+                </p>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Stats Bar */}
         {stats && !loading && (
@@ -128,7 +145,7 @@ const Home = () => {
                 Shop by Category
               </h2>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                Explore our curated collections of Bengali and Bollywood merchandise
+                Explore our curated collections of Indian cultural merchandise and Bollywood products
               </p>
             </div>
             
@@ -199,13 +216,15 @@ const Home = () => {
                     About The Custom Hub
                   </h2>
                   <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                    We bring together the best of Bengali and Bollywood cultural heritage 
+                    We bring together the best of Indian cultural heritage and Bollywood 
                     through unique, high-quality merchandise. Perfect for celebrating 
                     your identity or anyone who appreciates rich cultural traditions.
                   </p>
                   <p className="text-gray-600 mb-6">
-                    From authentic Durga Puja merchandise to vintage Bollywood posters, 
-                    each product tells a story of our vibrant cultural heritage. We're 
+                    From authentic festival merchandise to vintage Bollywood posters, 
+                    each product tells a story of our vibrant Indian cultural heritage. 
+                    We celebrate the diversity of Indian culture - from Bengali traditions 
+                    to Tamil heritage, Punjabi festivals to Marathi celebrations. We're 
                     passionate about making these treasures accessible to everyone.
                   </p>
                   <Link to="/contact" className="btn-outline">

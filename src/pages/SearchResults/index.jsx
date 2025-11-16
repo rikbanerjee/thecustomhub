@@ -108,7 +108,7 @@ const SearchResults = () => {
       {/* SEO Meta Tags */}
       <SEO 
         title={searchQuery ? `Search Results for "${searchQuery}" - The Custom Hub` : 'Search Products - The Custom Hub'}
-        description={`Search results for "${searchQuery}" in our Bengali and Bollywood cultural merchandise catalog.`}
+        description={`Search results for "${searchQuery}" in our Indian cultural merchandise and Bollywood products catalog.`}
         canonical={`https://thecustomhub.com/search?q=${encodeURIComponent(searchQuery)}`}
       />
 
@@ -280,7 +280,7 @@ const SearchResults = () => {
                 Start Your Search
               </h2>
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                Search our collection of Bengali and Bollywood cultural merchandise
+                Search our collection of Indian cultural merchandise and Bollywood products
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link to="/category/apparel" className="btn-primary">

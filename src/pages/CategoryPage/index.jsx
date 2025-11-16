@@ -128,9 +128,9 @@ const CategoryPage = () => {
       {/* SEO Meta Tags */}
       {category && (
         <SEO 
-          title={`${category.name} - Bengali & Bollywood Merchandise | The Custom Hub`}
-          description={`Shop ${category.name.toLowerCase()} - ${category.description}. Browse our collection of authentic Bengali and Bollywood cultural products.`}
-          keywords={`${category.name}, Bengali ${category.name}, Bollywood merchandise, cultural products`}
+          title={`${category.name} - Indian Cultural Merchandise | The Custom Hub`}
+          description={`Shop ${category.name.toLowerCase()} - ${category.description}. Browse our collection of authentic Indian cultural products and Bollywood merchandise.`}
+          keywords={`${category.name}, Indian ${category.name}, Bollywood merchandise, cultural products, Indian diaspora`}
           canonical={`https://thecustomhub.com/category/${categoryName}`}
         />
       )}
@@ -315,7 +315,7 @@ const CategoryPage = () => {
             <div className="mt-12 bg-white rounded-lg shadow-sm p-6 md:p-8">
               <h2 className="text-2xl font-bold mb-4">About {category?.name}</h2>
               <p className="text-gray-700 leading-relaxed mb-6">
-                {category?.description || `Explore our curated collection of ${category?.name.toLowerCase()} featuring authentic Bengali and Bollywood cultural designs. Each product is carefully selected to celebrate your heritage with quality and style.`}
+                {category?.description || `Explore our curated collection of ${category?.name.toLowerCase()} featuring authentic Indian cultural designs and Bollywood merchandise. Each product is carefully selected to celebrate your heritage with quality and style.`}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/contact" className="btn-outline">
