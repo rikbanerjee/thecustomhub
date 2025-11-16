@@ -87,7 +87,7 @@ const Header = () => {
               className="text-2xl md:text-3xl font-bold heading-font text-primary-600 hover:text-primary-700 transition-colors"
               onClick={closeMobileMenu}
             >
-              The Custom Hub
+              The CustomHub
             </Link>
 
             {/* Desktop Navigation */}
@@ -103,7 +103,7 @@ const Header = () => {
                 Home
               </NavLink>
 
-              {/* Categories Dropdown */}
+              {/* Shop Dropdown */}
               <div className="relative">
                 <button
                   onClick={toggleCategories}
@@ -116,7 +116,7 @@ const Header = () => {
                   aria-expanded={categoriesOpen}
                   aria-haspopup="true"
                 >
-                  Categories
+                  Shop
                   <svg 
                     className={`w-4 h-4 ml-1 transition-transform ${categoriesOpen ? 'rotate-180' : ''}`}
                     fill="none" 
@@ -132,6 +132,17 @@ const Header = () => {
                     className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 animate-fade-in"
                     role="menu"
                   >
+                    <Link
+                      to="/"
+                      className="flex items-center px-4 py-2 text-primary-600 hover:bg-primary-50 transition-colors font-medium"
+                      onClick={() => setCategoriesOpen(false)}
+                    >
+                      All Products
+                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                    <div className="border-t border-gray-100 my-2"></div>
                     {categories.map((category) => (
                       <Link
                         key={category.id}
@@ -151,22 +162,20 @@ const Header = () => {
                         </div>
                       </Link>
                     ))}
-                    
-                    <div className="border-t border-gray-100 mt-2 pt-2">
-                      <Link
-                        to="/"
-                        className="flex items-center px-4 py-2 text-primary-600 hover:bg-primary-50 transition-colors font-medium"
-                        onClick={() => setCategoriesOpen(false)}
-                      >
-                        View All Products
-                        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </Link>
-                    </div>
                   </div>
                 )}
               </div>
+
+              <NavLink
+                to="/custom-orders"
+                className={({ isActive }) =>
+                  `font-medium transition-colors ${
+                    isActive ? 'text-primary-600' : 'text-gray-700 hover:text-primary-600'
+                  }`
+                }
+              >
+                Custom Designs
+              </NavLink>
 
               <NavLink
                 to="/contact"
@@ -297,14 +306,14 @@ const Header = () => {
                 Home
               </NavLink>
 
-              {/* Categories Section */}
+              {/* Shop Section */}
               <div className="py-2">
                 <button
                   onClick={toggleCategories}
                   className="flex items-center justify-between w-full font-medium py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                   aria-expanded={categoriesOpen}
                 >
-                  <span>Categories</span>
+                  <span>Shop</span>
                   <svg 
                     className={`w-4 h-4 transition-transform ${categoriesOpen ? 'rotate-180' : ''}`}
                     fill="none" 
@@ -317,6 +326,13 @@ const Header = () => {
 
                 {categoriesOpen && (
                   <div className="ml-4 mt-2 space-y-1 animate-fade-in">
+                    <Link
+                      to="/"
+                      onClick={closeMobileMenu}
+                      className="flex items-center py-2 px-4 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors font-medium"
+                    >
+                      All Products
+                    </Link>
                     {categories.map((category) => (
                       <Link
                         key={category.id}
@@ -331,6 +347,20 @@ const Header = () => {
                   </div>
                 )}
               </div>
+
+              <NavLink
+                to="/custom-orders"
+                onClick={closeMobileMenu}
+                className={({ isActive }) =>
+                  `font-medium py-3 px-4 rounded-lg transition-colors ${
+                    isActive 
+                      ? 'bg-primary-50 text-primary-600' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`
+                }
+              >
+                Custom Designs
+              </NavLink>
 
               <NavLink
                 to="/contact"

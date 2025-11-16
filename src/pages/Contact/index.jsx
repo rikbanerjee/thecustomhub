@@ -11,6 +11,10 @@ const Contact = () => {
     name: '',
     email: '',
     phone: '',
+    orderType: '',
+    quantity: '',
+    eventName: '',
+    designIdea: '',
     productOfInterest: '',
     message: ''
   });
@@ -81,13 +85,18 @@ const Contact = () => {
     const newErrors = {};
     
     Object.keys(formData).forEach(key => {
-      if (key !== 'productOfInterest' && key !== 'phone') {
+      if (key !== 'productOfInterest' && key !== 'phone' && key !== 'quantity' && key !== 'eventName' && key !== 'designIdea' && key !== 'orderType') {
         const error = validateField(key, formData[key]);
         if (error) {
           newErrors[key] = error;
         }
       }
     });
+
+    // Validate orderType if it's required
+    if (!formData.orderType || !formData.orderType.trim()) {
+      newErrors.orderType = 'Please select an order type';
+    }
 
     // Validate optional phone if provided
     if (formData.phone) {
@@ -185,6 +194,10 @@ const Contact = () => {
           name: '',
           email: '',
           phone: '',
+          orderType: '',
+          quantity: '',
+          eventName: '',
+          designIdea: '',
           productOfInterest: '',
           message: ''
         });
@@ -217,9 +230,9 @@ const Contact = () => {
     <>
       {/* SEO Meta Tags */}
       <SEO 
-        title="Contact Us - The Custom Hub"
-        description="Get in touch with The Custom Hub for questions about Indian cultural merchandise and Bollywood products, custom orders, or bulk purchases. We're here to help!"
-        keywords="contact, customer service, custom orders, bulk orders, Indian merchandise inquiry"
+        title="Contact Us - The CustomHub"
+        description="Get in touch with The CustomHub for questions about Indian cultural merchandise, custom orders for sports teams, school events, family vacations, or bulk purchases. We're here to help!"
+        keywords="contact, customer service, custom orders, bulk orders, Indian merchandise inquiry, custom t-shirts, sports team apparel"
         canonical="https://thecustomhub.com/contact"
       />
 
@@ -232,8 +245,8 @@ const Contact = () => {
                 Contact Us
               </h1>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                Have questions about our Indian cultural merchandise and Bollywood products or need help with a custom order? 
-                We'd love to hear from you!
+                Have questions about our Indian cultural merchandise or need help with a custom design for your sports team, 
+                family event, or concert group? We'd love to hear from you!
               </p>
             </div>
 
@@ -362,6 +375,98 @@ const Contact = () => {
                           {errors.phone}
                         </p>
                       )}
+                    </div>
+
+                    {/* Order Type Dropdown */}
+                    <div>
+                      <label htmlFor="orderType" className="block text-sm font-medium text-gray-700 mb-2">
+                        What type of order are you interested in? <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="orderType"
+                        name="orderType"
+                        value={formData.orderType}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={getInputClassName('orderType')}
+                        disabled={isSubmitting}
+                        required
+                        aria-required="true"
+                      >
+                        <option value="">Select...</option>
+                        <optgroup label="Shop">
+                          <option value="indian-product">Question about Indian products</option>
+                          <option value="custom-indian">Custom Indian design</option>
+                        </optgroup>
+                        <optgroup label="Custom American Lifestyle">
+                          <option value="sports">Sports team/event</option>
+                          <option value="school">School/competition (robotics, etc.)</option>
+                          <option value="family">Family event/vacation</option>
+                          <option value="holiday">Holiday/party</option>
+                          <option value="popculture">Concert/celebrity/pop culture</option>
+                          <option value="corporate">Corporate/organization</option>
+                          <option value="other-custom">Other custom design</option>
+                        </optgroup>
+                        <option value="general">General question</option>
+                      </select>
+                      {errors.orderType && touched.orderType && (
+                        <p className="mt-1 text-sm text-red-600">{errors.orderType}</p>
+                      )}
+                    </div>
+
+                    {/* Quantity Dropdown */}
+                    <div>
+                      <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
+                        How many items? <span className="text-gray-400 text-xs">(helps us quote accurately)</span>
+                      </label>
+                      <select
+                        id="quantity"
+                        name="quantity"
+                        value={formData.quantity}
+                        onChange={handleChange}
+                        className={getInputClassName('quantity')}
+                        disabled={isSubmitting}
+                      >
+                        <option value="">Select quantity (optional)</option>
+                        <option value="1-11">1-11 items</option>
+                        <option value="12-24">12-24 items (15% off)</option>
+                        <option value="25-49">25-49 items (20% off)</option>
+                        <option value="50+">50+ items (25% off)</option>
+                      </select>
+                    </div>
+
+                    {/* Event/Occasion Name */}
+                    <div>
+                      <label htmlFor="eventName" className="block text-sm font-medium text-gray-700 mb-2">
+                        Event/Occasion Name <span className="text-gray-400 text-xs">(Optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="eventName"
+                        name="eventName"
+                        value={formData.eventName}
+                        onChange={handleChange}
+                        className={getInputClassName('eventName')}
+                        placeholder="e.g., 'Taylor Swift KC Concert Squad' or 'Smith Family Reunion 2025'"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+
+                    {/* Design Idea */}
+                    <div>
+                      <label htmlFor="designIdea" className="block text-sm font-medium text-gray-700 mb-2">
+                        Design Idea <span className="text-gray-400 text-xs">(Optional)</span>
+                      </label>
+                      <textarea
+                        id="designIdea"
+                        name="designIdea"
+                        rows="4"
+                        value={formData.designIdea}
+                        onChange={handleChange}
+                        className={getInputClassName('designIdea')}
+                        placeholder="Tell us your vision! Or just say 'need help with ideas'"
+                        disabled={isSubmitting}
+                      />
                     </div>
 
                     {/* Product of Interest Dropdown */}

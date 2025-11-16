@@ -8,6 +8,7 @@ const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
 const Contact = lazy(() => import('./pages/Contact'));
 const SearchResults = lazy(() => import('./pages/SearchResults'));
+const CustomOrders = lazy(() => import('./pages/CustomOrders'));
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="category/:categoryName" element={<CategoryPage />} />
             <Route path="product/:productId" element={<ProductDetail />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="custom-orders" element={<CustomOrders />} />
             <Route path="search" element={<SearchResults />} />
             {/* Legacy route support */}
             <Route path="products" element={<Home />} />

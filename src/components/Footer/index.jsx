@@ -14,75 +14,90 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About / Brand */}
           <div>
-            <h3 className="text-xl font-bold mb-4 heading-font tracking-wide">The Custom Hub</h3>
+            <h3 className="text-xl font-bold mb-4 heading-font tracking-wide">The CustomHub</h3>
             <p className="text-gray-400 mb-4 leading-relaxed">
-              Celebrating Indian cultural heritage through unique, 
-              high-quality merchandise. From Bengali traditions to Tamil heritage, 
-              Punjabi festivals to Marathi celebrations - we honor the rich diversity of Indian culture.
+              Your source for authentic Indian cultural merchandise 
+              and custom American lifestyle apparel. Based in USA.
             </p>
             <p className="text-sm text-gray-500">
-              Authentic products for cultural enthusiasts
+              Indian Cultural Apparel • Custom Designs for American Life
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* Shop Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4">Shop</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
-                  to="/" 
-                  className="text-gray-400 hover:text-white transition-colors flex items-center"
+                  to="/category/apparel" 
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                  Home
+                  Indian Cultural Apparel
                 </Link>
               </li>
               <li>
                 <Link 
                   to="/category/apparel" 
-                  className="text-gray-400 hover:text-white transition-colors flex items-center"
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
-                  Products
+                  Diwali & Festival Wear
                 </Link>
               </li>
               <li>
                 <Link 
-                  to="/contact" 
-                  className="text-gray-400 hover:text-white transition-colors flex items-center"
+                  to="/" 
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Contact Us
+                  Regional Indian Designs
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Custom Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Custom</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link 
+                  to="/custom-orders" 
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Sports Teams
                 </Link>
               </li>
               <li>
                 <Link 
-                  to="/about" 
-                  className="text-gray-400 hover:text-white transition-colors flex items-center"
+                  to="/custom-orders" 
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  About
+                  School & Clubs
                 </Link>
               </li>
               <li>
-                <a 
-                  href="#privacy" 
-                  className="text-gray-400 hover:text-white transition-colors flex items-center"
+                <Link 
+                  to="/custom-orders" 
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  Privacy Policy
-                </a>
+                  Family Events
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/custom-orders" 
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Pop Culture
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/custom-orders" 
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Bulk Orders
+                </Link>
               </li>
             </ul>
           </div>
@@ -204,7 +219,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             {/* Copyright */}
             <p className="text-gray-400 text-sm text-center md:text-left">
-              © {currentYear} The Custom Hub. All rights reserved.
+              © {currentYear} The CustomHub. All rights reserved.
             </p>
 
             {/* Legal Links */}

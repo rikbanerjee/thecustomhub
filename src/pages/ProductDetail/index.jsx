@@ -532,8 +532,17 @@ const ProductDetail = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <div className="text-sm text-gray-700">
-                    <p className="font-medium mb-1">Need something custom?</p>
-                    <p>We offer custom orders and bulk discounts. Contact us for more information.</p>
+                    <p className="font-medium mb-1">💡 Love our designs?</p>
+                    <p className="mb-2">We can create custom tees for your next family vacation, sports team, or Taylor Swift concert group too!</p>
+                    <Link 
+                      to="/custom-orders"
+                      className="text-primary-600 hover:text-primary-700 font-semibold inline-flex items-center"
+                    >
+                      Get Custom Quote
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   </div>
                 </div>
               </div>
