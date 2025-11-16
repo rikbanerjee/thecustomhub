@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { heroConfig, isImageUrl, getHeroBackgroundStyle } from '../../config/heroImages';
 
 /**
  * HeroCarousel Component
@@ -77,19 +78,39 @@ const HeroCarousel = ({
   // Single slide - no carousel needed
   if (slides.length === 1) {
     const slide = slides[0];
+    const hasImage = slide.backgroundImage || (slide.background && isImageUrl(slide.background));
+    const imageUrl = slide.backgroundImage || (isImageUrl(slide.background) ? slide.background : null);
+    const fallbackGradient = slide.background && !isImageUrl(slide.background) 
+      ? slide.background 
+      : 'linear-gradient(to right, var(--color-deep-brown), var(--color-warm-taupe))';
+    
+    const backgroundStyle = imageUrl 
+      ? getHeroBackgroundStyle(imageUrl, heroConfig.overlay.gradient, fallbackGradient)
+      : { background: fallbackGradient };
+
     return (
       <section 
         className="relative overflow-hidden"
         style={{ 
-          background: slide.background || 'linear-gradient(to right, var(--color-deep-brown), var(--color-warm-taupe))',
+          ...backgroundStyle,
           minHeight: '500px'
         }}
       >
-        <div className="container-custom py-20 md:py-28">
-          <div className="max-w-4xl mx-auto text-center text-white">
-            <HeroSlideContent slide={slide} />
+        {/* Overlay for text readability (disabled for primary hero image) */}
+        {false && hasImage && heroConfig.overlay.enabled && (
+          <div 
+            className="absolute inset-0 z-0" 
+            style={{ background: heroConfig.overlay.gradient }}
+          />
+        )}
+        {/* Hide text content for primary hero image (single slide case) */}
+        {false && (
+          <div className="container-custom py-20 md:py-28 relative z-10">
+            <div className="max-w-4xl mx-auto text-center text-white">
+              <HeroSlideContent slide={slide} />
+            </div>
           </div>
-        </div>
+        )}
       </section>
     );
   }
@@ -115,17 +136,34 @@ const HeroCarousel = ({
             aria-hidden={index !== currentSlide}
           >
             <div
-              className="w-full h-full flex items-center"
+              className="w-full h-full flex items-center relative"
               style={{ 
-                background: slide.background || 'linear-gradient(to right, var(--color-deep-brown), var(--color-warm-taupe))',
+                ...(slide.backgroundImage || (slide.background && isImageUrl(slide.background))
+                  ? getHeroBackgroundStyle(
+                      slide.backgroundImage || slide.background,
+                      heroConfig.overlay.gradient,
+                      slide.background && !isImageUrl(slide.background) ? slide.background : 'linear-gradient(to right, var(--color-deep-brown), var(--color-warm-taupe))'
+                    )
+                  : { background: slide.background || 'linear-gradient(to right, var(--color-deep-brown), var(--color-warm-taupe))' }
+                ),
                 minHeight: '500px'
               }}
             >
-              <div className="container-custom py-20 md:py-28 w-full">
-                <div className="max-w-4xl mx-auto text-center text-white">
-                  <HeroSlideContent slide={slide} />
+              {/* Overlay for text readability (only if image is loaded, skip for first slide) */}
+              {index !== 0 && (slide.backgroundImage || (slide.background && isImageUrl(slide.background))) && heroConfig.overlay.enabled && (
+                <div 
+                  className="absolute inset-0 z-0" 
+                  style={{ background: heroConfig.overlay.gradient }}
+                />
+              )}
+              {/* Hide text content for primary hero image (first slide) */}
+              {index !== 0 && (
+                <div className="container-custom py-20 md:py-28 w-full relative z-10">
+                  <div className="max-w-4xl mx-auto text-center text-white">
+                    <HeroSlideContent slide={slide} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         ))}
@@ -206,17 +244,17 @@ const HeroSlideContent = ({ slide }) => {
   return (
     <div className="animate-fade-in">
       {slide.title && (
-        <h1 className="heading-font text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-white drop-shadow-lg">
+        <h1 className="heading-font text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-white">
           {slide.title}
         </h1>
       )}
       {slide.subtitle && (
-        <p className="text-xl md:text-2xl mb-4 text-white drop-shadow-md">
+        <p className="text-xl md:text-2xl mb-4 text-white">
           {slide.subtitle}
         </p>
       )}
       {slide.description && (
-        <p className="text-lg md:text-xl mb-8 text-white/95 drop-shadow-sm">
+        <p className="text-lg md:text-xl mb-8 text-white/95">
           {slide.description}
         </p>
       )}
@@ -247,6 +285,7 @@ HeroSlideContent.propTypes = {
     subtitle: PropTypes.string,
     description: PropTypes.string,
     background: PropTypes.string,
+    backgroundImage: PropTypes.string,
     cta: PropTypes.arrayOf(
       PropTypes.shape({
         text: PropTypes.string.isRequired,
@@ -263,6 +302,7 @@ HeroCarousel.propTypes = {
       subtitle: PropTypes.string,
       description: PropTypes.string,
       background: PropTypes.string,
+      backgroundImage: PropTypes.string,
       cta: PropTypes.arrayOf(
         PropTypes.shape({
           text: PropTypes.string.isRequired,

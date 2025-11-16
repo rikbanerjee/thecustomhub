@@ -5,6 +5,7 @@ import ProductGrid from '../../components/ProductGrid';
 import CategoryCard from '../../components/CategoryCard';
 import HeroCarousel from '../../components/HeroCarousel';
 import { getAllCategories, getFeaturedProducts } from '../../utils/dataHelpers';
+import { heroConfig } from '../../config/heroImages';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -51,7 +52,11 @@ const Home = () => {
                 title: 'Celebrate Your Culture, Customize Your Style',
                 subtitle: 'Authentic Indian heritage apparel • Custom tees for every American moment',
                 description: 'From Diwali celebrations to Taylor Swift concerts, we\'ve got your custom apparel covered',
-                background: 'linear-gradient(135deg, var(--color-deep-brown) 0%, var(--color-warm-taupe) 100%)',
+                // Use heroConfig image if available, otherwise use gradient
+                backgroundImage: heroConfig.primaryImage || undefined,
+                background: heroConfig.primaryImage 
+                  ? undefined 
+                  : 'linear-gradient(135deg, var(--color-deep-brown) 0%, var(--color-warm-taupe) 100%)',
                 cta: [
                   { text: 'Shop', link: `/category/${categories[0]?.id}` },
                   { text: 'Create Custom Design', link: '/custom-orders' }

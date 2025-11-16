@@ -362,7 +362,7 @@ const Contact = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         className={getInputClassName('phone')}
-                        placeholder="+1 (234) 567-8900"
+                        placeholder="+1 (508) 733-4489"
                         aria-invalid={errors.phone && touched.phone ? 'true' : 'false'}
                         aria-describedby={errors.phone && touched.phone ? 'phone-error' : undefined}
                         disabled={isSubmitting}
@@ -606,8 +606,8 @@ const Contact = () => {
                       </div>
                       <div className="ml-3">
                         <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                        <a href="mailto:info@thecustomhub.com" className="text-primary-600 hover:underline text-sm">
-                          info@thecustomhub.com
+                        <a href="mailto:personalizedbyrisa@gmail.com" className="text-primary-600 hover:underline text-sm">
+                          personalizedbyrisa@gmail.com
                         </a>
                       </div>
                     </div>
@@ -621,8 +621,8 @@ const Contact = () => {
                       </div>
                       <div className="ml-3">
                         <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                        <a href="tel:+12345678900" className="text-secondary-600 hover:underline text-sm">
-                          +1 (234) 567-8900
+                        <a href="tel:+15087334489" className="text-secondary-600 hover:underline text-sm">
+                          +1 (508) 733-4489
                         </a>
                       </div>
                     </div>
