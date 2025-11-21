@@ -19,6 +19,7 @@
     "clean": "rm -rf dist node_modules/.vite"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@tailwindcss/postcss": "^4.1.17",
     "autoprefixer": "^10.4.22",
     "firebase": "^12.6.0",

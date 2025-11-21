@@ -14,7 +14,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About / Brand */}
           <div>
-            <h3 className="text-xl font-bold mb-4 heading-font tracking-wide">The CustomHub</h3>
+            <img 
+              src="/src/assets/thecustomhub.svg" 
+              alt="The CustomHub" 
+              className="h-8 mb-4 w-auto"
+            />
             <p className="text-gray-400 mb-4 leading-relaxed">
               Your source for authentic Indian cultural merchandise 
               and custom American lifestyle apparel. Based in USA.
@@ -139,7 +143,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
             <div className="flex flex-wrap gap-3 mb-4">
               <a
-                href="https://facebook.com/thecustomhub"
+                href="https://www.facebook.com/profile.php?id=100089498294090"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition-colors"
@@ -151,7 +155,7 @@ const Footer = () => {
               </a>
               
               <a
-                href="https://instagram.com/thecustomhub"
+                href="https://www.instagram.com/thekustomhub"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition-colors"
@@ -163,14 +167,14 @@ const Footer = () => {
               </a>
               
               <a
-                href="https://twitter.com/thecustomhub"
+                href="https://www.etsy.com/shop/ShopTheCustomHub"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition-colors"
-                aria-label="Twitter"
+                aria-label="Etsy"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                  <path d="M8.564 2.445c0-.325.033-.652.099-.98.083-.394.234-.74.413-.99.18-.233.407-.457.695-.663a3.544 3.544 0 0 1 1.095-.549c.365-.14.777-.22 1.23-.22.452 0 .864.08 1.23.22a3.544 3.544 0 0 1 1.095.549c.288.206.515.43.695.663.18.25.33.596.413.99.066.328.099.655.099.98v.31h4.781c.717 0 1.362.12 1.936.36.574.24 1.07.58 1.488 1.02.42.44.75.97.99 1.59.24.62.36 1.3.36 2.04 0 .74-.12 1.42-.36 2.04-.24.62-.57 1.15-.99 1.59-.42.44-.914.78-1.488 1.02-.574.24-1.219.36-1.936.36h-3.172v5.78c0 .4-.03.78-.09 1.14-.06.36-.15.7-.27 1.02-.12.32-.27.61-.45.87-.18.26-.39.49-.63.69-.24.2-.51.37-.81.51-.3.14-.63.25-.99.33-.36.08-.75.12-1.17.12-.42 0-.81-.04-1.17-.12-.36-.08-.69-.19-.99-.33-.3-.14-.57-.31-.81-.51-.24-.2-.45-.43-.63-.69-.18-.26-.33-.55-.45-.87-.12-.32-.21-.66-.27-1.02-.06-.36-.09-.74-.09-1.14V2.445zm1.737 1.244v4.609h3.186c.74 0 1.318-.19 1.737-.57.419-.38.628-.91.628-1.588 0-.677-.21-1.208-.628-1.588-.419-.38-.997-.57-1.737-.57h-3.186z"/>
                 </svg>
               </a>
               

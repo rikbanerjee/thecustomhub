@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import SEO from '../../components/SEO';
-import { getAllProducts } from '../../utils/dataHelpers';
+import { getAllProducts, getProductById } from '../../utils/dataHelpers';
+import emailjsConfig from '../../config/emailjs.config';
 
 /**
  * Contact Page Component
@@ -170,19 +172,47 @@ const Contact = () => {
       return;
     }
 
-    // Simulate form submission
+    // Submit form via EmailJS
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // In Phase 2, this would be an actual API call:
-      // await fetch('/api/contact', { method: 'POST', body: JSON.stringify(formData) });
-      // Or Firebase function, email service, etc.
+      // Check if EmailJS is configured
+      if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
+        throw new Error('EmailJS is not configured. Please set up environment variables.');
+      }
+
+      // Get product title if product of interest is selected
+      let productTitle = 'None';
+      if (formData.productOfInterest) {
+        const product = getProductById(formData.productOfInterest);
+        productTitle = product ? product.title : 'Unknown Product';
+      }
+
+      // Prepare template parameters for EmailJS
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone || 'Not provided',
+        order_type: formData.orderType || 'Not specified',
+        quantity: formData.quantity || 'Not specified',
+        event_name: formData.eventName || 'Not provided',
+        design_idea: formData.designIdea || 'Not provided',
+        product_of_interest: productTitle,
+        message: formData.message,
+        timestamp: new Date().toISOString()
+      };
+
+      // Send email via EmailJS
+      await emailjs.send(
+        emailjsConfig.serviceId,
+        emailjsConfig.templateId,
+        templateParams,
+        emailjsConfig.publicKey
+      );
       
       console.log('✅ Form submitted successfully:', formData);
+      console.log('✅ Email sent via EmailJS');
       console.log('Timestamp:', new Date().toISOString());
       
       // Success!
@@ -209,6 +239,11 @@ const Contact = () => {
     } catch (error) {
       console.error('❌ Form submission error:', error);
       setSubmitStatus('error');
+      
+      // Log more details for debugging
+      if (error.text) {
+        console.error('EmailJS error details:', error.text);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -216,7 +251,7 @@ const Contact = () => {
 
   // Get input class names with error state
   const getInputClassName = (fieldName) => {
-    const baseClass = "w-full px-4 py-3 border rounded-lg transition-all duration-200";
+    const baseClass = "w-full px-4 py-3 border rounded-lg transition-all duration-200 text-base";
     const focusClass = "focus:ring-2 focus:ring-primary-500 focus:outline-none";
     
     if (errors[fieldName] && touched[fieldName]) {
@@ -224,6 +259,11 @@ const Contact = () => {
     }
     
     return `${baseClass} border-gray-300 focus:border-primary-500 ${focusClass}`;
+  };
+
+  // Get select class names (with larger text for better readability)
+  const getSelectClassName = (fieldName) => {
+    return `${getInputClassName(fieldName)} text-base`;
   };
 
   return (
@@ -235,6 +275,18 @@ const Contact = () => {
         keywords="contact, customer service, custom orders, bulk orders, Indian merchandise inquiry, custom t-shirts, sports team apparel"
         canonical="https://thecustomhub.com/contact"
       />
+
+      {/* Style for select dropdown options */}
+      <style>{`
+        select option {
+          font-size: 1rem;
+          padding: 0.5rem;
+        }
+        select optgroup {
+          font-size: 1rem;
+          font-weight: 600;
+        }
+      `}</style>
 
       <div className="min-h-screen py-8 bg-primary-50 page-transition">
         <div className="container-custom">
@@ -388,10 +440,11 @@ const Contact = () => {
                         value={formData.orderType}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={getInputClassName('orderType')}
+                        className={getSelectClassName('orderType')}
                         disabled={isSubmitting}
                         required
                         aria-required="true"
+                        style={{ fontSize: '1rem' }}
                       >
                         <option value="">Select...</option>
                         <optgroup label="Shop">
@@ -424,8 +477,9 @@ const Contact = () => {
                         name="quantity"
                         value={formData.quantity}
                         onChange={handleChange}
-                        className={getInputClassName('quantity')}
+                        className={getSelectClassName('quantity')}
                         disabled={isSubmitting}
+                        style={{ fontSize: '1rem' }}
                       >
                         <option value="">Select quantity (optional)</option>
                         <option value="1-11">1-11 items</option>
@@ -479,8 +533,9 @@ const Contact = () => {
                         name="productOfInterest"
                         value={formData.productOfInterest}
                         onChange={handleChange}
-                        className={getInputClassName('productOfInterest')}
+                        className={getSelectClassName('productOfInterest')}
                         disabled={isSubmitting}
+                        style={{ fontSize: '1rem' }}
                       >
                         <option value="">Select a product (optional)</option>
                         <optgroup label="Apparel">

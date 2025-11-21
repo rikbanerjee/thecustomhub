@@ -84,10 +84,14 @@ const Header = () => {
             {/* Logo */}
             <Link 
               to="/" 
-              className="text-2xl md:text-3xl font-bold heading-font text-primary-600 hover:text-primary-700 transition-colors"
+              className="flex items-center"
               onClick={closeMobileMenu}
             >
-              The CustomHub
+              <img 
+                src="/src/assets/thecustomhub.svg" 
+                alt="The CustomHub" 
+                className="h-10 md:h-12 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
