@@ -15,7 +15,7 @@ const Footer = () => {
           {/* About / Brand */}
           <div>
             <img 
-              src="/src/assets/thecustomhub.svg" 
+              src="/thecustomhub.svg" 
               alt="The CustomHub" 
               className="h-8 mb-4 w-auto"
             />

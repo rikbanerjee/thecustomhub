@@ -88,7 +88,7 @@ const Header = () => {
               onClick={closeMobileMenu}
             >
               <img 
-                src="/src/assets/thecustomhub.svg" 
+                src="/thecustomhub.svg" 
                 alt="The CustomHub" 
                 className="h-10 md:h-12 w-auto"
               />

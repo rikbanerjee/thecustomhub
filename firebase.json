@@ -8,8 +8,26 @@
     ],
     "rewrites": [
       {
+        
+        "source": "/quant-alpha/**",
+        "destination": "https://stock-analysis-103702095556.us-central1.run.app"
+      },
+      {
+        
         "source": "**",
         "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        
+        "source": "/quant-alpha",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
       }
     ]
   }
