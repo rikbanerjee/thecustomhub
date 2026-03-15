@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+
 /**
  * Footer Component
  * Site-wide footer with contact info, social links, quick links, and copyright
@@ -237,6 +238,9 @@ const Footer = () => {
               <a href="#shipping" className="hover:text-white transition-colors">
                 Shipping Policy
               </a>
+              <Link to="/return-policy" className="hover:text-white transition-colors">
+                Return Policy
+              </Link>
             </div>
           </div>
 

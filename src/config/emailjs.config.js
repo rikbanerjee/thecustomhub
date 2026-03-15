@@ -10,7 +10,11 @@
 const emailjsConfig = {
   serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
   templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
-  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || ''
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '',
+  // Template for owner order notification (sent from OrderSuccess page)
+  // Create this template in EmailJS with params:
+  // order_id, items_summary, total_amount, payment_status, timestamp
+  orderNotificationTemplateId: import.meta.env.VITE_EMAILJS_ORDER_TEMPLATE_ID || ''
 };
 
 export default emailjsConfig;

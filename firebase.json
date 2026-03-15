@@ -8,19 +8,16 @@
     ],
     "rewrites": [
       {
-        
         "source": "/quant-alpha/**",
-        "destination": "https://stock-analysis-103702095556.us-central1.run.app"
+        "destination": "/index.html"
       },
       {
-        
         "source": "**",
         "destination": "/index.html"
       }
     ],
     "headers": [
       {
-        
         "source": "/quant-alpha",
         "headers": [
           {
@@ -30,5 +27,9 @@
         ]
       }
     ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
   }
 }

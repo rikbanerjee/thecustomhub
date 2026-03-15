@@ -3,15 +3,27 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatPrice } from '../../utils/dataHelpers';
 import { getFirebaseImageUrl, getPlaceholderImage } from '../../utils/imageHelpers';
+import { useCart } from '../../contexts/CartContext';
 
 /**
  * ProductCard Component
  * Displays a single product with image, title, price, and stock status
- * Includes hover effects and lazy loading for optimal performance
+ * Includes hover effects, lazy loading, and low stock indicators
  */
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onQuickView }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addItem } = useCart();
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!product.inStock) return;
+    addItem(product, null);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 1800);
+  };
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -33,6 +45,16 @@ const ProductCard = ({ product }) => {
     return prices.length > 0 ? Math.min(...prices) : 0;
   };
 
+  // Get total inventory from variants
+  const getTotalInventory = () => {
+    if (!product.variants || product.variants.length === 0) return null;
+    const total = product.variants.reduce((sum, v) => sum + (v.inventoryQty || 0), 0);
+    return total;
+  };
+
+  const inventory = getTotalInventory();
+  const isLowStock = inventory !== null && inventory > 0 && inventory <= 10;
+
   // Extract short description from HTML description or use first 150 chars
   const getShortDescription = () => {
     if (product.description?.short) {
@@ -43,6 +65,12 @@ const ProductCard = ({ product }) => {
     const desc = product.description || '';
     const plainText = desc.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
     return plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+  };
+
+  const handleQuickView = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onQuickView) onQuickView(product);
   };
 
   return (
@@ -80,12 +108,20 @@ const ProductCard = ({ product }) => {
           </div>
         )}
         
-        {/* Stock Badge */}
-        <div className="absolute top-3 right-3">
+        {/* Stock Badges */}
+        <div className="absolute top-3 right-3 flex flex-col gap-1">
           {product.inStock ? (
-            <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-              In Stock
-            </span>
+            <>
+              {isLowStock ? (
+                <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg animate-pulse">
+                  Only {inventory} left!
+                </span>
+              ) : (
+                <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                  In Stock
+                </span>
+              )}
+            </>
           ) : (
             <span className="bg-gray-800 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
               Out of Stock
@@ -93,8 +129,54 @@ const ProductCard = ({ product }) => {
           )}
         </div>
 
+        {/* Hover action buttons */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          {/* Quick View */}
+          {onQuickView && (
+            <button
+              onClick={handleQuickView}
+              className="bg-white/95 hover:bg-white text-gray-800 font-medium px-3 py-2 rounded-full shadow-lg flex items-center gap-1.5 text-sm whitespace-nowrap"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Quick View
+            </button>
+          )}
+
+          {/* Quick Add to Cart */}
+          {product.inStock && (
+            <button
+              onClick={handleAddToCart}
+              className={`font-medium px-3 py-2 rounded-full shadow-lg flex items-center gap-1.5 text-sm whitespace-nowrap transition-colors ${
+                addedToCart
+                  ? 'bg-green-600 text-white'
+                  : 'bg-primary-600 hover:bg-primary-700 text-white'
+              }`}
+              aria-label={addedToCart ? 'Added!' : `Add ${product.title} to cart`}
+            >
+              {addedToCart ? (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Added!
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
         {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
       </div>
 
       {/* Product Info */}
@@ -149,6 +231,7 @@ ProductCard.propTypes = {
     type: PropTypes.string,
     inStock: PropTypes.bool.isRequired,
   }).isRequired,
+  onQuickView: PropTypes.func,
 };
 
 export default ProductCard;

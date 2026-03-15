@@ -1,6 +1,8 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import SearchBar from '../SearchBar';
+import CartIcon from '../CartIcon';
+import CartDrawer from '../CartDrawer';
 import { getAllCategories } from '../../utils/dataHelpers';
 
 /**
@@ -202,9 +204,12 @@ const Header = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
+
+              {/* Cart Icon */}
+              <CartIcon />
             </nav>
 
-            {/* Mobile: Search + Menu Buttons */}
+            {/* Mobile: Search + Cart + Menu Buttons */}
             <div className="flex items-center gap-2 lg:hidden">
               <button
                 onClick={toggleSearch}
@@ -215,6 +220,7 @@ const Header = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
+              <CartIcon />
               
               <button
                 onClick={toggleMobileMenu}
@@ -385,11 +391,14 @@ const Header = () => {
           {/* Mobile Menu Footer */}
           <div className="border-t border-gray-200 p-4">
             <p className="text-sm text-gray-600 text-center">
-              © {new Date().getFullYear()} The Custom Hub
+              © {new Date().getFullYear()} The CustomHub
             </p>
           </div>
         </div>
       </aside>
+
+      {/* Cart Drawer */}
+      <CartDrawer />
     </>
   );
 };

@@ -16,10 +16,17 @@
     "firebase:init": "firebase init hosting",
     "firebase:login": "firebase login",
     "firebase:serve": "firebase serve --only hosting",
-    "clean": "rm -rf dist node_modules/.vite"
+    "clean": "rm -rf dist node_modules/.vite",
+    "amazon:generate": "node src/amazon/generator.js",
+    "amazon:test": "node src/amazon/test.js",
+    "amazon:test-defaults": "node src/amazon/test-defaults.js",
+    "walmart:generate": "node scripts/inject_walmart_feed.js",
+    "etsy:match": "node scripts/add_etsy_links.js",
+    "etsy:apply": "node scripts/add_etsy_links.js --apply"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@stripe/stripe-js": "^4.10.0",
     "@tailwindcss/postcss": "^4.1.17",
     "autoprefixer": "^10.4.22",
     "firebase": "^12.6.0",
@@ -35,10 +42,14 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.0",
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
-    "vite": "^7.2.2"
+    "uuid": "^13.0.0",
+    "vite": "^7.2.2",
+    "xlsx": "^0.18.5"
   }
 }
