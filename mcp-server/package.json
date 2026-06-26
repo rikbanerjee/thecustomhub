@@ -1,0 +1,16 @@
+{
+  "name": "tch-catalog-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "MCP server giving conversational control of The CustomHub's product catalog and inventory (products.json).",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "inspect": "npx @modelcontextprotocol/inspector node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.23.8"
+  }
+}

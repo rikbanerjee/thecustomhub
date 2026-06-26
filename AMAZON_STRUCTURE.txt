@@ -1,0 +1,155 @@
+================================================================================
+                    AMAZON FEED GENERATOR - STRUCTURE
+================================================================================
+
+📦 PROJECT ROOT
+│
+├── 📁 src/
+│   ├── 📁 amazon/                    ← NEW AMAZON MODULE
+│   │   ├── generator.js              ← Main orchestrator (run this!)
+│   │   ├── fieldMapping.js           ← Product → Amazon field mapping
+│   │   ├── templateHandler.js        ← Excel template operations
+│   │   ├── index.js                  ← Main exports
+│   │   ├── test.js                   ← Validation script
+│   │   ├── example-product.json      ← Complete example
+│   │   ├── README.md                 ← Technical docs
+│   │   ├── QUICKSTART.md            ← Quick start guide
+│   │   ├── MIGRATION_GUIDE.md       ← How to add Amazon data
+│   │   └── IMPLEMENTATION_SUMMARY.md ← What was built
+│   │
+│   └── 📁 data/
+│       └── products.json             ← Your product data (update this!)
+│
+├── 📁 docs/
+│   └── 📁 amazon/
+│       ├── DRINKING_CUP.xlsm         ← Amazon template
+│       ├── AMAZON_FEED_TROUBLESHOOTING.md
+│       └── AMAZON_GENERATOR_GUIDE.md ← Complete guide
+│
+├── 📁 output/
+│   └── 📁 amazon/                    ← Generated files go here
+│       ├── amazon_upload_ready.xlsx  ← Excel file (for review)
+│       └── amazon_upload_ready.tsv   ← TSV file (upload this!)
+│
+├── 📁 scripts/
+│   └── inject_walmart_feed.js        ← Walmart logic (unchanged)
+│
+├── package.json                      ← Updated with npm scripts
+└── AMAZON_SETUP_COMPLETE.md         ← This summary
+
+================================================================================
+                              WORKFLOW
+================================================================================
+
+1. UPDATE PRODUCT DATA
+   └─> Edit src/data/products.json
+       └─> Add marketplace.amazon = "active"
+       └─> Add amazonData object
+       └─> Add specifications
+       └─> Add dimensions
+
+2. TEST DATA
+   └─> Run: node src/amazon/test.js
+       └─> Validates fields
+       └─> Shows mappings
+       └─> Identifies issues
+
+3. GENERATE FEED
+   └─> Run: npm run amazon:generate
+       └─> Reads products.json
+       └─> Validates data
+       └─> Generates Excel
+       └─> Generates TSV
+
+4. UPLOAD TO AMAZON
+   └─> Go to Amazon Seller Central
+       └─> Catalog > Add Products via Upload
+       └─> Upload: output/amazon/amazon_upload_ready.tsv
+
+================================================================================
+                            KEY FEATURES
+================================================================================
+
+✅ Modular Architecture      - Clean, maintainable code
+✅ 60+ Field Mapping         - Comprehensive Amazon support
+✅ Full Validation           - Catches errors before upload
+✅ TSV Generation            - Amazon-compatible format
+✅ Test Script               - Validate before generating
+✅ Flexible Data Structure   - Multiple ways to organize data
+✅ Complete Documentation    - 5 comprehensive guides
+✅ Example Product           - Ready-to-use template
+✅ Walmart Preserved         - No impact on existing logic
+✅ Easy to Extend            - Add fields/categories easily
+
+================================================================================
+                         DOCUMENTATION MAP
+================================================================================
+
+📖 Getting Started
+   └─> AMAZON_SETUP_COMPLETE.md        ← Start here!
+   └─> src/amazon/QUICKSTART.md        ← Quick instructions
+
+📖 Adding Amazon Data
+   └─> src/amazon/MIGRATION_GUIDE.md   ← How to update products
+   └─> src/amazon/example-product.json ← Complete example
+
+📖 Technical Details
+   └─> src/amazon/README.md            ← Technical documentation
+   └─> docs/amazon/AMAZON_GENERATOR_GUIDE.md ← Complete guide
+
+📖 Troubleshooting
+   └─> docs/amazon/AMAZON_FEED_TROUBLESHOOTING.md ← Common issues
+
+📖 What Was Built
+   └─> src/amazon/IMPLEMENTATION_SUMMARY.md ← Implementation details
+
+================================================================================
+                          NPM COMMANDS
+================================================================================
+
+npm run amazon:generate     ← Generate Amazon feed
+npm run walmart:generate    ← Generate Walmart feed (unchanged)
+node src/amazon/test.js     ← Test/validate product data
+
+================================================================================
+                        REQUIRED FIELDS
+================================================================================
+
+✓ SKU                       - Product identifier
+✓ Product Type              - drinking_cup
+✓ Item Name                 - Product title
+✓ Brand Name                - Your brand
+✓ Main Image URL            - Primary image
+✓ Price                     - Selling price
+✓ Quantity                  - Inventory count
+✓ Condition                 - New/Used
+✓ Fulfillment Channel       - DEFAULT or AMAZON_NA
+
+================================================================================
+                      RECOMMENDED FIELDS
+================================================================================
+
+⭐ Bullet Points (5)        - Key features/benefits
+⭐ Product Description      - Detailed description
+⭐ Keywords                 - Search terms
+⭐ Special Features         - Product attributes
+⭐ Additional Images        - More product photos
+⭐ Capacity                 - Size (11oz)
+⭐ Material                 - Ceramic
+⭐ Color                    - White, Red
+⭐ Dimensions               - Item + package sizes
+
+================================================================================
+                         NEXT STEPS
+================================================================================
+
+1. Read: AMAZON_SETUP_COMPLETE.md
+2. Review: src/amazon/example-product.json
+3. Update: src/data/products.json
+4. Test: node src/amazon/test.js
+5. Generate: npm run amazon:generate
+6. Upload: output/amazon/amazon_upload_ready.tsv to Amazon
+
+================================================================================
+                    🎉 READY TO USE! 🎉
+================================================================================

@@ -33,3 +33,19 @@ ui-debug.log
 .env
 .env.local
 .env.production
+
+# Catalog MCP server — local operational state, not source
+mcp-server/snapshots/
+mcp-server/inventory-log.jsonl
+
+# Generated marketplace feed outputs
+output/
+
+# Walmart upload files generated at root
+walmart_upload*.xlsx
+walmart_upload*.csv
+walmart_upload_ready*.xlsx
+
+# Product intake workflow (operational, not source)
+_inbox/
+_processed/

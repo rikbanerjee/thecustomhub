@@ -1,0 +1,245 @@
+# Amazon Feed Generator
+
+Automated system for generating Amazon product listings from `products.json`.
+
+## Overview
+
+This module generates Amazon-ready product feeds in both Excel (.xlsx) and TSV formats for upload to Amazon Seller Central.
+
+## Directory Structure
+
+```
+src/amazon/
+├── generator.js          # Main orchestrator
+├── fieldMapping.js       # Product → Amazon field mapping
+├── templateHandler.js    # Excel template operations
+└── README.md            # This file
+```
+
+## Quick Start
+
+### 1. Prepare Your Product Data
+
+Add Amazon-specific fields to your product in `src/data/products.json`:
+
+```json
+{
+  "id": "dil-se-valentines-heart-mug",
+  "sku": "dil-se-valentines-heart-mug",
+  "title": "\"Dil Se\" Custom Photo Mug with Heart Handle",
+  "price": 19.99,
+  "marketplace": {
+    "amazon": "active",
+    "amazon": {
+      "brandName": "The CustomHub",
+      "title": "Personalized Valentine's Day Mug – Custom Photo Ceramic Coffee Cup with Red Heart Shaped Handle & Rim – Romantic Unique Gift for Couples, Him, Her, Boyfriend, Girlfriend - 11oz",
+      "bulletPoints": [
+        "UNIQUE HEART-SHAPED HANDLE - A signature red sculpted heart handle that makes every sip feel like a warm embrace",
+        "PERSONALIZE WITH YOUR PHOTO - Upload your favorite memory to create a one-of-a-kind keepsake that celebrates your unique bond",
+        "PREMIUM CERAMIC CONSTRUCTION - High-gloss white ceramic with a matching romantic red rim for a polished, boutique aesthetic",
+        "PERFECT CAPACITY - 11oz size ideal for your morning coffee, tea, or hot chocolate",
+        "IDEAL ROMANTIC GIFT - Perfect for Valentine's Day, anniversaries, birthdays, or just to say \"I love you\""
+      ],
+      "keywords": "coffee mug, valentines gift, custom photo mug, ceramic cup, romantic gift",
+      "specialFeatures": ["Microwave Safe", "Dishwasher Safe", "Heat Resistant"],
+      "capacity": 11,
+      "material": "Ceramic",
+      "color": "White, Red",
+      "countryOfOrigin": "US"
+    }
+  },
+  "specifications": {
+    "capacity": { "value": 11, "unit": "fl oz" },
+    "material": "Ceramic",
+    "color": "White, Red",
+    "hasHandle": true,
+    "dishwasherSafe": true,
+    "numberOfItems": 1,
+    "includedComponents": "1 Mug"
+  },
+  "dimensions": {
+    "item": { "height": 4, "width": 3.5, "unit": "inches" },
+    "package": { 
+      "length": 5, 
+      "width": 5, 
+      "height": 5, 
+      "weight": 1, 
+      "weightUnit": "pounds",
+      "unit": "inches"
+    }
+  },
+  "countryOfOrigin": "US",
+  "images": [
+    "https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fdil-se-valentines-heart-mug-01.jpg?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fdil-se-valentines-heart-mug-02.jpg?alt=media"
+  ]
+}
+```
+
+### 2. Run the Generator
+
+```bash
+npm run amazon:generate
+```
+
+Or directly:
+
+```bash
+node src/amazon/generator.js
+```
+
+### 3. Upload to Amazon
+
+1. Go to Amazon Seller Central
+2. Navigate to: **Catalog > Add Products via Upload**
+3. Upload the generated TSV file: `output/amazon/amazon_upload_ready.tsv`
+
+## Required Fields
+
+These fields MUST be present for a successful Amazon upload:
+
+| Field | Source | Example |
+|-------|--------|---------|
+| SKU | `product.id` or `product.sku` | `dil-se-valentines-heart-mug` |
+| Product Type | Hardcoded | `drinking_cup` |
+| Item Name | `marketplace.amazon.title` or `product.title` | `Personalized Valentine's Day Mug...` |
+| Brand Name | `marketplace.amazon.brandName` or `product.vendor` | `The CustomHub` |
+| Main Image URL | `product.images[0]` | Firebase URL |
+| Price | `marketplace.amazon.price` or `product.price` | `19.99` |
+| Quantity | `marketplace.amazon.quantity` | `100` |
+
+## Recommended Fields
+
+These fields significantly improve discoverability and conversion:
+
+- **Bullet Points** (5 max): Key product features
+- **Product Description**: Detailed description (max 2000 chars)
+- **Additional Images**: Up to 8 additional images
+- **Generic Keywords**: Search terms
+- **Special Features**: Product attributes (Microwave Safe, etc.)
+- **Capacity**: Size specification
+- **Material**: Product material
+- **Color**: Product color(s)
+
+## Field Mapping
+
+The `fieldMapping.js` module handles all product data transformations:
+
+- **Title Optimization**: Adds capacity if missing, truncates to 200 chars
+- **HTML Stripping**: Removes HTML from descriptions
+- **Bullet Point Generation**: Maps from product data
+- **Keyword Extraction**: Generates from tags if not provided
+- **Default Values**: Provides sensible defaults for optional fields
+
+## Template Structure
+
+The Amazon `DRINKING_CUP.xlsm` template has:
+
+- **Row 1**: Settings/Metadata
+- **Row 2**: Instructions
+- **Row 3**: Field groups
+- **Row 4**: Human-readable headers (used for mapping)
+- **Row 5**: Technical headers (used in TSV)
+- **Row 6+**: Data rows
+
+## TSV Conversion
+
+The TSV file is generated by:
+
+1. Keeping Row 1 (Settings)
+2. Keeping Row 5 (Technical headers)
+3. Keeping Row 6+ (Data)
+4. Removing Rows 2-4 (Instructions/Human headers)
+
+This ensures Amazon's parser correctly interprets the file.
+
+## Validation
+
+The generator validates:
+
+### Errors (will fail):
+- Missing SKU/ID
+- Missing title
+- Missing price
+- Missing images
+
+### Warnings (will proceed):
+- Missing description
+- Missing bullet points
+- Missing capacity
+- Missing material
+
+## Output Files
+
+Generated files are saved to `output/amazon/`:
+
+- `amazon_upload_ready.xlsx` - Excel file with full template
+- `amazon_upload_ready.tsv` - TSV file for Amazon upload
+
+## Troubleshooting
+
+### "No products found for Amazon"
+
+Mark products for Amazon by setting:
+```json
+"marketplace": {
+  "amazon": "active"
+}
+```
+
+### "Template not found"
+
+Ensure `docs/amazon/DRINKING_CUP.xlsm` exists.
+
+### "Missing required field"
+
+Check validation errors and add missing fields to `products.json`.
+
+### TSV Upload Fails
+
+1. Verify the TSV starts with technical headers (not instructions)
+2. Check for special characters in product data
+3. Ensure all required fields have values
+
+## Extending for Other Categories
+
+To support other Amazon categories (e.g., T-Shirts):
+
+1. Download the category-specific template from Amazon
+2. Update `TEMPLATE_PATH` in `templateHandler.js`
+3. Update `Product Type` in `fieldMapping.js`
+4. Add category-specific fields to the mapping
+
+## NPM Scripts
+
+Add to `package.json`:
+
+```json
+{
+  "scripts": {
+    "amazon:generate": "node src/amazon/generator.js"
+  }
+}
+```
+
+## API Usage
+
+```javascript
+import { generateAmazonFeed } from './src/amazon/generator.js';
+
+const result = await generateAmazonFeed({
+  productsPath: './src/data/products.json',
+  outputExcelPath: './output/amazon/feed.xlsx',
+  outputTsvPath: './output/amazon/feed.tsv',
+  generateTsv: true,
+  verbose: true
+});
+
+console.log(`Processed ${result.productsProcessed} products`);
+```
+
+## Related Documentation
+
+- `docs/amazon/AMAZON_FEED_TROUBLESHOOTING.md` - Common issues
+- `docs/amazon/DRINKING_CUP.xlsm` - Amazon template
+- Amazon Seller Central: Product Upload Guide

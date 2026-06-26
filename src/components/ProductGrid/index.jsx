@@ -12,7 +12,8 @@ const ProductGrid = ({
   loading = false, 
   emptyMessage = "No products found",
   emptyAction = null,
-  columns = { xs: 1, sm: 2, md: 3, lg: 4 }
+  columns = { xs: 1, sm: 2, md: 3, lg: 4 },
+  onQuickView = null
 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -93,7 +94,7 @@ const ProductGrid = ({
             animationFillMode: 'both'
           }}
         >
-          <ProductCard product={product} />
+          <ProductCard product={product} onQuickView={onQuickView} />
         </div>
       ))}
     </div>
@@ -158,6 +159,7 @@ ProductGrid.propTypes = {
     md: PropTypes.number,
     lg: PropTypes.number,
   }),
+  onQuickView: PropTypes.func,
 };
 
 export default ProductGrid;

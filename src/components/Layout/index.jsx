@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
+import WhatsAppButton from '../WhatsAppButton';
 
 /**
  * Layout Component
@@ -35,6 +36,9 @@ const Layout = () => {
       
       {/* Site Footer */}
       <Footer />
+      
+      {/* Floating WhatsApp Button */}
+      <WhatsAppButton />
       
       {/* Skip to main content link (accessibility) */}
       <a

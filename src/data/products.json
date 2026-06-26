@@ -31,6 +31,110 @@
     "marketplace": {
       "amazon": "inactive",
       "walmart": "active"
+    },
+    "walmartData": {
+      "specProductType": "T-Shirts",
+      "variantGroupId": "TCH-DHURANDER-TEE-GRP",
+      "shippingWeight": 0.5,
+      "productNameTemplate": "The CustomHub Dhurandhar Bollywood Graphic Tee, Unisex Fan T-Shirt, 100% Cotton, {color}, Size {size}",
+      "shortDescription": "Rep the grit of Bollywood with the Ghayal Hoon Isiliye Ghatak Hoon graphic tee. Inspired by Dhurandhar 2, this premium 100% ring-spun cotton shirt is built for comfort and style. Ideal for the Indian diaspora looking for high-quality cultural apparel.",
+      "keyFeatures": [
+        "100% ring-spun cotton, pre-shrunk, medium weight (~5.3 oz/sq yd) — soft, durable, and wash-safe",
+        "Bold Romanized Hindi Dhurandhar fan graphic — unapologetic Bollywood streetwear for the diaspora",
+        "Unisex crew neck, short sleeve — true-to-size fit in S, M, L, XL, 2XL; vibrant print that won't crack or fade"
+      ],
+      "variants": [
+        {
+          "sku": "TCH-DHURANDER-TEE-BLK-S",
+          "color": "Black",
+          "colorCategory": "Black",
+          "size": "S",
+          "price": 20.99,
+          "qty": 20,
+          "primary": true
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-BLK-M",
+          "color": "Black",
+          "colorCategory": "Black",
+          "size": "M",
+          "price": 20.99,
+          "qty": 20,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-BLK-L",
+          "color": "Black",
+          "colorCategory": "Black",
+          "size": "L",
+          "price": 20.99,
+          "qty": 20,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-BLK-XL",
+          "color": "Black",
+          "colorCategory": "Black",
+          "size": "XL",
+          "price": 20.99,
+          "qty": 20,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-BLK-2XL",
+          "color": "Black",
+          "colorCategory": "Black",
+          "size": "2XL",
+          "price": 22.99,
+          "qty": 10,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-WHT-S",
+          "color": "White",
+          "colorCategory": "White",
+          "size": "S",
+          "price": 20.99,
+          "qty": 20,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-WHT-M",
+          "color": "White",
+          "colorCategory": "White",
+          "size": "M",
+          "price": 20.99,
+          "qty": 20,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-WHT-L",
+          "color": "White",
+          "colorCategory": "White",
+          "size": "L",
+          "price": 20.99,
+          "qty": 20,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-WHT-XL",
+          "color": "White",
+          "colorCategory": "White",
+          "size": "XL",
+          "price": 20.99,
+          "qty": 20,
+          "primary": false
+        },
+        {
+          "sku": "TCH-DHURANDER-TEE-WHT-2XL",
+          "color": "White",
+          "colorCategory": "White",
+          "size": "2XL",
+          "price": 22.99,
+          "qty": 10,
+          "primary": false
+        }
+      ]
     }
   },
   {

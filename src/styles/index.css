@@ -1,6 +1,45 @@
 @import "tailwindcss";
 
 /* --------------------------------------------------------------------------
+ * Tailwind v4 theme tokens — generates bg-primary-*, text-primary-*, etc.
+ * ------------------------------------------------------------------------ */
+@theme {
+  /* Primary palette */
+  --color-primary-50: #fffbf5;
+  --color-primary-100: #faf7f2;
+  --color-primary-200: #e8e4df;
+  --color-primary-300: #d6cbbd;
+  --color-primary-400: #c9a67c;
+  --color-primary-500: #8b7355;
+  --color-primary-600: #2c1810;
+  --color-primary-700: #24120b;
+  --color-primary-800: #1b0e08;
+  --color-primary-900: #120804;
+
+  /* Secondary palette */
+  --color-secondary-50: #f5f7f3;
+  --color-secondary-100: #e3eadc;
+  --color-secondary-200: #c7d4b9;
+  --color-secondary-300: #9caf88;
+  --color-secondary-400: #7f986d;
+  --color-secondary-500: #627c53;
+  --color-secondary-600: #4c6142;
+  --color-secondary-700: #394933;
+  --color-secondary-800: #273324;
+  --color-secondary-900: #182017;
+
+  /* Accent & neutral */
+  --color-accent: #c9a67c;
+  --color-charcoal: #3a3a3a;
+  --color-light-gray: #6b6b6b;
+  --color-soft-gray: #e8e4df;
+
+  /* Font families */
+  --font-heading: "Cormorant Garamond", "Times New Roman", serif;
+  --font-body: "Work Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* --------------------------------------------------------------------------
  * Refined Heritage Design System
  * Global tokens + utilities shared across all components/pages
  * ------------------------------------------------------------------------ */

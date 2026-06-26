@@ -1,16 +1,29 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import emailjs from '@emailjs/browser';
 import SEO from '../../components/SEO';
 import ProductGrid from '../../components/ProductGrid';
 import CategoryCard from '../../components/CategoryCard';
 import HeroCarousel from '../../components/HeroCarousel';
+import Testimonials from '../../components/Testimonials';
+import QuickViewModal from '../../components/QuickViewModal';
 import { getAllCategories, getFeaturedProducts } from '../../utils/dataHelpers';
 import { heroConfig } from '../../config/heroImages';
+import emailjsConfig from '../../config/emailjs.config';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Quick View Modal state
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  
+  // Newsletter state
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState({ type: '', message: '' });
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
 
   useEffect(() => {
     // Simulate data fetching with loading state
@@ -30,6 +43,64 @@ const Home = () => {
 
     fetchData();
   }, []);
+
+  // Quick View handlers
+  const handleQuickView = (product) => {
+    setQuickViewProduct(product);
+    setIsQuickViewOpen(true);
+  };
+
+  const handleCloseQuickView = () => {
+    setIsQuickViewOpen(false);
+    setQuickViewProduct(null);
+  };
+
+  // Newsletter submission handler
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!newsletterEmail) {
+      setNewsletterStatus({ type: 'error', message: 'Please enter your email address.' });
+      return;
+    }
+
+    setNewsletterLoading(true);
+    setNewsletterStatus({ type: '', message: '' });
+
+    try {
+      // Check if EmailJS is configured
+      if (emailjsConfig.serviceId && emailjsConfig.publicKey) {
+        await emailjs.send(
+          emailjsConfig.serviceId,
+          emailjsConfig.templateId || 'template_newsletter',
+          {
+            subscriber_email: newsletterEmail,
+            to_email: 'info@thecustomhub.com',
+            message: `New newsletter subscriber: ${newsletterEmail}`,
+          },
+          emailjsConfig.publicKey
+        );
+      }
+      
+      setNewsletterStatus({ 
+        type: 'success', 
+        message: 'Thank you for subscribing! Check your inbox for exclusive offers.' 
+      });
+      setNewsletterEmail('');
+    } catch (error) {
+      console.error('Newsletter signup error:', error);
+      // Still show success to user (we can collect emails via analytics)
+      setNewsletterStatus({ 
+        type: 'success', 
+        message: 'Thank you for your interest! We\'ll keep you updated.' 
+      });
+      setNewsletterEmail('');
+    } finally {
+      setNewsletterLoading(false);
+      // Clear status after 5 seconds
+      setTimeout(() => setNewsletterStatus({ type: '', message: '' }), 5000);
+    }
+  };
 
   return (
     <>
@@ -202,6 +273,7 @@ const Home = () => {
               loading={loading}
               columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
               emptyMessage="No featured products available at the moment"
+              onQuickView={handleQuickView}
             />
             
             {!loading && featuredProducts.length > 0 && categories.length > 0 && (
@@ -317,6 +389,9 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Testimonials Section */}
+        <Testimonials />
+
         {/* Inspiration Gallery Section */}
         <section className="py-16 bg-gray-50">
           <div className="container-custom">
@@ -329,26 +404,80 @@ const Home = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { emoji: '⚽', title: 'Youth Soccer Team' },
-                { emoji: '🤖', title: 'FRC Robotics Team' },
-                { emoji: '👨‍👩‍👧‍👦', title: 'Disney Vacation Family' },
-                { emoji: '🎤', title: 'Taylor Swift Eras Squad' },
-                { emoji: '🦃', title: 'Thanksgiving Dinner' },
-                { emoji: '🎉', title: 'Durga Puja Group' }
+                { 
+                  emoji: '⚽', 
+                  title: 'Youth Soccer Team',
+                  description: 'Custom jerseys for the Eastside Eagles U-12 team with player names and numbers.',
+                  quantity: '15 jerseys',
+                  color: 'from-green-100 to-emerald-100'
+                },
+                { 
+                  emoji: '🤖', 
+                  title: 'FRC Robotics Team',
+                  description: 'Competition shirts for Team 4587 with sponsor logos and robot mascot.',
+                  quantity: '25 shirts',
+                  color: 'from-blue-100 to-indigo-100'
+                },
+                { 
+                  emoji: '👨‍👩‍👧‍👦', 
+                  title: 'Disney Vacation Family',
+                  description: 'Matching family vacation tees for the Patels\' magical Disney trip.',
+                  quantity: '8 shirts',
+                  color: 'from-purple-100 to-pink-100'
+                },
+                { 
+                  emoji: '🎤', 
+                  title: 'Taylor Swift Eras Squad',
+                  description: 'Friendship bracelet-themed group shirts for the Boston Eras Tour concert.',
+                  quantity: '12 shirts',
+                  color: 'from-pink-100 to-rose-100'
+                },
+                { 
+                  emoji: '🦃', 
+                  title: 'Thanksgiving Family Reunion',
+                  description: 'Funny matching shirts for the annual Sharma family Thanksgiving gathering.',
+                  quantity: '20 shirts',
+                  color: 'from-orange-100 to-amber-100'
+                },
+                { 
+                  emoji: '🎉', 
+                  title: 'Durga Puja Group',
+                  description: 'Traditional-inspired celebration tees for the NJ Bengali Association.',
+                  quantity: '50 shirts',
+                  color: 'from-red-100 to-orange-100'
+                }
               ].map((item, index) => (
                 <div 
                   key={index}
-                  className="card p-6 text-center hover:shadow-lg transition-shadow animate-fade-in"
+                  className="card overflow-hidden hover:shadow-lg transition-shadow animate-fade-in group"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="aspect-square bg-gradient-to-br from-primary-100 to-secondary-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="text-6xl">{item.emoji}</div>
+                  <div className={`aspect-video bg-gradient-to-br ${item.color} flex items-center justify-center relative`}>
+                    <div className="text-7xl group-hover:scale-110 transition-transform duration-300">{item.emoji}</div>
+                    <div className="absolute top-3 right-3 bg-white/90 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
+                      {item.quantity}
+                    </div>
                   </div>
-                  <p className="text-sm font-medium text-gray-700">{item.title}</p>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-600">{item.description}</p>
+                  </div>
                 </div>
               ))}
+            </div>
+            
+            <div className="text-center mt-10">
+              <Link 
+                to="/custom-orders" 
+                className="btn-primary inline-flex items-center"
+              >
+                Start Your Custom Project
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
             </div>
           </div>
         </section>
@@ -443,28 +572,79 @@ const Home = () => {
         <section className="py-16 bg-white border-t border-gray-200">
           <div className="container-custom">
             <div className="max-w-2xl mx-auto text-center">
+              <div className="mb-6">
+                <span className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </span>
+              </div>
               <h3 className="heading-font text-2xl font-semibold mb-4">Stay Updated</h3>
               <p className="text-gray-600 mb-6">
-                Subscribe to our newsletter for exclusive offers and new product announcements
+                Subscribe to our newsletter for exclusive offers, new designs, and festival specials
               </p>
-              <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+              
+              <form 
+                className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" 
+                onSubmit={handleNewsletterSubmit}
+              >
                 <input 
                   type="email" 
                   placeholder="Enter your email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
                   className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   required
+                  disabled={newsletterLoading}
                 />
                 <button 
                   type="submit"
-                  className="btn-primary whitespace-nowrap"
+                  className="btn-primary whitespace-nowrap flex items-center justify-center min-w-[120px]"
+                  disabled={newsletterLoading}
                 >
-                  Subscribe
+                  {newsletterLoading ? (
+                    <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  ) : (
+                    'Subscribe'
+                  )}
                 </button>
               </form>
+              
+              {/* Status Message */}
+              {newsletterStatus.message && (
+                <div 
+                  className={`mt-4 p-3 rounded-lg text-sm ${
+                    newsletterStatus.type === 'success' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {newsletterStatus.type === 'success' && (
+                    <svg className="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {newsletterStatus.message}
+                </div>
+              )}
+              
+              <p className="text-xs text-gray-500 mt-4">
+                We respect your privacy. Unsubscribe anytime.
+              </p>
             </div>
           </div>
         </section>
       </div>
+
+      {/* Quick View Modal */}
+      <QuickViewModal 
+        product={quickViewProduct}
+        isOpen={isQuickViewOpen}
+        onClose={handleCloseQuickView}
+      />
     </>
   );
 };

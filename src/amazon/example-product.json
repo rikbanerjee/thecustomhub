@@ -1,0 +1,91 @@
+{
+  "id": "dil-se-valentines-heart-mug",
+  "sku": "dil-se-valentines-heart-mug",
+  "title": "\"Dil Se\" Custom Photo Mug with Heart Handle",
+  "vendor": "The CustomHub",
+  "category": "Home & Garden > Kitchen & Dining > Tableware > Drinkware > Mugs",
+  "type": "Coffee and Tea Cups",
+  "price": 19.99,
+  "description": "Capture a moment that speaks directly from the heart with our \"Dil Se\" (From the Heart) Personalization Series. \n\n- **Signature Heart Handle:** A unique, sculpted red heart handle that makes every sip feel like a warm embrace.\n- **Premium Ceramic Finish:** High-gloss white ceramic with a matching romantic red rim for a polished, boutique aesthetic.\n- **Your Story, Your Way:** Seamlessly add your favorite photo to create a co-created masterpiece that celebrates your unique bond.\n\nWhether it's for a first Valentine's or a silver anniversary, this isn't just a mug—it's a daily \"Cultural Easter Egg\" of your love story. Add your personal touch below to make this a truly one-of-a-kind piece.",
+  "isCustomizable": true,
+  "customization": {
+    "type": "photo-upload",
+    "label": "Upload Your Memory",
+    "instructions": "For best results, use a high-resolution square image."
+  },
+  "images": [
+    "https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fdil-se-valentines-heart-mug-01.jpg?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fdil-se-valentines-heart-mug-02.jpg?alt=media"
+  ],
+  "inStock": true,
+  "tags": [
+    "Valentines Day",
+    "Custom Gift",
+    "Couple Mug",
+    "Heart Handle",
+    "Romantic Gift"
+  ],
+  "marketplace": {
+    "amazon": "active",
+    "walmart": {
+      "price": 19.99
+    }
+  },
+  "amazonData": {
+    "brandName": "The CustomHub",
+    "title": "Personalized Valentine's Day Mug – Custom Photo Ceramic Coffee Cup with Red Heart Shaped Handle & Rim – Romantic Unique Gift for Couples, Him, Her, Boyfriend, Girlfriend - 11oz",
+    "bulletPoints": [
+      "UNIQUE HEART-SHAPED HANDLE - A signature red sculpted heart handle that makes every sip feel like a warm embrace",
+      "PERSONALIZE WITH YOUR PHOTO - Upload your favorite memory to create a one-of-a-kind keepsake that celebrates your unique bond",
+      "PREMIUM CERAMIC CONSTRUCTION - High-gloss white ceramic with a matching romantic red rim for a polished, boutique aesthetic",
+      "PERFECT CAPACITY - 11oz size ideal for your morning coffee, tea, or hot chocolate",
+      "IDEAL ROMANTIC GIFT - Perfect for Valentine's Day, anniversaries, birthdays, or just to say \"I love you\""
+    ],
+    "keywords": "coffee mug, valentines gift, custom photo mug, ceramic cup, romantic gift, heart handle mug, personalized mug, photo mug, couple gift",
+    "specialFeatures": [
+      "Microwave Safe",
+      "Dishwasher Safe",
+      "Heat Resistant",
+      "Custom Photo Print",
+      "Heart-Shaped Handle"
+    ],
+    "capacity": 11,
+    "material": "Ceramic",
+    "color": "White, Red",
+    "countryOfOrigin": "US",
+    "manufacturer": "The CustomHub",
+    "itemTypeKeyword": "coffee-mugs",
+    "fulfillmentChannel": "DEFAULT",
+    "quantity": 100,
+    "price": 19.99
+  },
+  "specifications": {
+    "capacity": {
+      "value": 11,
+      "unit": "fl oz"
+    },
+    "material": "Ceramic",
+    "color": "White, Red",
+    "hasHandle": true,
+    "dishwasherSafe": true,
+    "microwaveSafe": true,
+    "numberOfItems": 1,
+    "includedComponents": "1 Mug"
+  },
+  "dimensions": {
+    "item": {
+      "height": 4,
+      "width": 3.5,
+      "unit": "inches"
+    },
+    "package": {
+      "length": 5,
+      "width": 5,
+      "height": 5,
+      "weight": 1,
+      "weightUnit": "pounds",
+      "unit": "inches"
+    }
+  },
+  "countryOfOrigin": "US"
+}

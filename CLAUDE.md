@@ -74,9 +74,9 @@ When adding products to `src/data/products.json`, the required fields are:
 }
 ```
 
-**Valid `type` values** (drives site navigation): `"Coffee and Tea Cups"`, `"T-Shirts"`, `"Sweatshirts"`, `"Sports Jerseys"`, `"Home Decor"`.
+**Valid `type` values** (drives site navigation): the distinct `type` strings currently present in `products.json` are `"T-Shirts"`, `"Coffee and Tea Cups"`, `"Sweatshirts"`, and `"Sports Jerseys"`. Navigation is generated from whatever `type` values exist, so adding a new one creates a new category automatically — reuse an existing string unless you intend a new category.
 
-For Amazon marketplace products, also include an `amazonData` object with `title`, `bulletPoints` (5 items), and `keywords`. See `src/amazon/AGENT_GUIDANCE.md` for the full Amazon listing workflow and `src/amazon/productDefaults.js` for auto-filled fields.
+For Amazon marketplace products, also include an `amazonData` object with `title`, `bulletPoints` (exactly 5 items), and `keywords`. See `src/amazon/AGENT_GUIDANCE.md` for the full Amazon listing workflow and `src/amazon/productDefaults.js` for auto-filled fields. See the **Marketplace Automation** section below for current limitations.
 
 ## New Product Workflow (Full Lifecycle)
 
@@ -84,8 +84,83 @@ For Amazon marketplace products, also include an `amazonData` object with `title
 2. Append product entry to `src/data/products.json` following schema above
 3. Validate JSON is valid: `node -e "JSON.parse(require('fs').readFileSync('src/data/products.json','utf8'))"`
 4. Run `npm run build` to verify the build passes
-5. If Amazon listing: run `npm run amazon:generate` → upload `output/amazon/amazon_upload_ready.tsv` to Seller Central
+5. If Amazon/Walmart listing: add an `amazonData`/`walmartData` block to the product, set `marketplace.<channel> = "active"`, then run `npm run amazon:generate` / `npm run walmart:generate`. See the **Marketplace Automation** section for the schema.
 6. Deploy: `npm run deploy`
+
+## Marketplace Automation (Amazon + Walmart) — READ BEFORE TOUCHING
+
+The site also feeds product listings to **Amazon Seller Central** and **Walmart Seller Center** via bulk-upload files. This subsystem is **partially working and brittle** — read this whole section before running or editing anything here. The detailed, battle-tested field references live in:
+
+- `docs/walmart/WALMART_UPLOAD_GUIDE.md` — column map, confirmed closed-list values, per-product-type field tables, variant grouping, SKU convention, and a full error→fix table. **Mandatory read before generating any Walmart file.**
+- `docs/amazon/AMAZON_FEED_TROUBLESHOOTING.md` — the TSV must start with the technical header row; strip the top 4 metadata rows or Amazon rejects it.
+- `src/amazon/AGENT_GUIDANCE.md` + `src/amazon/productDefaults.js` — Amazon listing workflow and auto-filled defaults.
+- `AGENT_WORKFLOW.md` — the `_inbox/` product intake convention.
+
+### Two pipelines, two output formats
+
+| | Amazon | Walmart |
+|---|---|---|
+| Format | TSV (tab-separated flat file) | `.xlsx` injected into Walmart's official template |
+| Generic generator | `src/amazon/generator.js` (`npm run amazon:generate`) | `scripts/inject_walmart_feed.js` (`npm run walmart:generate`) |
+| Template | `docs/amazon/DRINKING_CUP.xlsm` | `walmart_template.xlsx` (root — Full Item Spec from Seller Center) |
+| Output | `output/amazon/` | `output/walmart/` |
+| Per-variant rows | One row per product | One row **per size variant** (color+size = own row) |
+
+### How the generic generators work (both are now schema-driven)
+
+Both npm-script generators read the live `marketplace: { amazon|walmart: "active" | "inactive" }` field — a product is included only when its channel is `"active"`. Per-product listing detail is carried on the product itself:
+
+- **Amazon** (`src/amazon/generator.js`): reads an `amazonData` block (`title`, `bulletPoints` ×5, `keywords`, …). Type defaults come from `src/amazon/productDefaults.js`; field mapping lives in `src/amazon/fieldMapping.js`.
+- **Walmart** (`scripts/inject_walmart_feed.js` + `scripts/walmartDefaults.js`): reads a `walmartData` block (see schema below). The column map, GTIN exemption, variant grouping, and the second-`variantAttributeNames`-column insertion (proven on the Dhurander tee) are all folded in. `walmartDefaults.js` holds `COMMON_DEFAULTS`, per-`specProductType` `TYPE_DEFAULTS`, and the column map; the injector merges common → type → per-product `walmartData.fields` overrides for each row. Output: `output/walmart/walmart_upload_ready.xlsx`.
+
+The generic Walmart generator reproduces the known-good Dhurander upload cell-for-cell (verified — only the auto-filled `startDate` differs, since it's "today").
+
+#### `walmartData` schema (T-shirt example)
+
+```jsonc
+"walmartData": {
+  "specProductType": "T-Shirts",          // optional; else derived from `type`
+  "variantGroupId": "TCH-DHURANDER-TEE-GRP",
+  "shippingWeight": 0.5,
+  "productNameTemplate": "... {color}, Size {size}",  // {color}/{size} placeholders
+  "shortDescription": "...",               // optional; falls back to stripped description
+  "keyFeatures": ["bullet 1", "bullet 2", "bullet 3"],
+  "fields": { "clothingTopStyle": "Pullover" },        // optional per-product overrides
+  "variants": [
+    { "sku": "TCH-...-BLK-S", "color": "Black", "colorCategory": "Black",
+      "size": "S", "price": 20.99, "qty": 20, "primary": true }
+  ]
+}
+```
+
+A product with no `variants` produces a single row from its top-level fields (fine for mugs). Size variants automatically trigger the inserted `clothingSize` column.
+
+### Legacy / reference scripts
+
+The original per-product one-off scripts are kept as references but are **superseded** by the generic generators:
+- `scripts/inject_dhurander_walmart.mjs` (and `_by_size`) — the hand-built Dhurander Walmart injector the generic logic was distilled from.
+- `scripts/generate_dhurander_amazon.mjs` — the hand-built Dhurander Amazon TSV generator.
+
+Don't add new per-product scripts — add a `walmartData`/`amazonData` block to the product and run the generic generator instead.
+
+### Hard-won gotchas (do not relearn these the hard way)
+
+- **Walmart rejects Firebase Storage image URLs.** Both `firebasestorage.googleapis.com/...?alt=media` and `storage.googleapis.com/...` (403) fail. Workaround: copy images into `public/product-images/{folder}/`, `npm run deploy`, then reference `https://thecustomhub.com/product-images/{folder}/{file}`.
+- **Walmart data starts at row 7 (index 6)**; rows 1–6 are template metadata. Inject into `walmart_template.xlsx` directly — never build a fresh xlsx, the hidden sheets/macros must stay intact.
+- **GTIN exemption:** every Walmart row sets `productIdType="GTIN"`, `productId="custom"`.
+- **`fulfillmentCenterID = 10002931712`** (TheCustomHub's confirmed FC ID) — never blank or `"0"`.
+- **Walmart `(+)` fields take ONE value per cell** — comma-separated lists error. Add extra values via the Seller Center UI after the listing is live.
+- **Color+size variants need two `variantAttributeNames` columns** (`"color"` at 113, `"clothingSize"` inserted at 114) or Walmart treats every size as a duplicate listing. See `inject_dhurander_walmart.mjs` for the exact column-shift logic.
+- **Amazon TSV must start with the technical header row** (`contribution_sku#1.value\t...`) — strip the top 4 metadata rows or the upload is rejected. Verify with `head -n 1 output/amazon/*.tsv`.
+- **Amazon needs an `amazonData` block** per product: `title`, `bulletPoints` (exactly 5), `keywords`, plus type defaults from `src/amazon/productDefaults.js`.
+
+## Catalog & Inventory MCP Server
+
+`mcp-server/` is a separate MCP server (own `package.json`, own `node_modules` — not part of the Vite bundle) that lets a Claude session manage inventory and channel status conversationally instead of hand-editing `products.json`. Wired into this repo via `.mcp.json` at the root, so Claude Code picks it up automatically. See `mcp-server/README.md` for usage, `docs/CATALOG_INVENTORY_MCP_PLAN.md` for the product rationale, `docs/CATALOG_MCP_V0_IMPLEMENTATION_PLAN.md` for the engineering scope.
+
+`mcp-server/lib/store.js` is the only module allowed to read or write `products.json`; every write tool routes through its `applyChange()`, which snapshots, validates the full catalog, atomically writes, and audit-logs. If you're adding a new tool to this server, never read/write the file directly from `index.js` — go through `store.js`.
+
+Tools: `find_product`, `get_product`, `list_low_stock` (read-only); `update_inventory`, `set_channel_status`, `discontinue_product` (write — two-phase preview/confirm). Does not yet cover adding products, pricing, or feed regeneration — that's still done by hand per the workflow above.
 
 ## Brand Context
 
