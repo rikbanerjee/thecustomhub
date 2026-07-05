@@ -49,3 +49,12 @@ walmart_upload_ready*.xlsx
 # Product intake workflow (operational, not source)
 _inbox/
 _processed/
+
+# RetailAgentOS — files synced into functions/ by scripts/sync-raos-functions.js
+# before every `firebase deploy --only functions` (functions.predeploy hook).
+# Source of truth is raos/, vendor/, and src/data/products.json — never edit
+# these copies directly.
+functions/raos/
+functions/vendor/
+functions/data/
+functions/public/

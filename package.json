@@ -22,7 +22,8 @@
     "amazon:test-defaults": "node src/amazon/test-defaults.js",
     "walmart:generate": "node scripts/inject_walmart_feed.js",
     "etsy:match": "node scripts/add_etsy_links.js",
-    "etsy:apply": "node scripts/add_etsy_links.js --apply"
+    "etsy:apply": "node scripts/add_etsy_links.js --apply",
+    "raos:sync-functions": "node scripts/sync-raos-functions.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

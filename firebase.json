@@ -8,6 +8,14 @@
     ],
     "rewrites": [
       {
+        "source": "/.well-known/ucp",
+        "function": "ucpManifest"
+      },
+      {
+        "source": "/product/**",
+        "function": "productSchema"
+      },
+      {
         "source": "/quant-alpha/**",
         "destination": "/index.html"
       },
@@ -30,6 +38,10 @@
   },
   "functions": {
     "source": "functions",
-    "runtime": "nodejs20"
+    "runtime": "nodejs20",
+    "predeploy": [
+      "npm run build",
+      "node scripts/sync-raos-functions.js"
+    ]
   }
 }

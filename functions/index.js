@@ -6,6 +6,9 @@ const Stripe = require("stripe");
 
 initializeApp();
 
+// Track B3/B4 — RetailAgentOS discovery endpoints (ucpManifest, productSchema).
+Object.assign(exports, require("./raos"));
+
 // Stripe secret key stored in Firebase Secret Manager
 // Set it once with: firebase functions:secrets:set STRIPE_SECRET_KEY
 const stripeSecretKey = defineSecret("STRIPE_SECRET_KEY");
