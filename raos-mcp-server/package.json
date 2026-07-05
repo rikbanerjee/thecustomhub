@@ -1,0 +1,21 @@
+{
+  "name": "thecustomhub-raos-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "commonjs",
+  "description": "Cloud Run MCP server (Track B5) — lets a shopping agent (Claude Desktop) browse The CustomHub catalog, reason about eligibility/price/stock/region via the RetailAgentOS engine, get a price-locked quote, and hand off to Stripe checkout.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@retailagentos/engine": "file:../vendor/retailagentos-engine-0.1.0.tgz",
+    "express": "^4.19.2",
+    "stripe": "^16.0.0",
+    "zod": "^3.23.8"
+  },
+  "engines": {
+    "node": "20"
+  }
+}

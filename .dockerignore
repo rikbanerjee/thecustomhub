@@ -1,0 +1,13 @@
+# Track B5 — keep the Cloud Run build context (gcloud run deploy --source .)
+# to just what raos-mcp-server/'s Dockerfile actually COPYs.
+node_modules
+dist
+functions
+mcp-server
+output
+_inbox
+_processed
+docs
+*.md
+.git
+.firebase
