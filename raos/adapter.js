@@ -100,6 +100,11 @@ function merchantProfile() {
       protocol: 'RAOS-0000',
       tier: 1,
       capabilities: capabilityEntries,
+      // Without a declared key, the engine's provenance signer falls back to
+      // an internal "k1" default that validateQuote can't verify against
+      // (ISSUER_UNKNOWN) — declaring one here is required for issueQuote's
+      // tokens to actually validate at checkout, not just optional metadata.
+      keys: [{ keyId: 'thecustomhub-k1', validFrom: 0, validTo: null }],
     },
     servesRegions: SERVES_REGIONS,
   };
@@ -139,6 +144,26 @@ function composeTitle(product, variant) {
   return options.length ? `${product.title} - ${options.join(' / ')}` : product.title;
 }
 
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * A real, non-null `sku` in products.json is the exception, not the rule —
+ * most size/color variant rows carry real price/option/inventory data but
+ * were exported from Shopify with `sku: null` (the merchant never populated
+ * it; this is distinct from the fully-null padding rows stripped in B1).
+ * Falls back to product.id + option labels for a stable, readable id.
+ */
+function variantSku(product, variant, index) {
+  if (variant.sku) return variant.sku;
+  const options = [variant.option1, variant.option2, variant.option3].filter(Boolean).map(slugify);
+  return options.length ? `${product.id}--${options.join('-')}` : `${product.id}--${index}`;
+}
+
 /**
  * Maps one products.json entry to one or more RAOS Variants.
  *
@@ -147,19 +172,33 @@ function composeTitle(product, variant) {
  *    Null-padding rows are stripped in B1 already, so every row here is real.
  *  - Flat top-level `price` with no `variants[]` (2 products) — a single
  *    Variant using the product id as both id and sku.
+ *
+ * `sku` carries the raw merchant SKU (or synthesized fallback) so it still
+ * lines up with Amazon/Walmart feed exports. `id` is namespaced with
+ * `product.id` and used as the RAOS Variant identity everywhere in this repo
+ * (evaluate_offer/issue_quote variantId, MCP catalog, etc.) because the raw
+ * `sku` is NOT reliably unique across this catalog — see Open Questions:
+ * several Durga Puja and Valentine's Day product families share literal SKU
+ * strings (e.g. "CTH-SUBH-BIJ-2") across 3-5 different products, evidently
+ * copy-pasted from a shared template. Deduping/renaming those is a merchant
+ * data-quality fix out of scope for Track B; namespacing `id` here just
+ * keeps the agent-facing catalog from resolving the wrong product.
  */
 function toVariants(product) {
   if (Array.isArray(product.variants) && product.variants.length > 0) {
-    return product.variants.map((variant) => ({
-      id: variant.sku,
-      sku: variant.sku,
-      title: composeTitle(product, variant),
-      basePrice: variant.compareAtPrice ?? variant.price,
-      currency: CURRENCY,
-      callForPrice: Boolean(product.callForPrice),
-      promoPricing: toPromoPricing(variant),
-      inventory: toInventoryConfig(product, variant),
-    }));
+    return product.variants.map((variant, index) => {
+      const sku = variantSku(product, variant, index);
+      return {
+        id: `${product.id}::${sku}`,
+        sku,
+        title: composeTitle(product, variant),
+        basePrice: variant.compareAtPrice ?? variant.price,
+        currency: CURRENCY,
+        callForPrice: Boolean(product.callForPrice),
+        promoPricing: toPromoPricing(variant),
+        inventory: toInventoryConfig(product, variant),
+      };
+    });
   }
 
   return [
