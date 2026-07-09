@@ -179,7 +179,16 @@ const Header = () => {
                 Custom Orders
               </NavLink>
 
-              {/* AI Stylist nav link added in Phase 4 once /ai-stylist route exists */}
+              <NavLink
+                to="/ai-stylist"
+                className={({ isActive }) =>
+                  `font-bold transition-colors ${
+                    isActive ? 'text-ink' : 'text-rani hover:text-ink'
+                  }`
+                }
+              >
+                AI Stylist ✦
+              </NavLink>
 
               <NavLink
                 to="/contact"
@@ -368,6 +377,20 @@ const Header = () => {
                 }
               >
                 Custom Orders
+              </NavLink>
+
+              <NavLink
+                to="/ai-stylist"
+                onClick={closeMobileMenu}
+                className={({ isActive }) =>
+                  `font-medium py-3 px-4 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-primary-50 text-rani'
+                      : 'text-rani hover:bg-gray-50'
+                  }`
+                }
+              >
+                AI Stylist ✦
               </NavLink>
 
               <NavLink

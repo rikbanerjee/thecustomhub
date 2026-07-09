@@ -360,6 +360,26 @@ export const getProductsByTag = (tag) => {
 };
 
 /**
+ * Get products by vibe tag (normalized) — powers the AI Stylist's Vibe
+ * Finder quiz and HubBot chat. `vibe` is an optional array field on
+ * products.json entries (filmy, bangali, nerdy, sporty, family).
+ * @param {string} vibe - Vibe tag to filter by
+ * @returns {Array} Array of normalized products with the given vibe
+ */
+export const getProductsByVibe = (vibe) => {
+  if (!vibe) return [];
+
+  const products = getAllProducts();
+  const lowerVibe = vibe.toLowerCase();
+
+  return products
+    .filter((product) =>
+      Array.isArray(product.vibe) && product.vibe.some((v) => v.toLowerCase() === lowerVibe)
+    )
+    .map(normalizeProduct);
+};
+
+/**
  * Get in-stock products only (normalized)
  * @returns {Array} Array of products that are currently in stock
  */
