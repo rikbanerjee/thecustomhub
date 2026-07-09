@@ -76,33 +76,29 @@ const Header = () => {
 
   return (
     <>
-      <header 
-        className={`bg-primary-50/90 backdrop-blur sticky top-0 z-50 border-b border-soft-gray transition-shadow duration-300 ${
-          isScrolled ? 'shadow-md' : 'shadow-sm'
+      <header
+        className={`bg-cream sticky top-0 z-50 border-b-[3px] border-ink transition-shadow duration-300 ${
+          isScrolled ? 'shadow-md' : ''
         }`}
       >
         <div className="container-custom">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-3.5">
             {/* Logo */}
-            <Link 
-              to="/" 
-              className="flex items-center"
+            <Link
+              to="/"
+              className="flex items-center display text-2xl md:text-[26px] text-ink"
               onClick={closeMobileMenu}
             >
-              <img 
-                src="/thecustomhub.svg" 
-                alt="The CustomHub" 
-                className="h-10 md:h-12 w-auto"
-              />
+              THE CUSTOM<span className="text-rani">HUB</span>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-6" role="navigation" aria-label="Main navigation">
+            <nav className="hidden lg:flex items-center space-x-7" role="navigation" aria-label="Main navigation">
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `font-medium transition-colors ${
-                    isActive ? 'text-primary-600' : 'text-gray-700 hover:text-primary-600'
+                  `font-bold transition-colors ${
+                    isActive ? 'text-rani' : 'text-ink hover:text-rani'
                   }`
                 }
               >
@@ -118,15 +114,15 @@ const Header = () => {
                       setTimeout(() => setCategoriesOpen(false), 200);
                     }
                   }}
-                  className="font-medium text-gray-700 hover:text-primary-600 transition-colors flex items-center"
+                  className="font-bold text-ink hover:text-rani transition-colors flex items-center"
                   aria-expanded={categoriesOpen}
                   aria-haspopup="true"
                 >
                   Shop
-                  <svg 
+                  <svg
                     className={`w-4 h-4 ml-1 transition-transform ${categoriesOpen ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -134,13 +130,13 @@ const Header = () => {
                 </button>
 
                 {categoriesOpen && (
-                  <div 
-                    className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 animate-fade-in"
+                  <div
+                    className="absolute top-full left-0 mt-2 w-64 bg-white pop-border shadow-[4px_4px_0_var(--color-ink)] py-2 animate-fade-in"
                     role="menu"
                   >
                     <Link
                       to="/"
-                      className="flex items-center px-4 py-2 text-primary-600 hover:bg-primary-50 transition-colors font-medium"
+                      className="flex items-center px-4 py-2 text-rani hover:bg-cream transition-colors font-bold"
                       onClick={() => setCategoriesOpen(false)}
                     >
                       All Products
@@ -148,12 +144,12 @@ const Header = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </Link>
-                    <div className="border-t border-gray-100 my-2"></div>
+                    <div className="border-t border-soft-gray my-2"></div>
                     {categories.map((category) => (
                       <Link
                         key={category.id}
                         to={`/category/${category.id}`}
-                        className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
+                        className="flex items-center px-4 py-3 hover:bg-cream transition-colors"
                         onClick={() => setCategoriesOpen(false)}
                         role="menuitem"
                       >
@@ -161,8 +157,8 @@ const Header = () => {
                           {getCategoryIcon(category.id)}
                         </span>
                         <div>
-                          <div className="font-medium text-gray-800">{category.name}</div>
-                          <div className="text-xs text-gray-500">
+                          <div className="font-semibold text-ink">{category.name}</div>
+                          <div className="text-xs text-light-gray">
                             {category.productCount} products
                           </div>
                         </div>
@@ -175,19 +171,21 @@ const Header = () => {
               <NavLink
                 to="/custom-orders"
                 className={({ isActive }) =>
-                  `font-medium transition-colors ${
-                    isActive ? 'text-primary-600' : 'text-gray-700 hover:text-primary-600'
+                  `font-bold transition-colors ${
+                    isActive ? 'text-rani' : 'text-ink hover:text-rani'
                   }`
                 }
               >
-                Custom Designs
+                Custom Orders
               </NavLink>
+
+              {/* AI Stylist nav link added in Phase 4 once /ai-stylist route exists */}
 
               <NavLink
                 to="/contact"
                 className={({ isActive }) =>
-                  `font-medium transition-colors ${
-                    isActive ? 'text-primary-600' : 'text-gray-700 hover:text-primary-600'
+                  `font-bold transition-colors ${
+                    isActive ? 'text-rani' : 'text-ink hover:text-rani'
                   }`
                 }
               >
@@ -197,10 +195,10 @@ const Header = () => {
               {/* Search Icon */}
               <button
                 onClick={toggleSearch}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="p-2 hover:bg-marigold/40 transition-colors"
                 aria-label="Toggle search"
               >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
@@ -245,7 +243,7 @@ const Header = () => {
               <div className="max-w-2xl mx-auto">
                 <SearchBar 
                   onSearch={handleSearch}
-                  placeholder="Search Indian cultural merchandise..."
+                  placeholder="Search desi tees, mugs, hoodies..."
                   showSuggestions={true}
                   maxSuggestions={6}
                 />
@@ -275,7 +273,7 @@ const Header = () => {
         <div className="flex flex-col h-full">
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <span className="text-xl font-bold text-primary-600">Menu</span>
+            <span className="display text-xl text-ink">Menu</span>
             <button
               onClick={closeMobileMenu}
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -369,7 +367,7 @@ const Header = () => {
                   }`
                 }
               >
-                Custom Designs
+                Custom Orders
               </NavLink>
 
               <NavLink

@@ -202,6 +202,9 @@ h6 {
     animation: none;
   }
 }
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
 
 /* Container utility shared across pages */
 .container-custom {
