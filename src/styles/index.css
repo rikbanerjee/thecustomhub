@@ -2,40 +2,51 @@
 
 /* --------------------------------------------------------------------------
  * Tailwind v4 theme tokens — generates bg-primary-*, text-primary-*, etc.
+ * "Desi Pop x Zine" theme (see docs/DESIGN_REVAMP_PLAN.md)
  * ------------------------------------------------------------------------ */
 @theme {
-  /* Primary palette */
-  --color-primary-50: #fffbf5;
-  --color-primary-100: #faf7f2;
-  --color-primary-200: #e8e4df;
-  --color-primary-300: #d6cbbd;
-  --color-primary-400: #c9a67c;
-  --color-primary-500: #8b7355;
-  --color-primary-600: #2c1810;
-  --color-primary-700: #24120b;
-  --color-primary-800: #1b0e08;
-  --color-primary-900: #120804;
+  /* Flat brand tokens — use directly: bg-ink, text-rani, border-marigold... */
+  --color-ink: #1A1423;
+  --color-cream: #FFF6E9;
+  --color-rani: #D81E5B;
+  --color-marigold: #FFB627;
+  --color-peacock: #0F7173;
+  --color-chai: #C9A67C;
 
-  /* Secondary palette */
-  --color-secondary-50: #f5f7f3;
-  --color-secondary-100: #e3eadc;
-  --color-secondary-200: #c7d4b9;
-  --color-secondary-300: #9caf88;
-  --color-secondary-400: #7f986d;
-  --color-secondary-500: #627c53;
-  --color-secondary-600: #4c6142;
-  --color-secondary-700: #394933;
-  --color-secondary-800: #273324;
-  --color-secondary-900: #182017;
+  /* Primary palette — remapped onto ink/chai so every existing component
+     (Cart, ProductDetail, SearchResults, CategoryPage, etc.) inherits the
+     new theme without being individually rebuilt. */
+  --color-primary-50: #FFF6E9;
+  --color-primary-100: #FDEFDA;
+  --color-primary-200: #F3E0BE;
+  --color-primary-300: #E5C99A;
+  --color-primary-400: #C9A67C;
+  --color-primary-500: #A97F52;
+  --color-primary-600: #1A1423;
+  --color-primary-700: #140F1B;
+  --color-primary-800: #0F0B15;
+  --color-primary-900: #08060C;
+
+  /* Secondary palette — remapped onto peacock */
+  --color-secondary-50: #E8F4F4;
+  --color-secondary-100: #D3E9E9;
+  --color-secondary-200: #A6D3D3;
+  --color-secondary-300: #7EB8B9;
+  --color-secondary-400: #3D9799;
+  --color-secondary-500: #14807F;
+  --color-secondary-600: #0F7173;
+  --color-secondary-700: #0C5A5B;
+  --color-secondary-800: #0A4F50;
+  --color-secondary-900: #063233;
 
   /* Accent & neutral */
-  --color-accent: #c9a67c;
-  --color-charcoal: #3a3a3a;
-  --color-light-gray: #6b6b6b;
-  --color-soft-gray: #e8e4df;
+  --color-accent: #C9A67C;
+  --color-charcoal: #1A1423;
+  --color-light-gray: #6a6376;
+  --color-soft-gray: #E6DCC8;
 
   /* Font families */
-  --font-heading: "Cormorant Garamond", "Times New Roman", serif;
+  --font-heading: "Anton", sans-serif;
   --font-body: "Work Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -46,25 +57,25 @@
 
 /* CSS variables for colors, typography, spacing, radius, shadows */
 :root {
-  /* Color palette - Earthy & Sophisticated */
-  --color-deep-brown: #2c1810; /* primary brand */
-  --color-warm-taupe: #8b7355; /* secondary brand */
-  --color-golden-tan: #c9a67c; /* accent */
-  --color-sage-green: #9caf88; /* success/eco */
+  /* Color palette - Desi Pop x Zine */
+  --color-deep-brown: #1A1423; /* primary brand (now "ink") */
+  --color-warm-taupe: #C9A67C; /* secondary brand (now "chai") */
+  --color-golden-tan: #FFB627; /* accent (now "marigold") */
+  --color-sage-green: #0F7173; /* success/eco (now "peacock") */
 
-  --color-warm-white: #fffbf5; /* primary background */
-  --color-cream: #faf7f2;      /* section background */
-  --color-soft-gray: #e8e4df;  /* borders/dividers */
-  --color-charcoal: #3a3a3a;   /* primary text */
-  --color-light-gray: #6b6b6b; /* secondary text */
+  --color-warm-white: #FFF6E9; /* primary background (now "cream") */
+  --color-cream: #FFF6E9;      /* section background */
+  --color-soft-gray: #E6DCC8;  /* borders/dividers */
+  --color-charcoal: #1A1423;   /* primary text */
+  --color-light-gray: #6a6376; /* secondary text */
 
   /* Typography */
-  --font-heading: "Cormorant Garamond", "Times New Roman", serif;
+  --font-heading: "Anton", sans-serif;
   --font-body: "Work Sans", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
 
-  --heading-letter-spacing: 0.5px;
-  --button-letter-spacing: 1px;
+  --heading-letter-spacing: 0.035em;
+  --button-letter-spacing: 0.5px;
 
   /* Type scale (desktop base) */
   --text-h1: 3.625rem;
@@ -118,6 +129,8 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
+  font-weight: 400; /* Anton ships one weight — never let the browser fake-bold it */
+  font-synthesis: none;
   letter-spacing: var(--heading-letter-spacing);
   line-height: var(--lh-heading);
   color: var(--color-deep-brown);
@@ -126,7 +139,68 @@ h6 {
 /* Utility class when headings need to be applied to non-heading elements */
 .heading-font {
   font-family: var(--font-heading);
+  font-weight: 400;
+  font-synthesis: none;
   letter-spacing: var(--heading-letter-spacing);
+}
+
+/* --------------------------------------------------------------------------
+ * Desi Pop x Zine display treatment
+ * Anton (the display face) ships ONE weight (400). Every heading using it
+ * MUST force font-weight:400 + font-synthesis:none or browsers render an
+ * ugly faux-bold. This is the single source of truth for that rule — use
+ * .display instead of setting font-heading + font-bold per usage.
+ * ------------------------------------------------------------------------ */
+.display {
+  font-family: var(--font-heading);
+  font-weight: 400 !important;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+}
+
+/* Rotated pill "sticker" badge — the repeated ornament across every mockup */
+.sticker {
+  display: inline-block;
+  background-color: var(--color-marigold, #FFB627);
+  border: 2.5px solid var(--color-ink, #1A1423);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  box-shadow: 3px 3px 0 var(--color-ink, #1A1423);
+  color: var(--color-ink, #1A1423);
+}
+.sticker--pink { background-color: var(--color-rani, #D81E5B); color: #fff; }
+.sticker--teal { background-color: var(--color-peacock, #0F7173); color: #fff; }
+.sticker--ink { background-color: var(--color-ink, #1A1423); color: var(--color-marigold, #FFB627); }
+.sticker--r1 { transform: rotate(-3deg); }
+.sticker--r2 { transform: rotate(2deg); }
+.sticker--r3 { transform: rotate(-1.5deg); }
+
+/* Hard offset shadow + 3px ink border — the site's structural signature */
+.pop-border { border: 3px solid var(--color-ink, #1A1423); }
+.pop-shadow { box-shadow: 6px 6px 0 var(--color-ink, #1A1423); }
+.pop-shadow-marigold { box-shadow: 8px 8px 0 var(--color-marigold, #FFB627); }
+
+/* Marquee ribbon — scrolling ticker between sections */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee-scroll 25s linear infinite;
+}
+.marquee-track[data-paused="true"] {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
 
 /* Container utility shared across pages */
@@ -177,7 +251,7 @@ h6 {
 }
 
 .btn-base:focus-visible {
-  outline: 2px solid var(--color-golden-tan);
+  outline: 3px solid var(--color-golden-tan);
   outline-offset: 2px;
 }
 
@@ -186,26 +260,31 @@ h6 {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.75rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-family: var(--font-body);
   font-size: var(--text-button);
-  font-weight: 500;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--button-letter-spacing);
+  border: 3px solid var(--color-ink, #1A1423);
   transition:
     background-color 200ms ease,
     color 200ms ease,
-    box-shadow 200ms ease,
+    box-shadow 150ms ease,
     transform 150ms ease;
-  background-color: var(--color-deep-brown);
+  background-color: var(--color-rani, #D81E5B);
   color: #ffffff;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 5px 5px 0 var(--color-ink, #1A1423);
 }
 
 .btn-primary:hover {
-  background-color: #1f120b;
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-1px);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-ink, #1A1423);
+}
+
+.btn-primary:focus-visible {
+  outline: 3px solid var(--color-marigold, #FFB627);
+  outline-offset: 2px;
 }
 
 .btn-secondary {
@@ -213,26 +292,31 @@ h6 {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.75rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-family: var(--font-body);
   font-size: var(--text-button);
-  font-weight: 500;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--button-letter-spacing);
+  border: 3px solid var(--color-ink, #1A1423);
   transition:
     background-color 200ms ease,
     color 200ms ease,
-    box-shadow 200ms ease,
+    box-shadow 150ms ease,
     transform 150ms ease;
-  background-color: var(--color-warm-taupe);
+  background-color: var(--color-peacock, #0F7173);
   color: #ffffff;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 5px 5px 0 var(--color-ink, #1A1423);
 }
 
 .btn-secondary:hover {
-  background-color: #6d5a40;
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-1px);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-ink, #1A1423);
+}
+
+.btn-secondary:focus-visible {
+  outline: 3px solid var(--color-marigold, #FFB627);
+  outline-offset: 2px;
 }
 
 .btn-outline {
@@ -252,12 +336,17 @@ h6 {
     box-shadow 200ms ease,
     transform 150ms ease;
   background-color: transparent;
-  color: var(--color-deep-brown);
-  border: 1.5px solid var(--color-deep-brown);
+  color: var(--color-ink, #1A1423);
+  border: 3px solid var(--color-ink, #1A1423);
 }
 
 .btn-outline:hover {
-  background-color: rgba(44, 24, 16, 0.04);
+  background-color: var(--color-marigold, #FFB627);
+}
+
+.btn-outline:focus-visible {
+  outline: 3px solid var(--color-marigold, #FFB627);
+  outline-offset: 2px;
 }
 
 /* Section backgrounds */

@@ -3,38 +3,47 @@ export default {
   theme: {
     extend: {
       colors: {
-        /* Refined Heritage palette mapped into Tailwind tokens */
+        /* "Desi Pop x Zine" palette — flat brand tokens */
+        ink: '#1A1423',
+        cream: '#FFF6E9',
+        rani: '#D81E5B',
+        marigold: '#FFB627',
+        peacock: '#0F7173',
+        chai: '#C9A67C',
+        /* primary/secondary scales kept for existing components; remapped
+           onto the new palette so untouched pages inherit the new theme
+           instead of the old "Refined Heritage" brown/sage colors. */
         primary: {
-          50: '#fffbf5', // warm white
-          100: '#faf7f2', // cream
-          200: '#e8e4df', // soft gray
-          300: '#d6cbbd',
-          400: '#c9a67c', // golden tan accent
-          500: '#8b7355', // warm taupe
-          600: '#2c1810', // deep brown (primary brand)
-          700: '#24120b',
-          800: '#1b0e08',
-          900: '#120804',
+          50: '#FFF6E9', // cream
+          100: '#FDEFDA',
+          200: '#F3E0BE',
+          300: '#E5C99A',
+          400: '#C9A67C', // chai
+          500: '#A97F52',
+          600: '#1A1423', // ink (main brand dark)
+          700: '#140F1B',
+          800: '#0F0B15',
+          900: '#08060C',
         },
         secondary: {
-          50: '#f5f7f3',
-          100: '#e3eadc',
-          200: '#c7d4b9',
-          300: '#9caf88', // sage green
-          400: '#7f986d',
-          500: '#627c53',
-          600: '#4c6142',
-          700: '#394933',
-          800: '#273324',
-          900: '#182017',
+          50: '#E8F4F4',
+          100: '#D3E9E9',
+          200: '#A6D3D3',
+          300: '#7EB8B9',
+          400: '#3D9799',
+          500: '#14807F',
+          600: '#0F7173', // peacock
+          700: '#0C5A5B',
+          800: '#0A4F50',
+          900: '#063233',
         },
-        accent: '#c9a67c',
-        charcoal: '#3a3a3a',
-        'light-gray': '#6b6b6b',
-        'soft-gray': '#e8e4df',
+        accent: '#C9A67C', // chai
+        charcoal: '#1A1423', // ink
+        'light-gray': '#6a6376',
+        'soft-gray': '#E6DCC8',
       },
       fontFamily: {
-        heading: ['"Cormorant Garamond"', 'Times New Roman', 'serif'],
+        heading: ['Anton', 'sans-serif'],
         body: ['"Work Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
       },
     },
