@@ -45,9 +45,19 @@ Images are hosted on Firebase Storage (`thecustomhub-efb8a.firebasestorage.app`)
 
 ### Styling
 
-Tailwind CSS 4 with a custom token system defined in `tailwind.config.js`:
-- **Brand colors**: `primary-600` (#2c1810, deep brown), `accent` (#c9a67c, golden tan), `secondary-300` (#9caf88, sage green)
-- **Fonts**: `font-heading` = Cormorant Garamond (serif), `font-body` = Work Sans (sans-serif)
+Tailwind CSS 4 with a custom token system defined in `tailwind.config.js` and mirrored in the
+`@theme` block of `src/styles/index.css` (the CSS `@theme` block is what actually generates
+utility classes under this project's PostCSS-based v4 setup — keep both files in sync).
+"Desi Pop x Zine" theme (see `docs/DESIGN_REVAMP_PLAN.md`):
+- **Brand colors**: `ink` (#1A1423), `cream` (#FFF6E9), `rani` (#D81E5B, primary CTA/accents),
+  `marigold` (#FFB627, secondary accent/stickers), `peacock` (#0F7173, links/secondary buttons),
+  `chai` (#C9A67C, borders/subtle fills). The `primary-*`/`secondary-*` Tailwind scales are
+  remapped onto ink/chai and peacock respectively so pre-existing components inherit the theme.
+- **Fonts**: `font-heading` = Anton (display, one weight only — always pair with the `.display`
+  utility class, which bakes in `font-weight:400 !important; font-synthesis:none` so browsers
+  never fake-bold it), `font-body` = Work Sans (sans-serif, unchanged).
+- Style signature: 3px ink borders, hard offset shadows (`.pop-border`/`.pop-shadow`), rotated
+  pill "sticker" badges (`.sticker`, or `src/components/ui/Sticker.jsx`), marigold focus rings.
 
 ### Services & Config
 

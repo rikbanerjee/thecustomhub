@@ -113,6 +113,18 @@
   --shadow-strong: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
+/* Site-wide focus ring — marigold, per the mockups' accessibility treatment.
+   Only fires for keyboard focus (:focus-visible), never on mouse click. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--color-golden-tan);
+  outline-offset: 2px;
+}
+
 /* Global base styles */
 body {
   background-color: var(--color-warm-white);

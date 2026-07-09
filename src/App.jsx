@@ -11,6 +11,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const SearchResults = lazy(() => import('./pages/SearchResults'));
 const CustomOrders = lazy(() => import('./pages/CustomOrders'));
 const AiStylist = lazy(() => import('./pages/AiStylist'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 const Cart = lazy(() => import('./pages/Cart'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
 const OrderCancelled = lazy(() => import('./pages/OrderCancelled'));
@@ -46,6 +47,8 @@ function App() {
               {/* Legacy route support */}
               <Route path="products" element={<Home />} />
               <Route path="products/:id" element={<ProductDetail />} />
+              {/* Catch-all — any unmatched path renders the 404 inside the shared Layout */}
+              <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
         </Suspense>

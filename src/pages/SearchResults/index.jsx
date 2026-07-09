@@ -246,16 +246,16 @@ const SearchResults = () => {
                       Showing <span className="font-semibold">{displayedResults.length}</span> of <span className="font-semibold">{allResults.length}</span> results
                     </>
                   ) : (
-                    'No results found'
+                    'Kuch nahi mila — no results found'
                   )}
                 </p>
               </div>
 
               {/* Results Grid */}
-              <ProductGrid 
+              <ProductGrid
                 products={displayedResults}
                 loading={loading}
-                emptyMessage={`No products found matching "${searchQuery}"`}
+                emptyMessage={`Kuch nahi mila for "${searchQuery}" (nothing turned up) — try "Diwali" or "chai"?`}
                 emptyAction={
                   hasActiveFilters ? (
                     <button 
