@@ -11,6 +11,7 @@ const Cart = () => {
     removeItem,
     updateQty,
     clearCart,
+    captureWhatsAppLead,
     checkout,
     checkoutLoading,
     checkoutError,
@@ -238,6 +239,7 @@ const Cart = () => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => captureWhatsAppLead()}
                   className="w-full flex items-center justify-center gap-2 font-bold py-3.5 px-6 rounded-xl transition-colors"
                   style={{ backgroundColor: '#25D366', color: '#ffffff' }}
                 >

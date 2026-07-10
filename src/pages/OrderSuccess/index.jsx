@@ -1,73 +1,29 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
 import SEO from '../../components/SEO';
 import { useCart } from '../../contexts/CartContext';
-import emailjsConfig from '../../config/emailjs.config';
 
 const OrderSuccess = () => {
   const [searchParams] = useSearchParams();
   const { clearCart } = useCart();
   const sessionId = searchParams.get('session_id');
-  const notificationSentRef = useRef(false);
-  const [emailStatus, setEmailStatus] = useState(null); // 'sent' | 'failed' | null
+  const cartClearedRef = useRef(false);
 
   useEffect(() => {
-    if (notificationSentRef.current) return;
-    notificationSentRef.current = true;
+    if (cartClearedRef.current) return;
+    cartClearedRef.current = true;
 
     // Clear cart on successful payment
     clearCart();
 
-    // Read cart snapshot stored before redirect
-    let pendingOrder = null;
+    // Clean up the pre-redirect cart snapshot (no longer needed — the Stripe
+    // webhook handles order persistence and owner notification server-side).
     try {
-      const raw = sessionStorage.getItem('tch_pending_order');
-      if (raw) {
-        pendingOrder = JSON.parse(raw);
-        sessionStorage.removeItem('tch_pending_order');
-      }
+      sessionStorage.removeItem('tch_pending_order');
     } catch {
-      // ignore parse errors
+      // ignore
     }
-
-    // Send owner notification email if template is configured
-    if (!emailjsConfig.orderNotificationTemplateId) return;
-
-    const itemsSummary = pendingOrder?.items
-      ?.map(
-        (i) =>
-          `${i.title}${i.variantLabel ? ` (${i.variantLabel})` : ''} × ${i.quantity} — $${(i.price * i.quantity).toFixed(2)}`
-      )
-      .join('\n') || 'Order details not available';
-
-    const templateParams = {
-      order_id: sessionId || 'N/A',
-      items_summary: itemsSummary,
-      total_amount: pendingOrder?.subtotal
-        ? `$${pendingOrder.subtotal.toFixed(2)}`
-        : 'See Stripe Dashboard',
-      payment_status: 'Paid',
-      timestamp: new Date().toLocaleString('en-US', {
-        timeZone: 'America/New_York',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }),
-    };
-
-    emailjs
-      .send(
-        emailjsConfig.serviceId,
-        emailjsConfig.orderNotificationTemplateId,
-        templateParams,
-        emailjsConfig.publicKey
-      )
-      .then(() => setEmailStatus('sent'))
-      .catch((err) => {
-        console.error('Order notification email failed:', err);
-        setEmailStatus('failed');
-      });
-  }, [clearCart, sessionId]);
+  }, [clearCart]);
 
   return (
     <>

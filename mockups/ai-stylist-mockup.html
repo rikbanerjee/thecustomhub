@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Stylist — The CustomHub (Mockup)</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1A1423;--cream:#FFF6E9;--rani:#D81E5B;--marigold:#FFB627;--peacock:#0F7173;--chai:#C9A67C}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Work Sans',sans-serif;background:var(--cream);color:var(--ink)}
+  .display{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.035em;font-weight:400 !important;font-synthesis:none;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+  nav{position:sticky;top:0;z-index:50;background:var(--cream);border-bottom:3px solid var(--ink)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1200px;margin:0 auto}
+  .logo{font-family:'Anton',sans-serif;font-weight:400;font-size:26px}
+  .logo a{color:var(--ink);text-decoration:none}
+  .logo span{color:var(--rani)}
+  .back{font-weight:600;font-size:14px;color:var(--peacock);text-decoration:none}
+
+  header.page{padding:36px 0 10px;text-align:center}
+  header.page h1{font-size:clamp(28px,3.6vw,42px)}
+  header.page h1 em{font-style:normal;color:var(--rani)}
+  header.page p{margin:10px auto 0;max-width:56ch;color:#4a4356;font-size:15px}
+  .ai-badge{display:inline-block;background:var(--ink);color:var(--marigold);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:700;letter-spacing:.08em;margin-top:14px}
+  .ai-badge b{color:var(--cream)}
+
+  .cols{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;padding:28px 0 50px}
+  .panel{border:3px solid var(--ink);background:#fff}
+  .panel-h{background:var(--ink);color:var(--cream);padding:14px 18px;display:flex;align-items:center;gap:10px}
+  .panel-h .dot{width:10px;height:10px;border-radius:50%;background:#41d98d}
+  .panel-h h2{font-size:16px;letter-spacing:.05em}
+  .panel-h .sub{margin-left:auto;font-size:11px;color:#9a92ab;font-weight:600}
+
+  /* Quiz */
+  .quiz{padding:20px}
+  .q-step{margin-bottom:18px}
+  .q-step .q{font-weight:700;font-size:15px;margin-bottom:10px}
+  .q-step .q small{color:var(--rani)}
+  .chips{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{border:2.5px solid var(--ink);background:var(--cream);padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;transition:all .12s}
+  .chip:hover{background:var(--marigold)}
+  .chip.sel{background:var(--ink);color:var(--marigold)}
+  .results{padding:0 20px 20px}
+  .results h3{font-size:14px;font-weight:700;margin-bottom:12px}
+  .results h3 em{font-style:normal;color:var(--peacock)}
+  .prods{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .prod{border:2.5px solid var(--ink);background:#fff;text-decoration:none;color:var(--ink);display:block;transition:transform .12s,box-shadow .12s}
+  .prod:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+  .prod .im{aspect-ratio:1;overflow:hidden;border-bottom:2.5px solid var(--ink);background:#f3ecdd}
+  .prod img{width:100%;height:100%;object-fit:cover}
+  .prod .nm{font-size:12px;font-weight:700;padding:8px 10px 2px;line-height:1.25}
+  .prod .pr{font-size:12px;font-weight:700;color:var(--rani);padding:0 10px 9px}
+  .empty{font-size:13px;color:#6a6376;border:2.5px dashed var(--ink);padding:16px;text-align:center}
+
+  /* Chat */
+  .chat-body{height:430px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:repeating-linear-gradient(0deg,#fff 0 40px,#fdf8ee 40px 41px)}
+  .msg{max-width:85%;padding:11px 14px;font-size:14px;line-height:1.45;border:2.5px solid var(--ink)}
+  .msg.bot{background:var(--cream);align-self:flex-start;border-radius:0 14px 14px 14px}
+  .msg.user{background:var(--peacock);color:#fff;align-self:flex-end;border-radius:14px 0 14px 14px}
+  .msg .mini{display:flex;gap:8px;margin-top:10px}
+  .msg .mini a{display:block;width:86px;text-decoration:none;color:var(--ink);border:2px solid var(--ink);background:#fff;font-size:10px;font-weight:700}
+  .msg .mini img{width:100%;aspect-ratio:1;object-fit:cover;display:block;border-bottom:2px solid var(--ink)}
+  .msg .mini span{display:block;padding:4px 5px;line-height:1.2}
+  .chat-chips{padding:10px 14px;border-top:2.5px solid var(--ink);display:flex;gap:8px;flex-wrap:wrap;background:#fff}
+  .chat-chips .chip{font-size:12px;padding:7px 13px}
+  .chat-in{display:flex;border-top:3px solid var(--ink)}
+  .chat-in input{flex:1;border:none;padding:14px 16px;font-family:'Work Sans',sans-serif;font-size:14px;background:var(--cream)}
+  .chat-in input:focus{outline:none;background:#fff3d6}
+  .chat-in button{border:none;border-left:3px solid var(--ink);background:var(--rani);color:#fff;font-weight:700;padding:0 22px;cursor:pointer;font-family:'Work Sans',sans-serif}
+  .typing{align-self:flex-start;font-size:12px;color:#6a6376;font-weight:600}
+
+  .how{border:3px solid var(--ink);background:var(--ink);color:var(--cream);padding:22px 26px;margin-bottom:50px}
+  .how h3{font-size:18px;color:var(--marigold);margin-bottom:8px}
+  .how p{font-size:13.5px;color:#cfc8dd;max-width:90ch}
+  .how b{color:var(--cream)}
+
+  @media(max-width:860px){.cols{grid-template-columns:1fr}.prods{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav><div class="nav-inner">
+  <div class="logo"><a href="homepage-hybrid-mockup.html">THE CUSTOM<span>HUB</span></a></div>
+  <a class="back" href="homepage-hybrid-mockup.html">← Back to shop</a>
+</div></nav>
+
+<header class="page">
+  <h1 class="display">Meet your <em>AI stylist</em></h1>
+  <p>Three taps to find your vibe, or just ask HubBot. It knows all 59 designs, sizes, shipping — and when to call a human.</p>
+  <div class="ai-badge">✦ AI-POWERED · <b>HUMAN-FINISHED</b></div>
+</header>
+
+<div class="wrap cols">
+
+  <!-- VIBE FINDER -->
+  <div class="panel">
+    <div class="panel-h"><span class="dot"></span><h2 class="display">Vibe Finder</h2><span class="sub">3 taps · instant</span></div>
+    <div class="quiz">
+      <div class="q-step">
+        <div class="q">1 · Who's this for? <small id="a1"></small></div>
+        <div class="chips" data-q="who">
+          <button class="chip" data-v="me">Me, obviously</button>
+          <button class="chip" data-v="gift">A gift</button>
+          <button class="chip" data-v="group">My whole crew</button>
+        </div>
+      </div>
+      <div class="q-step">
+        <div class="q">2 · Pick a vibe <small id="a2"></small></div>
+        <div class="chips" data-q="vibe">
+          <button class="chip" data-v="filmy">Filmy 🎬</button>
+          <button class="chip" data-v="bangali">Bangali ❤️</button>
+          <button class="chip" data-v="nerdy">Nerdy 🤓</button>
+          <button class="chip" data-v="sporty">Sporty 🏏</button>
+        </div>
+      </div>
+      <div class="q-step">
+        <div class="q">3 · What kind of thing? <small id="a3"></small></div>
+        <div class="chips" data-q="type">
+          <button class="chip" data-v="tee">Tees</button>
+          <button class="chip" data-v="sweatshirt">Sweatshirts</button>
+          <button class="chip" data-v="mug">Mugs</button>
+          <button class="chip" data-v="any">Surprise me</button>
+        </div>
+      </div>
+    </div>
+    <div class="results" id="results"></div>
+  </div>
+
+  <!-- HUBBOT -->
+  <div class="panel">
+    <div class="panel-h"><span class="dot"></span><h2 class="display">HubBot</h2><span class="sub">answers in &lt;1s</span></div>
+    <div class="chat-body" id="chat"></div>
+    <div class="chat-chips">
+      <button class="chip" onclick="ask('Find me a gift')">🎁 Find a gift</button>
+      <button class="chip" onclick="ask('I need a bulk order for my team')">👕 Bulk order</button>
+      <button class="chip" onclick="ask('What are your Diwali picks?')">🪔 Diwali picks</button>
+      <button class="chip" onclick="ask('What sizes do you have?')">📏 Sizes</button>
+    </div>
+    <div class="chat-in">
+      <input id="chat-input" placeholder="Ask anything… e.g. 'funny mug for my sister'" onkeydown="if(event.key==='Enter')send()">
+      <button onclick="send()">Send</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="how">
+    <h3 class="display">How we keep AI fast (and affordable)</h3>
+    <p>This whole page answers from <b>our own catalog first</b> — quiz matching and common questions cost nothing and reply instantly. Only genuinely new questions reach a small language model (with the catalog cached), and anything tricky goes straight to <b>a real human on WhatsApp</b>. Small studio, big-brand experience, no venture funding required.</p>
+  </div>
+</div>
+
+<script>
+const FB='https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2F';
+const CATALOG=[
+ {n:'Dhurander Bollywood Tee',p:20.99,t:'tee',v:['filmy'],who:['me','gift'],img:FB+'dhurander-bollywood-tee%2FDhurandhar-tee-main-blk.jpeg?alt=media',u:'/product/dhurander-bollywood-tee'},
+ {n:'Ghayal Hoon Isiliye Ghatak Hoon Tee',p:21.99,t:'tee',v:['filmy'],who:['me','gift'],img:'ghayal-hoon.jpg',u:'#'},
+ {n:'Abstract Durga Maa Shakti Tee',p:22.99,t:'tee',v:['bangali','filmy'],who:['me','gift'],img:FB+'abstract-durga-maa-shakti-t-shirt-white.jpeg?alt=media',u:'#'},
+ {n:'Kotoi Rongo Bengali Tee',p:21.99,t:'tee',v:['bangali'],who:['me','gift'],img:FB+'bengalitshirtkotoirongofemale.jpg?alt=media',u:'#'},
+ {n:'Bheto Bangali Tee',p:21.99,t:'tee',v:['bangali'],who:['me','gift'],img:FB+'bhetobangalimenmain.jpg?alt=media',u:'#'},
+ {n:'Pagla Khabi Ki Tee',p:21.99,t:'tee',v:['bangali'],who:['me','gift'],img:FB+'paglakhabikimain2.jpg?alt=media',u:'#'},
+ {n:'Google Dad Tee',p:21.99,t:'tee',v:['nerdy'],who:['gift'],img:'google-dad-tee.jpg',u:'#'},
+ {n:'ChatGPT… But Make It Chai Cup',p:16.99,t:'mug',v:['nerdy'],who:['me','gift'],img:FB+'chatgptcup.png?alt=media',u:'#'},
+ {n:'Dil Se Heart Mug',p:15.99,t:'mug',v:['filmy'],who:['gift'],img:FB+'dil-se-valentines-heart-mug-01.jpg?alt=media',u:'#'},
+ {n:'Behen Chugli Mug',p:15.99,t:'mug',v:['bangali','filmy'],who:['gift'],img:FB+'Behen-chugli1.jpg?alt=media',u:'#'},
+ {n:'G.O.A.T. Dad Mug',p:15.99,t:'mug',v:['sporty','nerdy'],who:['gift'],img:FB+'GOAT_Dad_Illustration.png?alt=media',u:'#'},
+ {n:'Bollywood Soul Sweatshirt',p:39.99,t:'sweatshirt',v:['filmy'],who:['me','gift'],img:FB+'bollywood_soul_black.jpg?alt=media',u:'#'},
+ {n:'Bollywood Era Sweatshirt',p:39.99,t:'sweatshirt',v:['filmy'],who:['me','gift'],img:FB+'bollywood_era.jpg?alt=media',u:'#'},
+ {n:'Pyar Dosti Hain Sweatshirt',p:39.99,t:'sweatshirt',v:['filmy'],who:['me','gift'],img:FB+'pyar-dosti-hain-bollywood-sweatshirt.jpg?alt=media',u:'#'},
+ {n:'Man Evolution Sweatshirt',p:37.99,t:'sweatshirt',v:['nerdy'],who:['me','gift'],img:FB+'man_evolution_main.png?alt=media',u:'#'},
+ {n:'Personalized Cricket Jersey',p:34.99,t:'jersey',v:['sporty'],who:['me','gift','group'],img:FB+'cricket_jersey_back_personalized_Background_Removed.png?alt=media',u:'#'}
+];
+
+/* ---------- Vibe Finder (Tier 0: zero tokens) ---------- */
+const ans={who:null,vibe:null,type:null};
+document.querySelectorAll('.chips[data-q]').forEach(g=>{
+  g.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+    g.querySelectorAll('.chip').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');ans[g.dataset.q]=c.dataset.v;
+    document.getElementById('a'+(['who','vibe','type'].indexOf(g.dataset.q)+1)).textContent='— '+c.textContent;
+    if(ans.who&&ans.vibe&&ans.type)recommend();
+  });
+});
+function recommend(){
+  let hits=CATALOG.filter(p=>p.v.includes(ans.vibe)&&(ans.type==='any'||p.t===ans.type));
+  let note='';
+  if(!hits.length){hits=CATALOG.filter(p=>p.v.includes(ans.vibe));note=' (nothing exact — here\'s the vibe in other formats)';}
+  hits=hits.slice(0,6);
+  const r=document.getElementById('results');
+  let html=`<h3>Your matches <em>· picked from our real catalog${note}</em></h3><div class="prods">`;
+  hits.forEach(p=>{html+=`<a class="prod" href="${p.u}"><div class="im"><img src="${p.img}" loading="lazy" alt="${p.n}"></div><div class="nm">${p.n}</div><div class="pr">$${p.p}</div></a>`;});
+  html+='</div>';
+  if(ans.who==='group')html+=`<p style="margin-top:12px;font-size:13px;font-weight:600">Ordering for a crew? <a href="custom-order-page-mockup.html" style="color:var(--rani)">The bulk builder</a> does mixed sizes + group discounts.</p>`;
+  r.innerHTML=html;
+}
+
+/* ---------- HubBot (Tier 1: rules + keywords; Tier 2 = LLM would slot in here) ---------- */
+const chat=document.getElementById('chat');
+function bubble(html,who){const d=document.createElement('div');d.className='msg '+who;d.innerHTML=html;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
+function cards(list){return '<div class="mini">'+list.slice(0,3).map(p=>`<a href="${p.u}"><img src="${p.img}" alt=""><span>${p.n.split(' ').slice(0,3).join(' ')} · $${p.p}</span></a>`).join('')+'</div>';}
+function botReply(q){
+  const s=q.toLowerCase();
+  const has=(...w)=>w.some(x=>s.includes(x));
+  if(has('gift')){
+    if(has('sister','behen','didi'))return {t:"For a sister? Say no more — the chugli specialist:",c:CATALOG.filter(p=>p.n.includes('Behen'))};
+    if(has('dad','father','baba','papa'))return {t:"Dad gifts are our specialty. Crowd favorites:",c:CATALOG.filter(p=>/Dad|G\.O\.A\.T/.test(p.n))};
+    if(has('mug','cup'))return {t:"Gift mugs, coming up:",c:CATALOG.filter(p=>p.t==='mug')};
+    return {t:"Love it. Who's it for — or tap a vibe in the Vibe Finder and I'll match from all 59 designs. Meanwhile, safe bets:",c:CATALOG.filter(p=>p.who.includes('gift')).slice(0,3)};
+  }
+  if(has('bulk','team','group','crew','office','event'))return {t:"Bulk is our thing — mixed sizes, one design, group discounts at 10+. The bulk builder takes 2 minutes: <a href='custom-order-page-mockup.html' style='color:var(--rani);font-weight:700'>Start a custom order →</a> Free mockup in 24h before you pay anything."};
+  if(has('diwali','festival','puja','holi','rakhi'))return {t:"Festival drop favorites — Durga Maa for the culture, Dil Se for the gifting:",c:CATALOG.filter(p=>p.v.includes('bangali')||p.n.includes('Dil'))};
+  if(has('size','fit','measurement'))return {t:"Apparel runs S–3XL (true to size, unisex). Onesies 0–24M. Mugs: 11oz & 15oz. Between sizes? Size up for the classic streetwear fit."};
+  if(has('ship','delivery','how long','arrive'))return {t:"Ready designs ship in 3–5 business days across USA & Canada. Custom orders: 2–3 weeks. In MA? Local pickup is free."};
+  if(has('track','order status','where is my'))return {t:"Check the confirmation email for your tracking link — or ping us on WhatsApp with your order number and a human will chase it down."};
+  if(has('return','refund','exchange'))return {t:"Wrong size? Unworn items exchange free within 30 days. Custom pieces are made-for-you so they're final sale — that's why we send a free mockup first."};
+  if(has('mug','cup','chai'))return {t:"Mug lineup, fresh from the kiln:",c:CATALOG.filter(p=>p.t==='mug')};
+  if(has('funny','pun','joke'))return {t:"Certified pun-heavy picks:",c:[CATALOG[9],CATALOG[7],CATALOG[6]]};
+  if(has('bengali','bangla','kolkata'))return {t:"Bangali corner ❤️ :",c:CATALOG.filter(p=>p.v.includes('bangali'))};
+  if(has('bollywood','filmy','movie','hindi'))return {t:"Full filmy mode:",c:CATALOG.filter(p=>p.v.includes('filmy'))};
+  if(has('cricket','jersey','sport'))return {t:"Game day gear:",c:CATALOG.filter(p=>p.v.includes('sporty'))};
+  if(has('human','person','call','whatsapp'))return {t:"Tap the WhatsApp button (bottom-right on the real site) — a real human replies, usually within the hour. Chai break permitting."};
+  return {t:"Good question — that one's beyond my quick answers, so I'd hand it to the team on WhatsApp (real humans, fast replies). Or try: <i>'gift for dad'</i>, <i>'Diwali picks'</i>, <i>'bulk order'</i>, <i>'sizes'</i>."};
+}
+function ask(q){bubble(q,'user');reply(q);}
+function send(){const i=document.getElementById('chat-input');if(!i.value.trim())return;ask(i.value.trim());i.value='';}
+function reply(q){
+  const t=document.createElement('div');t.className='typing';t.textContent='HubBot is thinking…';chat.appendChild(t);chat.scrollTop=chat.scrollHeight;
+  setTimeout(()=>{t.remove();const r=botReply(q);bubble(r.t+(r.c&&r.c.length?cards(r.c):''),'bot');},450);
+}
+bubble("Namaste! 🙏 I'm HubBot — TheCustomHub's stylist-in-residence. I know every design, size and ship date. Tap a chip below or just ask.",'bot');
+</script>
+</body>
+</html>

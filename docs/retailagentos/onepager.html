@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How RetailAgentOS Made The CustomHub Ready for Agentic Commerce</title>
+<style>
+  :root{
+    --brown:#2c1810; --tan:#c9a67c; --sage:#9caf88;
+    --ink:#241a14; --muted:#6b5d52; --line:#e7ded3;
+    --paper:#fbf7f1; --card:#ffffff;
+    --green:#3f7a4e; --green-bg:#eaf3ec;
+    --amber:#9a6a1c; --amber-bg:#f6eddb;
+    --red:#9a3b2f; --red-bg:#f6e6e2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Work Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px 80px;}
+  h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif; color:var(--brown); font-weight:600; line-height:1.15;}
+  a{color:var(--brown);}
+
+  /* Hero */
+  .hero{
+    background:linear-gradient(135deg,#2c1810 0%,#3d2618 60%,#4a2f1d 100%);
+    color:#f4ece1; padding:64px 24px 56px; text-align:center;
+  }
+  .hero .inner{max-width:820px; margin:0 auto;}
+  .eyebrow{
+    letter-spacing:.22em; text-transform:uppercase; font-size:12px;
+    color:var(--tan); font-weight:600; margin-bottom:18px;
+  }
+  .hero h1{color:#fff; font-size:52px; margin:0 0 18px;}
+  .hero p{font-size:19px; color:#e4d6c5; max-width:640px; margin:0 auto;}
+  .badges{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:34px;}
+  .badge{
+    background:rgba(255,255,255,.07); border:1px solid rgba(201,166,124,.4);
+    border-radius:10px; padding:14px 22px; min-width:120px;
+  }
+  .badge .n{font-family:'Cormorant Garamond',serif; font-size:34px; color:var(--tan); font-weight:700; line-height:1;}
+  .badge .l{font-size:12px; color:#d8c7b3; letter-spacing:.04em; margin-top:6px;}
+
+  /* Sections */
+  section{margin-top:56px;}
+  h2{font-size:34px; margin:0 0 8px;}
+  .lede{color:var(--muted); font-size:17px; margin:0 0 26px; max-width:680px;}
+
+  /* Before/After columns */
+  .ba{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  .col{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:26px;}
+  .col.before{border-top:4px solid var(--red);}
+  .col.after{border-top:4px solid var(--green);}
+  .col h3{font-size:24px; margin:0 0 4px; display:flex; align-items:center; gap:10px;}
+  .col .tag{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:16px;}
+  .col ul{margin:0; padding:0; list-style:none;}
+  .col li{position:relative; padding-left:26px; margin-bottom:13px; font-size:14.5px;}
+  .col li::before{position:absolute; left:0; top:1px; font-size:14px;}
+  .before li::before{content:"✕"; color:var(--red);}
+  .after li::before{content:"✓"; color:var(--green);}
+
+  /* Scorecard table */
+  table{width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  th,td{text-align:left; padding:13px 16px; font-size:14px; border-bottom:1px solid var(--line);}
+  th{background:#f3ebe0; color:var(--brown); font-weight:600; letter-spacing:.02em;}
+  tr:last-child td{border-bottom:none;}
+  td.task{font-weight:500;}
+  .pill{display:inline-block; font-size:11.5px; font-weight:600; padding:4px 11px; border-radius:20px; letter-spacing:.02em; white-space:nowrap;}
+  .p-fixed{background:var(--green-bg); color:var(--green);}
+  .p-code{background:var(--amber-bg); color:var(--amber);}
+  .p-defer{background:#eee7f0; color:#6b4c78;}
+  .p-fail{background:var(--red-bg); color:var(--red);}
+
+  /* How it works */
+  .flow{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+  .step{
+    flex:1 1 140px; background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:18px; position:relative;
+  }
+  .step .k{font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--sage); font-weight:700;}
+  .step h4{margin:6px 0 4px; font-size:15px; color:var(--brown); font-family:'Work Sans',sans-serif; font-weight:600;}
+  .step p{margin:0; font-size:13px; color:var(--muted);}
+  .arrow{align-self:center; color:var(--tan); font-size:20px; font-weight:700;}
+
+  /* Transcript */
+  .term{
+    background:#241a14; color:#e8dccb; border-radius:14px; padding:24px 26px;
+    font-family:'SF Mono',ui-monospace,Menlo,Consolas,monospace; font-size:13px; line-height:1.7;
+    overflow-x:auto;
+  }
+  .term .cmd{color:var(--tan);}
+  .term .ok{color:#8fc99b;}
+  .term .no{color:#e0a196;}
+  .term .dim{color:#8a7a68;}
+  .caption{font-size:13px; color:var(--muted); margin-top:10px;}
+
+  /* Callout */
+  .callout{
+    background:#f3ebe0; border-left:4px solid var(--tan);
+    border-radius:0 12px 12px 0; padding:20px 24px; margin-top:14px;
+  }
+  .callout strong{color:var(--brown);}
+
+  footer{margin-top:60px; padding-top:26px; border-top:1px solid var(--line); font-size:13px; color:var(--muted); text-align:center;}
+
+  @media(max-width:680px){
+    .hero h1{font-size:38px;} .ba{grid-template-columns:1fr;} h2{font-size:28px;}
+    .flow{flex-direction:column;} .arrow{transform:rotate(90deg);}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="inner">
+    <div class="eyebrow">Agentic Commerce · Proof of Concept</div>
+    <h1>The first small business built to the RetailAgentOS spec</h1>
+    <p>The CustomHub is the first independent shop to implement the RetailAgentOS specification as-is — turning an ordinary storefront into one an AI shopping agent can actually discover, price, and buy from. It's a concrete step closer to agentic commerce, and here are the receipts.</p>
+    <div class="badges">
+      <div class="badge"><div class="n">0→7</div><div class="l">of 10 agent tasks now pass</div></div>
+      <div class="badge"><div class="n">3</div><div class="l">agent capabilities exposed</div></div>
+      <div class="badge"><div class="n">1</div><div class="l">real checkout, no human</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <h2>The problem nobody warns small shops about</h2>
+    <p class="lede">Like most independent stores, The CustomHub is a React single-page app — fast and clean for a shopper with a browser. But agentic commerce doesn't drive a browser. An AI agent hits the URL, gets a blank JavaScript shell, and leaves. Ten realistic agent-shopping tasks were run against the live store. <strong>Zero</strong> completed in a structured, agent-usable way. That's the starting line almost every small business is standing on today.</p>
+
+    <div class="ba">
+      <div class="col before">
+        <h3>Before</h3>
+        <span class="tag">Unmodified production store</span>
+        <ul>
+          <li>No region data anywhere — "ships to Canada?" was unanswerable, a silent no-match.</li>
+          <li>Every product URL served the same empty SPA shell. A non-JS crawler saw nothing.</li>
+          <li>No structured data: zero JSON-LD, no per-product title, no price an agent could read.</li>
+          <li><code>/.well-known/ucp</code> returned a false-positive HTML 200 instead of a real manifest.</li>
+          <li>Buying worked only by driving the React cart — no agent-callable surface at all.</li>
+          <li>Bulk quotes dead-ended at a freeform human contact form.</li>
+        </ul>
+      </div>
+      <div class="col after">
+        <h3>After</h3>
+        <span class="tag">RetailAgentOS integrated</span>
+        <ul>
+          <li>Every product carries <code>shipsTo: ['US','CA']</code>, gated by an explicit region check.</li>
+          <li>Product pages serve schema.org <code>Product</code> + <code>Offer</code> JSON-LD to non-JS clients.</li>
+          <li>A real UCP manifest advertises eligibility, inventory, and pricing capabilities.</li>
+          <li>Agents call <code>find → evaluate_offer → issue_quote → checkout</code> as clean tool calls.</li>
+          <li>Out-of-region and out-of-stock requests are declined <em>with a reason</em>, never a failed checkout.</li>
+          <li>A quote produces a price-locked token that hands off to a genuine Stripe checkout URL.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it actually works</h2>
+    <p class="lede">RetailAgentOS sits beside the existing store as a reasoning layer, implemented straight from the published spec. Nothing about the human shopping experience changed — the shop simply gained a machine-readable front door.</p>
+    <div class="flow">
+      <div class="step"><div class="k">01</div><h4>Discover</h4><p>Agent reads the UCP manifest to learn what the store can do.</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">02</div><h4>Evaluate</h4><p>Checks region + stock + price for a specific variant.</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">03</div><h4>Quote</h4><p>Returns a signed, price-locked quote token with a TTL.</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">04</div><h4>Checkout</h4><p>Validates the quote, hands off to the real Stripe function.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The 10-task scorecard</h2>
+    <p class="lede">Same ten tasks, before and after implementing the spec. Only what an agent can do in a structured, callable way counts here — not what a human can do by clicking.</p>
+    <table>
+      <thead><tr><th>Agent task</th><th>Before</th><th>After</th></tr></thead>
+      <tbody>
+        <tr><td class="task">Find a tee that ships to Canada under $30</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-fixed">Fixed</span></td></tr>
+        <tr><td class="task">Buy 2 of a specific product</td><td><span class="pill p-fail">Partial</span></td><td><span class="pill p-fixed">Fixed</span></td></tr>
+        <tr><td class="task">Check stock before buying</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-fixed">Fixed</span></td></tr>
+        <tr><td class="task">"Does this ship to the UK?"</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-fixed">Fixed</span></td></tr>
+        <tr><td class="task">Find current price with any discount</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-fixed">Fixed</span></td></tr>
+        <tr><td class="task">Complete a Canadian checkout</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-fixed">Fixed</span></td></tr>
+        <tr><td class="task">Read Product/Offer JSON-LD without JS</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-code">Code-verified*</span></td></tr>
+        <tr><td class="task">Discover capabilities via <code>/.well-known/ucp</code></td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-code">Code-verified*</span></td></tr>
+        <tr><td class="task">Get a price for 25 custom shirts</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-defer">Deferred (next)</span></td></tr>
+        <tr><td class="task">Quote a bulk / custom order</td><td><span class="pill p-fail">Fail</span></td><td><span class="pill p-defer">Deferred (next)</span></td></tr>
+      </tbody>
+    </table>
+    <p class="caption">*Code-verified: the handler was exercised directly and produces correct output; it goes live on the next <code>firebase deploy</code>. The two deferred tasks (structured custom-order intake) are a scoped follow-on, not a regression. <strong>0 tasks regressed.</strong></p>
+  </section>
+
+  <section>
+    <h2>The proof: find → quote → checkout, no human</h2>
+    <p class="lede">This is a real agent tool session against The CustomHub's RetailAgentOS server. Every value — prices, quote ID, the Stripe URL — is genuine output.</p>
+    <div class="term">
+<span class="cmd">&gt; find_product("bengali t-shirt")</span>
+  → 15 matches, all in_stock, $19.99–$29.99  <span class="dim"># incl. "Pagla Khabi Ki?"</span>
+
+<span class="cmd">&gt; evaluate_offer(variant, quantity=1, region="CA")</span>
+  <span class="ok">{ "purchasable": true, "unitPrice": 19.99, "currency": "USD" }</span>
+
+<span class="cmd">&gt; issue_quote(variant, quantity=1, region="CA")</span>
+  <span class="ok">{ "quoted": true, "quoteId": "q_6b901481_2d59e1", "expiresInSeconds": 600 }</span>
+
+<span class="cmd">&gt; checkout(quoteId="q_6b901481_2d59e1")</span>
+  <span class="ok">{ "checkedOut": true,
+    "checkoutUrl": "https://checkout.stripe.com/c/pay/cs_test_a1mHe…" }</span>
+    </div>
+    <p class="caption">The checkout call hit the real, already-deployed Stripe Cloud Function — the URL is a genuine test-mode Stripe Checkout session.</p>
+
+    <p class="lede" style="margin-top:34px;">And the part I care about most — it says <em>no</em> for the right reason:</p>
+    <div class="term">
+<span class="cmd">&gt; evaluate_offer(variant, quantity=1, region="GB")</span>
+  <span class="no">{ "purchasable": false,
+    "reasonCode": "REGION_RESTRICTED",
+    "message": "The CustomHub ships to US/CA only — cannot sell to GB." }</span>
+
+<span class="cmd">&gt; evaluate_offer(out_of_stock_item, region="US")</span>
+  <span class="no">{ "purchasable": false,
+    "reasonCode": "OUT_OF_STOCK",
+    "message": "This item is out of stock… request a notification instead." }</span>
+    </div>
+    <p class="caption">The region check short-circuits before Stripe is ever touched. An out-of-region shopper gets a clear decline, not a broken checkout.</p>
+  </section>
+
+  <section>
+    <h2>Why this matters</h2>
+    <div class="callout">
+      <p style="margin:0"><strong>Agentic commerce doesn't fail loudly — it fails silently.</strong> An agent that can't read a store just moves on to one it can. The gap isn't the catalog or the prices; it's that everything an agent needs — region eligibility, live stock, a canonical price, a callable checkout — lived only inside a browser session. RetailAgentOS turned each of those into something a machine can query and act on, without changing a single pixel for human shoppers.</p>
+    </div>
+    <p class="lede" style="margin-top:26px;">The CustomHub is a small shop serving NRI shoppers across the US and Canada — exactly the kind of business usually last to get new infrastructure. By implementing the RetailAgentOS spec as-is, it's proof that agentic readiness isn't reserved for retail giants. It's a step any independent store can take today — and one of them just did it first.</p>
+  </section>
+
+  <footer>
+    The CustomHub · New England Design Studio · Dual-lingo streetwear for the Indian diaspora<br>
+    Evidence captured 2026-07-05 against production commit <code>3cad2cc</code>. Full transcripts on file.
+  </footer>
+
+</div>
+</body>
+</html>

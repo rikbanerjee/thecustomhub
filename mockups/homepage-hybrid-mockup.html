@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The CustomHub — Desi Pop × Zine Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1423; --cream:#FFF6E9; --rani:#D81E5B; --marigold:#FFB627;
+    --peacock:#0F7173; --chai:#C9A67C;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Work Sans',sans-serif;background:var(--cream);color:var(--ink)}
+  .display,.logo,.occ h3,.cat-info h3,.proof .display{font-weight:400 !important;font-synthesis:none;-webkit-font-smoothing:antialiased}
+  .display{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.035em}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+  /* Nav */
+  nav{position:sticky;top:0;z-index:50;background:var(--cream);border-bottom:3px solid var(--ink)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1200px;margin:0 auto}
+  .logo{font-family:'Anton',sans-serif;font-size:26px;letter-spacing:.02em}
+  .logo span{color:var(--rani)}
+  .nav-links{display:flex;gap:28px;font-weight:600;font-size:15px}
+  .nav-links a{color:var(--ink);text-decoration:none}
+  .nav-links a:hover{color:var(--rani)}
+  .cart-btn{background:var(--ink);color:var(--cream);border:none;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;border-radius:0}
+
+  /* Marquee */
+  .marquee{background:var(--ink);color:var(--marigold);overflow:hidden;white-space:nowrap;padding:9px 0;font-weight:700;font-size:14px;letter-spacing:.05em}
+  .marquee-track{display:inline-block;animation:scroll 25s linear infinite}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .marquee b{color:var(--cream);margin:0 18px}
+
+  /* Hero (compact — categories visible above the fold) */
+  .hero{display:grid;grid-template-columns:1.35fr 1fr;gap:32px;align-items:center;padding:30px 24px 36px;max-width:1200px;margin:0 auto}
+  .hero h1{font-size:clamp(30px,3.8vw,50px);line-height:1}
+  .hero .swap{color:var(--rani);display:inline-block;min-width:5ch;border-bottom:5px solid var(--marigold)}
+  .hero p{font-size:16px;margin:14px 0 18px;max-width:44ch;color:#3d3548}
+  .hero-img{max-width:330px;margin-left:auto}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{font-weight:700;font-size:15px;padding:12px 22px;text-decoration:none;border:3px solid var(--ink);display:inline-block}
+  .btn-primary{background:var(--rani);color:#fff;box-shadow:5px 5px 0 var(--ink);transition:transform .15s, box-shadow .15s}
+  .btn-primary:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+  .btn-outline{background:transparent;color:var(--ink)}
+  .btn-outline:hover{background:var(--marigold)}
+
+  /* Sticker badges */
+  .sticker{display:inline-block;background:var(--marigold);border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;font-weight:700;font-size:13px;box-shadow:3px 3px 0 var(--ink)}
+  .sticker.pink{background:var(--rani);color:#fff}
+  .sticker.teal{background:var(--peacock);color:#fff}
+  .hero-stickers{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .r1{transform:rotate(-3deg)} .r2{transform:rotate(2deg)} .r3{transform:rotate(-1.5deg)}
+
+  /* Tee mockup (photo placeholder) */
+  .tee-stage{background:repeating-linear-gradient(45deg,#f3e8d5 0 12px,var(--cream) 12px 24px);border:3px solid var(--ink);padding:36px;display:flex;justify-content:center;box-shadow:8px 8px 0 var(--marigold)}
+  .tee{width:230px;height:250px;position:relative;filter:drop-shadow(0 6px 8px rgba(26,20,35,.25))}
+  .tee-body{position:absolute;inset:28px 22px 0;background:var(--t,var(--ink));border-radius:14px 14px 8px 8px}
+  .tee-sleeve{position:absolute;top:28px;width:62px;height:86px;background:var(--t,var(--ink));border-radius:10px}
+  .tee-sleeve.l{left:-8px;transform:rotate(18deg)} .tee-sleeve.r{right:-8px;transform:rotate(-18deg)}
+  .tee-neck{position:absolute;top:20px;left:50%;transform:translateX(-50%);width:74px;height:26px;background:var(--cream);border-radius:0 0 40px 40px;border:5px solid var(--t,var(--ink));border-top:none}
+  .tee-print{position:absolute;top:95px;left:50%;transform:translateX(-50%);text-align:center;width:150px;color:var(--p,var(--marigold));font-family:'Anton',sans-serif;font-size:26px;line-height:1.05;text-transform:uppercase}
+  .tee-print small{display:block;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.2em;margin-top:6px;color:var(--cream);opacity:.85}
+  .photo-note{font-size:12px;font-weight:600;color:var(--peacock);margin-top:10px;text-align:center}
+
+  /* Sections */
+  section{padding:64px 0}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:34px;gap:16px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(24px,2.6vw,34px)}
+  .sec-head h2 em{font-style:normal;color:var(--rani)}
+  .sec-head a{color:var(--peacock);font-weight:700;text-decoration:none}
+
+  /* Category cards with rotating product images */
+  .occasions{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .cat-card{border:3px solid var(--ink);background:#fff;text-decoration:none;color:var(--ink);display:block;position:relative;transition:transform .15s,box-shadow .15s}
+  .cat-card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--ink)}
+  .cat-rotator{position:relative;aspect-ratio:1;overflow:hidden;border-bottom:3px solid var(--ink);background:#f6efe2}
+  .cat-rotator img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
+  .cat-rotator img.on{opacity:1}
+  .cat-card:hover .cat-rotator img.on{transform:scale(1.05);transition:opacity .6s ease,transform 2.5s ease}
+  .cat-count{position:absolute;top:10px;left:10px;z-index:2;font-size:11px;padding:4px 10px}
+  .cat-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:2;display:flex;gap:5px}
+  .cat-dots i{width:7px;height:7px;border-radius:50%;background:#fff;opacity:.5;border:1px solid var(--ink)}
+  .cat-dots i.on{opacity:1;background:var(--marigold)}
+  .cat-info{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .cat-info h3{font-family:'Anton',sans-serif;font-size:19px;text-transform:uppercase;line-height:1.05}
+  .cat-info p{font-size:12px;font-weight:500;color:#4a4356;margin-top:3px}
+  .cat-arrow{flex-shrink:0;width:36px;height:36px;border:3px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;background:var(--marigold);transition:transform .15s,background .15s}
+  .cat-card:hover .cat-arrow{transform:translateX(4px);background:var(--rani);color:#fff}
+  .countdown{background:var(--marigold);border:3px solid var(--ink);padding:14px 20px;font-weight:700;display:flex;gap:12px;align-items:center;margin-bottom:26px;box-shadow:5px 5px 0 var(--ink)}
+  .countdown .display{font-size:20px}
+
+  /* Product grid */
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .card{border:3px solid var(--ink);background:#fff}
+  .card .ph{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-bottom:3px solid var(--ink);position:relative;overflow:hidden}
+  .card .ph .mini-tee{transform:scale(.62)}
+  .card .info{padding:14px}
+  .card .info h4{font-size:15px;font-weight:700}
+  .card .info .price{color:var(--rani);font-weight:700;margin-top:4px}
+  .card .badge{position:absolute;top:10px;left:10px;font-size:11px;padding:4px 10px}
+
+  /* Custom block */
+  .custom{background:var(--ink);color:var(--cream)}
+  .custom-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+  .custom h2{font-size:clamp(28px,3.2vw,42px);line-height:1.05}
+  .custom h2 em{font-style:normal;color:var(--marigold)}
+  .custom p{margin:18px 0 26px;color:#cfc8dd;font-size:17px;max-width:48ch}
+  .proof{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .proof div{border:2.5px solid var(--cream);padding:18px;font-size:14px;font-weight:600}
+  .proof .display{font-size:30px;color:var(--marigold);display:block}
+
+  /* Quotes */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .quote{border:3px solid var(--ink);background:#fff;padding:22px;box-shadow:5px 5px 0 var(--chai)}
+  .quote p{font-size:15px;line-height:1.5}
+  .quote .who{margin-top:12px;font-weight:700;font-size:13px;color:var(--peacock)}
+
+  /* Custom order form */
+  .order-form-wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:0;border:3px solid var(--ink);background:#fff;box-shadow:8px 8px 0 var(--marigold)}
+  .order-info{background:var(--peacock);color:#FFF6E9;padding:36px;display:flex;flex-direction:column;justify-content:center}
+  .order-info h2{font-size:clamp(24px,2.6vw,34px);line-height:1.1}
+  .order-info h2 em{font-style:normal;color:var(--marigold)}
+  .order-info p{margin-top:14px;font-size:15px;color:#d8eeee;max-width:38ch}
+  .order-info ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:10px;font-size:14px;font-weight:600}
+  .order-info li::before{content:"✓";display:inline-block;width:22px;height:22px;background:var(--marigold);color:var(--ink);border-radius:50%;text-align:center;line-height:22px;margin-right:10px;font-size:13px}
+  .order-form{padding:32px 36px}
+  .order-form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .order-form label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}
+  .order-form input,.order-form select,.order-form textarea{width:100%;padding:12px 14px;border:2.5px solid var(--ink);background:var(--cream);font-family:'Work Sans',sans-serif;font-size:15px;color:var(--ink)}
+  .order-form input:focus,.order-form select:focus,.order-form textarea:focus{outline:3px solid var(--marigold);outline-offset:-1px}
+  .order-form textarea{resize:vertical;min-height:90px}
+  .order-form .submit-row{display:flex;align-items:center;gap:16px;margin-top:20px;flex-wrap:wrap}
+  .order-form .fine{font-size:12px;color:#6a6376}
+
+  /* Footer */
+  footer{background:var(--ink);color:var(--cream);padding:56px 0 30px;margin-top:70px}
+  .news{display:flex;gap:12px;max-width:460px;margin-top:18px}
+  .news input{flex:1;padding:14px;border:3px solid var(--cream);background:transparent;color:var(--cream);font-size:15px}
+  .news input::placeholder{color:#9a92ab}
+  .news button{background:var(--marigold);border:3px solid var(--marigold);color:var(--ink);font-weight:700;padding:0 22px;cursor:pointer}
+  .foot-note{margin-top:34px;font-size:13px;color:#9a92ab}
+
+  @media(max-width:900px){
+    .hero,.custom-grid{grid-template-columns:1fr}
+    .hero-img{margin:0 auto}
+    .occasions{grid-template-columns:1fr 1fr}
+    .grid4{grid-template-columns:1fr 1fr}
+    .quotes{grid-template-columns:1fr}
+    .order-form-wrap{grid-template-columns:1fr}
+    .order-form .row{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">THE CUSTOM<span>HUB</span></div>
+    <div class="nav-links">
+      <a href="/category/t-shirts">T-Shirts</a>
+      <a href="/category/coffee-and-tea-cups">Coffee &amp; Tea Cups</a>
+      <a href="/category/sweatshirts">Sweatshirts</a>
+      <a href="/category/sports-jerseys">Sports Jerseys</a>
+      <a href="custom-order-page-mockup.html">Custom Orders</a>
+      <a href="ai-stylist-mockup.html" style="color:var(--rani)">AI Stylist ✦</a>
+    </div>
+    <button class="cart-btn">Cart · 0</button>
+  </div>
+</nav>
+
+<div class="marquee"><div class="marquee-track">
+  <b>★</b>FREE DESIGN MOCKUPS<b>★</b>NO MINIMUMS<b>★</b>LOCAL PICKUP IN MA<b>★</b>SHIPS ACROSS USA &amp; CANADA<b>★</b>PAISA VASOOL GUARANTEED
+  <b>★</b>FREE DESIGN MOCKUPS<b>★</b>NO MINIMUMS<b>★</b>LOCAL PICKUP IN MA<b>★</b>SHIPS ACROSS USA &amp; CANADA<b>★</b>PAISA VASOOL GUARANTEED
+</div></div>
+
+<!-- HERO: static split, word-swap headline replaces carousel -->
+<header class="hero">
+  <div>
+    <h1 class="display">Wear your<br><span class="swap" id="swap">Filmy</span><br>side.</h1>
+    <p>Dual-lingo tees, hoodies &amp; mugs for the desi diaspora — plus custom gear for your team, your squad, your office, your fam.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#">Shop Desi Collection</a>
+      <a class="btn btn-outline" href="custom-order-page-mockup.html">Custom for Your Crew</a>
+    </div>
+    <div class="hero-stickers">
+      <span class="sticker r1">100% Filmy</span>
+      <span class="sticker pink r2">Paisa Vasool</span>
+      <span class="sticker teal r3">Nerd Approved</span>
+      <a href="ai-stylist-mockup.html" class="sticker r1" style="background:var(--ink);color:var(--marigold);text-decoration:none">✦ AI Stylist — find your vibe</a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <div class="tee-stage" style="padding:0;position:relative">
+      <img src="ghayal-hoon.jpg" alt="Ghayal Hoon Isiliye Ghatak Hoon tee" style="display:block;width:100%;aspect-ratio:1;object-fit:cover">
+      <div style="position:absolute;bottom:14px;right:14px;background:var(--rani);color:#FFF6E9;border:3px solid var(--ink);border-radius:8px;padding:6px 13px;font-family:'Anton',sans-serif;font-size:18px;transform:rotate(6deg)">$21.99</div>
+    </div>
+  </div>
+</header>
+
+<!-- SHOP BY OCCASION -->
+<section>
+  <div class="wrap">
+    <div class="countdown">
+      <span class="display">DIWALI IS COMING</span>
+      <span>Order by Oct 22 for guaranteed delivery · 47 days left</span>
+      <span class="sticker pink" style="margin-left:auto">Shop Diwali →</span>
+    </div>
+    <div class="sec-head">
+      <h2 class="display">Shop by <em>category</em></h2>
+      <a href="#">4 collections · 59 designs and counting →</a>
+    </div>
+    <div class="occasions">
+      <a class="cat-card" href="/category/t-shirts">
+        <div class="cat-rotator" data-rotate>
+          <img class="on" src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fdhurander-bollywood-tee%2FDhurandhar-tee-main-blk.jpeg?alt=media" alt="Dhurandhar Bollywood tee">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fabstract-durga-maa-shakti-t-shirt-white.jpeg?alt=media" alt="Durga Maa Shakti tee">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fbhetobangalimenmain.jpg?alt=media" alt="Bheto Bangali tee">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fpaglakhabikimain2.jpg?alt=media" alt="Pagla Khabi Ki tee">
+          <span class="cat-count sticker">36 designs</span>
+          <span class="cat-dots"></span>
+        </div>
+        <div class="cat-info"><div><h3>T-Shirts</h3><p>Dual-lingo, Bollywood &amp; techie tees</p></div><span class="cat-arrow">→</span></div>
+      </a>
+      <a class="cat-card" href="/category/coffee-and-tea-cups">
+        <div class="cat-rotator" data-rotate>
+          <img class="on" src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fdil-se-valentines-heart-mug-01.jpg?alt=media" alt="Dil Se heart mug">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2FBehen-chugli1.jpg?alt=media" alt="Behen chugli mug">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fchatgptcup.png?alt=media" alt="ChatGPT mug">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2FGOAT_Dad_Illustration.png?alt=media" alt="GOAT Dad mug">
+          <span class="cat-count sticker">14 designs</span>
+          <span class="cat-dots"></span>
+        </div>
+        <div class="cat-info"><div><h3>Coffee &amp; Tea Cups</h3><p>Because mugs deserve puns too</p></div><span class="cat-arrow">→</span></div>
+      </a>
+      <a class="cat-card" href="/category/sweatshirts">
+        <div class="cat-rotator" data-rotate>
+          <img class="on" src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fbollywood_soul_black.jpg?alt=media" alt="Bollywood Soul sweatshirt">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fman_evolution_main.png?alt=media" alt="Man Evolution sweatshirt">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fbollywood_era.jpg?alt=media" alt="Bollywood Era sweatshirt">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fpyar-dosti-hain-bollywood-sweatshirt.jpg?alt=media" alt="Pyar Dosti Hain sweatshirt">
+          <span class="cat-count sticker">7 designs</span>
+          <span class="cat-dots"></span>
+        </div>
+        <div class="cat-info"><div><h3>Sweatshirts</h3><p>Desi warmth for NE winters</p></div><span class="cat-arrow">→</span></div>
+      </a>
+      <a class="cat-card" href="/category/sports-jerseys">
+        <div class="cat-rotator" data-rotate>
+          <img class="on" src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fcricket_jersey_back_personalized_Background_Removed.png?alt=media" alt="Personalized cricket jersey">
+          <img src="https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2FIMG_6480_eb3742ad-2e61-4d54-a7af-8950ca248f14.jpg?alt=media" alt="Sports jersey">
+          <span class="cat-count sticker">2 designs</span>
+          <span class="cat-dots"></span>
+        </div>
+        <div class="cat-info"><div><h3>Sports Jerseys</h3><p>Rep your squad, game day ready</p></div><span class="cat-arrow">→</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- BESTSELLERS -->
+<section style="background:#fff;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head"><h2 class="display">Public <em>favorites</em></h2><a href="#">View all →</a></div>
+    <div class="grid4">
+      <div class="card"><div class="ph" style="background:#fde8ef"><span class="badge sticker pink">Bestseller</span><div class="tee mini-tee" style="--t:#D81E5B;--p:#FFF6E9"><div class="tee-sleeve l"></div><div class="tee-sleeve r"></div><div class="tee-body"></div><div class="tee-neck"></div><div class="tee-print">Jugaad<br>Engineer<small>PROBLEM? SOLVED.</small></div></div></div><div class="info"><h4>Jugaad Engineer Tee</h4><div class="price">$24.99</div></div></div>
+      <div class="card"><div class="ph" style="background:#e8f4f4"><div class="tee mini-tee" style="--t:#0F7173;--p:#FFB627"><div class="tee-sleeve l"></div><div class="tee-sleeve r"></div><div class="tee-body"></div><div class="tee-neck"></div><div class="tee-print">Machher<br>Jhol<small>BENGALI FUEL</small></div></div></div><div class="info"><h4>Machher Jhol Sweatshirt</h4><div class="price">$39.99</div></div></div>
+      <div class="card"><div class="ph" style="background:#fff3d6"><span class="badge sticker">New</span><div class="tee mini-tee" style="--t:#1A1423;--p:#D81E5B"><div class="tee-sleeve l"></div><div class="tee-sleeve r"></div><div class="tee-body"></div><div class="tee-neck"></div><div class="tee-print">Bolly<br>Wood?<small>MORE LIKE BOLLY-WOULD</small></div></div></div><div class="info"><h4>Bolly-Would Tee</h4><div class="price">$24.99</div></div></div>
+      <div class="card"><div class="ph" style="background:#efe9dd"><div class="tee mini-tee" style="--t:#C9A67C;--p:#1A1423"><div class="tee-sleeve l"></div><div class="tee-sleeve r"></div><div class="tee-body"></div><div class="tee-neck"></div><div class="tee-print">Ctrl+C<br>Ctrl+Chai<small>DEV APPROVED</small></div></div></div><div class="info"><h4>Ctrl+Chai Mug &amp; Tee Set</h4><div class="price">$29.99</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOM ORDERS -->
+<section class="custom">
+  <div class="wrap custom-grid">
+    <div>
+      <h2 class="display">Your crew.<br>Your design.<br><em>Ek dum custom.</em></h2>
+      <p>Robotics teams, Durga Puja committees, Eras Tour squads, Thanksgiving family chaos — send us the idea, we send you a free mockup. No minimums, bulk discounts, 2–3 week turnaround.</p>
+      <a class="btn btn-primary" href="custom-order-page-mockup.html" style="border-color:var(--cream);box-shadow:5px 5px 0 var(--marigold)">Start a Custom Order</a>
+    </div>
+    <div class="proof">
+      <div><span class="display">50</span>tees for the NJ Bengali Association's Durga Puja</div>
+      <div><span class="display">25</span>shirts for FRC Team 4587's regionals run</div>
+      <div><span class="display">12</span>Eras Tour squad shirts, Boston night 2</div>
+      <div><span class="display">∞</span>family reunion puns we're not ashamed of</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF + NEWSLETTER -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><h2 class="display">Log <em>kya kahenge?</em> This, apparently.</h2></div>
+    <div class="quotes">
+      <div class="quote"><p>"Wore the Dhurander tee to a family wedding. Three uncles asked where to buy it. Zero regrets."</p><div class="who">— Priya S., Boston MA</div></div>
+      <div class="quote"><p>"Our robotics team shirts came out better than the robot. Fast turnaround, free mockups were clutch."</p><div class="who">— Coach Dan, Worcester MA</div></div>
+      <div class="quote"><p>"Sent the chai mug to my sister in Toronto for Rakhi. She sent back a crying-laughing emoji. Mission accomplished."</p><div class="who">— Arjun M., San Jose CA</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOM ORDER FORM -->
+<section id="custom-order" style="padding-top:20px">
+  <div class="wrap">
+    <div class="order-form-wrap">
+      <div class="order-info">
+        <h2 class="display">Got an idea?<br><em>Bol daal.</em></h2>
+        <p>Tell us what you're celebrating — we'll send a free design mockup within 24 hours. No commitment, no minimums.</p>
+        <ul>
+          <li>Free design mockup before you pay</li>
+          <li>Bulk &amp; group discounts</li>
+          <li>2–3 week turnaround</li>
+          <li>Local pickup in MA available</li>
+        </ul>
+      </div>
+      <form class="order-form" onsubmit="event.preventDefault();alert('Ho gaya! We\'ll be in touch within 24 hours.')">
+        <div class="row">
+          <div><label for="of-name">Your name</label><input id="of-name" type="text" placeholder="Priya Sharma" required></div>
+          <div><label for="of-email">Email</label><input id="of-email" type="email" placeholder="you@email.com" required></div>
+        </div>
+        <div class="row">
+          <div><label for="of-type">What are we making?</label>
+            <select id="of-type">
+              <option>T-Shirts</option><option>Sweatshirts / Hoodies</option>
+              <option>Coffee &amp; Tea Cups</option><option>Sports Jerseys</option><option>Not sure yet</option>
+            </select>
+          </div>
+          <div><label for="of-qty">How many?</label>
+            <select id="of-qty">
+              <option>Just 1</option><option>2–10</option><option>11–25</option><option>26–50</option><option>50+</option>
+            </select>
+          </div>
+        </div>
+        <label for="of-idea">Tell us the idea</label>
+        <textarea id="of-idea" placeholder="e.g. 20 tees for our Durga Puja committee — 'Dhaaker Taal' on the front, names on the back, need them by Oct 10…"></textarea>
+        <div class="submit-row">
+          <button type="submit" class="btn btn-primary" style="cursor:pointer;font-family:'Work Sans',sans-serif">Get My Free Mockup</button>
+          <span class="fine">We reply within 24 hours. Prefer WhatsApp? Tap the green button anytime.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h3 class="display" style="font-size:32px">Thoda gossip, <span style="color:var(--marigold)">thoda discount.</span></h3>
+    <p style="color:#cfc8dd;margin-top:8px">New designs, festival drops, and offers. No spam — pinky promise.</p>
+    <div class="news"><input placeholder="you@email.com"><button>Subscribe</button></div>
+    <div class="foot-note">© 2026 The CustomHub · New England Design Studio · Romanized Hindi &amp; Bengali streetwear for the diaspora</div>
+  </div>
+</footer>
+
+<script>
+  const words=['Filmy','Desi','Nerdy','Bangali','Jugaadu','Squad'];
+  let i=0; const el=document.getElementById('swap');
+  setInterval(()=>{ i=(i+1)%words.length; el.style.opacity=0;
+    setTimeout(()=>{ el.textContent=words[i]; el.style.opacity=1; },200);
+  },2200);
+  el.style.transition='opacity .2s';
+
+  // Category card image rotation (staggered so cards don't flip in unison)
+  document.querySelectorAll('[data-rotate]').forEach((box,ci)=>{
+    const imgs=[...box.querySelectorAll('img')];
+    const dotsWrap=box.querySelector('.cat-dots');
+    imgs.forEach((_,k)=>{const d=document.createElement('i');if(k===0)d.className='on';dotsWrap.appendChild(d);});
+    const dots=[...dotsWrap.children];
+    if(imgs.length<2)return;
+    let cur=0;
+    setTimeout(()=>setInterval(()=>{
+      imgs[cur].classList.remove('on');dots[cur].classList.remove('on');
+      cur=(cur+1)%imgs.length;
+      imgs[cur].classList.add('on');dots[cur].classList.add('on');
+    },3000),ci*750);
+  });
+</script>
+</body>
+</html>

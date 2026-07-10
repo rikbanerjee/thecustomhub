@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Orders — The CustomHub (Mockup)</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1A1423;--cream:#FFF6E9;--rani:#D81E5B;--marigold:#FFB627;--peacock:#0F7173;--chai:#C9A67C}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Work Sans',sans-serif;background:var(--cream);color:var(--ink)}
+  .display{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.035em;font-weight:400 !important;font-synthesis:none;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  nav{position:sticky;top:0;z-index:50;background:var(--cream);border-bottom:3px solid var(--ink)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1200px;margin:0 auto}
+  .logo{font-family:'Anton',sans-serif;font-weight:400;font-size:26px}
+  .logo span{color:var(--rani)}
+  .logo a{color:var(--ink);text-decoration:none}
+  .back{font-weight:600;font-size:14px;color:var(--peacock);text-decoration:none}
+
+  header.page{padding:40px 0 8px;text-align:center}
+  header.page h1{font-size:clamp(30px,4vw,46px)}
+  header.page h1 em{font-style:normal;color:var(--rani)}
+  header.page p{margin:10px auto 0;max-width:52ch;color:#4a4356;font-size:16px}
+
+  .steps{counter-reset:step}
+  .step{background:#fff;border:3px solid var(--ink);margin:26px 0;padding:26px 28px;position:relative}
+  .step h2{font-size:20px;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .step h2::before{counter-increment:step;content:counter(step);width:34px;height:34px;background:var(--marigold);border:3px solid var(--ink);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-weight:400;font-size:17px;flex-shrink:0}
+  .step.done h2::before{background:var(--peacock);color:#fff;content:"✓"}
+  .hidden{display:none !important}
+  .hint{font-size:13px;color:#6a6376;margin-top:-10px;margin-bottom:16px}
+
+  /* Category cards */
+  .cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .cat{border:3px solid var(--ink);background:var(--cream);padding:18px 12px;text-align:center;cursor:pointer;transition:transform .12s,box-shadow .12s}
+  .cat:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+  .cat.sel{background:var(--rani);color:#fff;box-shadow:4px 4px 0 var(--ink)}
+  .cat svg{width:44px;height:44px;margin-bottom:8px}
+  .cat .nm{font-family:'Anton',sans-serif;font-weight:400;font-size:16px;text-transform:uppercase;display:block}
+  .cat .sub{font-size:11px;font-weight:500;opacity:.75}
+
+  /* Swatches */
+  .swatches{display:flex;gap:12px;flex-wrap:wrap}
+  .sw{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;position:relative;transition:transform .12s}
+  .sw:hover{transform:scale(1.1)}
+  .sw.sel::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:var(--cw,#fff)}
+  .sw-name{font-size:12px;font-weight:600;text-align:center;margin-top:5px}
+  .sw-col{display:flex;flex-direction:column;align-items:center}
+
+  /* Size pills */
+  .sizes{display:flex;gap:10px;flex-wrap:wrap}
+  .pill{border:3px solid var(--ink);background:var(--cream);padding:9px 18px;font-weight:700;font-size:14px;cursor:pointer;transition:all .12s}
+  .pill:hover{background:var(--marigold)}
+  .pill.sel{background:var(--ink);color:var(--marigold)}
+
+  /* Placement select */
+  select,input[type=text],input[type=email],textarea{width:100%;padding:12px 14px;border:2.5px solid var(--ink);background:var(--cream);font-family:'Work Sans',sans-serif;font-size:15px;color:var(--ink)}
+  select:focus,input:focus,textarea:focus{outline:3px solid var(--marigold);outline-offset:-1px}
+  label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}
+  label:first-child{margin-top:0}
+
+  /* Upload boxes */
+  .uploads{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .uploads.single{grid-template-columns:1fr}
+  .up{border:3px dashed var(--ink);background:var(--cream);padding:22px;text-align:center;cursor:pointer;transition:background .12s;position:relative;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+  .up:hover{background:#fff0d6}
+  .up .side-tag{position:absolute;top:-14px;left:14px;background:var(--peacock);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:3px 14px;font-size:12px;font-weight:700}
+  .up .big{font-size:30px}
+  .up .t{font-weight:700;font-size:14px}
+  .up .s{font-size:12px;color:#6a6376}
+  .up img.preview{max-height:130px;max-width:100%;border:2px solid var(--ink)}
+  .up input{display:none}
+  .up.has{border-style:solid;background:#fff}
+
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+  /* Size breakdown rows */
+  .srow{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+  .srow select{width:130px;padding:9px 12px}
+  .srow .qty{transform:scale(.92);transform-origin:left center}
+  .srow .rbtn{width:38px;height:38px;border:2.5px solid var(--ink);background:var(--cream);font-size:16px;font-weight:700;cursor:pointer;font-family:'Work Sans',sans-serif;transition:background .12s}
+  .srow .rbtn:hover{background:var(--marigold)}
+  .srow .rbtn.del:hover{background:var(--rani);color:#fff}
+  .tally-ok{color:var(--peacock)} .tally-off{color:var(--rani)}
+  .qty{display:flex;align-items:center;gap:0;width:max-content;border:3px solid var(--ink)}
+  .qty button{width:42px;height:44px;border:none;background:var(--marigold);font-size:20px;font-weight:700;cursor:pointer;font-family:'Work Sans',sans-serif}
+  .qty input{width:64px;height:44px;border:none;border-left:3px solid var(--ink);border-right:3px solid var(--ink);text-align:center;font-size:16px;font-weight:700;background:#fff}
+
+  /* Summary + submit */
+  .summary{background:var(--ink);color:var(--cream);border:3px solid var(--ink);padding:24px 28px;margin:26px 0;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .summary .line{font-size:14px;color:#cfc8dd}
+  .summary .line b{color:var(--marigold)}
+  .btn-primary{background:var(--rani);color:#fff;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--marigold);font-weight:700;font-size:16px;padding:15px 30px;cursor:pointer;font-family:'Work Sans',sans-serif;transition:transform .12s,box-shadow .12s}
+  .btn-primary:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--marigold)}
+  footer{text-align:center;padding:30px 0 40px;font-size:13px;color:#6a6376}
+
+  @media(max-width:760px){
+    .cats{grid-template-columns:1fr 1fr}
+    .uploads,.row2{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav><div class="nav-inner">
+  <div class="logo"><a href="homepage-hybrid-mockup.html">THE CUSTOM<span>HUB</span></a></div>
+  <a class="back" href="homepage-hybrid-mockup.html">← Back to shop</a>
+</div></nav>
+
+<header class="page">
+  <h1 class="display">Custom for <em>your crew</em></h1>
+  <p>Pick the product, pick the look, drop your design. We send a free mockup within 24 hours — you pay nothing until you love it.</p>
+</header>
+
+<div class="wrap steps">
+
+  <!-- STEP 1: Category -->
+  <div class="step" id="step-cat">
+    <h2>What are we making?</h2>
+    <div class="cats">
+      <div class="cat" data-cat="tshirt" onclick="pickCat(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4 4 7l2 3 1.5-1V20h9V9L18 10l2-3-4-3a3 3 0 0 1-8 0Z"/></svg>
+        <span class="nm">T-Shirt</span><span class="sub">from $19.99</span>
+      </div>
+      <div class="cat" data-cat="sweatshirt" onclick="pickCat(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4 3 7l1.5 4L7 10v10h10V10l2.5 1L21 7l-5-3a4 4 0 0 1-8 0Z"/><path d="M7 14h2m6 0h2"/></svg>
+        <span class="nm">Sweatshirt</span><span class="sub">from $34.99</span>
+      </div>
+      <div class="cat" data-cat="mug" onclick="pickCat(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 6h11v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z"/><path d="M16 8h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/></svg>
+        <span class="nm">Cup / Mug</span><span class="sub">from $14.99</span>
+      </div>
+      <div class="cat" data-cat="onesie" onclick="pickCat(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 4 5 6l1 4 2-.5V15l-2 3h4l2-2 2 2h4l-2-3V9.5l2 .5 1-4-4-2a3 3 0 0 1-6 0Z"/></svg>
+        <span class="nm">Onesie</span><span class="sub">from $17.99</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Color (apparel only) -->
+  <div class="step hidden" id="step-color">
+    <h2>Pick your color</h2>
+    <div class="swatches" id="swatches">
+      <div class="sw-col"><div class="sw sel" style="background:#1A1423" data-c="Black" onclick="pickSw(this)"></div><div class="sw-name">Black</div></div>
+      <div class="sw-col"><div class="sw" style="background:#fff;--cw:#1A1423" data-c="White" onclick="pickSw(this)"></div><div class="sw-name">White</div></div>
+      <div class="sw-col"><div class="sw" style="background:#233a5e" data-c="Navy" onclick="pickSw(this)"></div><div class="sw-name">Navy</div></div>
+      <div class="sw-col"><div class="sw" style="background:#7b1e3a" data-c="Maroon" onclick="pickSw(this)"></div><div class="sw-name">Maroon</div></div>
+      <div class="sw-col"><div class="sw" style="background:#d9c7a7;--cw:#1A1423" data-c="Sand" onclick="pickSw(this)"></div><div class="sw-name">Sand</div></div>
+      <div class="sw-col"><div class="sw" style="background:#9caf88;--cw:#1A1423" data-c="Sage" onclick="pickSw(this)"></div><div class="sw-name">Sage</div></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Quantity + size breakdown -->
+  <div class="step hidden" id="step-size">
+    <h2>How many &amp; what sizes?</h2>
+    <label for="total-qty">Total pieces needed</label>
+    <div class="qty">
+      <button type="button" onclick="totQty(-1)">−</button>
+      <input id="total-qty" value="1" readonly>
+      <button type="button" onclick="totQty(1)">+</button>
+    </div>
+    <p class="hint" style="margin-top:8px">10+ pieces unlock group discounts automatically.</p>
+    <label>Size breakdown <span style="font-weight:500;color:#6a6376">— same design, mix any sizes</span></label>
+    <div id="size-rows"></div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:12px;flex-wrap:wrap">
+      <button type="button" class="pill" onclick="addRow()">+ Add another size</button>
+      <span id="tally" style="font-size:13px;font-weight:700"></span>
+    </div>
+  </div>
+
+  <!-- STEP 4: Design upload + placement -->
+  <div class="step hidden" id="step-design">
+    <h2>Your design</h2>
+    <div id="placement-wrap">
+      <label for="placement">Where should it be printed?</label>
+      <select id="placement" onchange="placementChange()" style="max-width:320px">
+        <option value="front">Front only</option>
+        <option value="back">Back only</option>
+        <option value="both">Both — front &amp; back</option>
+      </select>
+    </div>
+    <label style="margin-top:18px">Upload your design</label>
+    <div class="uploads single" id="uploads">
+      <div class="up" id="up-front" onclick="this.querySelector('input').click()">
+        <span class="side-tag hidden" id="tag-front">FRONT</span>
+        <span class="big">⬆</span>
+        <span class="t">Click to upload — this goes on the <b id="front-label">front</b></span>
+        <span class="s">PNG, JPG or PDF · max 20MB · don't worry, we'll clean it up</span>
+        <input type="file" accept="image/*,.pdf" onchange="preview(this,'up-front')">
+      </div>
+      <div class="up hidden" id="up-back" onclick="this.querySelector('input').click()">
+        <span class="side-tag" id="tag-back">BACK</span>
+        <span class="big">⬆</span>
+        <span class="t">Click to upload — this goes on the <b>back</b></span>
+        <span class="s">PNG, JPG or PDF · max 20MB</span>
+        <input type="file" accept="image/*,.pdf" onchange="preview(this,'up-back')">
+      </div>
+    </div>
+    <p class="hint" style="margin-top:12px">No design yet? No tension — describe the idea in the notes and our designers will create it for you (that's the free mockup).</p>
+  </div>
+
+  <!-- STEP 5: Notes + contact -->
+  <div class="step hidden" id="step-final">
+    <h2>Almost done</h2>
+    <label for="notes">Notes — deadline, names on backs, idea details</label>
+    <textarea id="notes" rows="3" placeholder="e.g. Need by Oct 10 for Durga Puja. Text on back should say 'Dhaaker Taal'. Player names: see list…"></textarea>
+    <div class="row2">
+      <div><label for="cname">Your name</label><input type="text" id="cname" placeholder="Priya Sharma"></div>
+      <div><label for="cemail">Email</label><input type="email" id="cemail" placeholder="you@email.com"></div>
+    </div>
+  </div>
+
+  <!-- SUMMARY BAR -->
+  <div class="summary hidden" id="summary">
+    <div class="line" id="summary-text"></div>
+    <button class="btn-primary" onclick="alert('Ho gaya! Your request is in — free mockup within 24 hours.')">Get My Free Mockup →</button>
+  </div>
+</div>
+
+<footer>The CustomHub · Free mockup first, payment later · Local pickup in MA · WhatsApp us anytime</footer>
+
+<script>
+const state={cat:null,color:'Black',size:null,placement:'front'};
+const SIZES={
+  tshirt:['S','M','L','XL','2XL','3XL'],
+  sweatshirt:['S','M','L','XL','2XL','3XL'],
+  onesie:['0–3M','3–6M','6–12M','12–18M','18–24M'],
+  mug:['11 oz','15 oz']
+};
+const NAMES={tshirt:'T-Shirt',sweatshirt:'Sweatshirt',mug:'Cup / Mug',onesie:'Onesie'};
+
+function pickCat(el){
+  document.querySelectorAll('.cat').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  state.cat=el.dataset.cat;
+  const apparel=state.cat!=='mug';
+  document.getElementById('step-cat').classList.add('done');
+  // color: apparel only
+  document.getElementById('step-color').classList.toggle('hidden',!apparel);
+  // size: everyone (mug gets 11/15oz)
+  document.getElementById('step-size').classList.remove('hidden');
+  buildSizes();
+  // design step: placement dropdown apparel only
+  document.getElementById('step-design').classList.remove('hidden');
+  document.getElementById('placement-wrap').classList.toggle('hidden',!apparel);
+  if(!apparel){state.placement='front';document.getElementById('placement').value='front';placementChange(true);}
+  document.getElementById('step-final').classList.remove('hidden');
+  document.getElementById('summary').classList.remove('hidden');
+  updateSummary();
+  document.getElementById('step-color').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function buildSizes(){
+  // reset breakdown rows for the newly chosen product
+  document.getElementById('size-rows').innerHTML='';
+  document.getElementById('total-qty').value=1;
+  addRow();
+}
+function totQty(d){
+  const v=document.getElementById('total-qty');
+  v.value=Math.max(1,parseInt(v.value)+d);
+  updateTally();
+}
+function addRow(size,qty){
+  const wrap=document.getElementById('size-rows');
+  const row=document.createElement('div');row.className='srow';
+  const sel=document.createElement('select');
+  SIZES[state.cat].forEach(s=>{const o=document.createElement('option');o.textContent=s;if(s===size)o.selected=true;sel.appendChild(o);});
+  sel.onchange=updateTally;
+  const q=document.createElement('div');q.className='qty';
+  q.innerHTML='<button type="button">−</button><input value="'+(qty||1)+'" readonly><button type="button">+</button>';
+  const qi=q.querySelector('input');
+  q.children[0].onclick=()=>{qi.value=Math.max(1,+qi.value-1);updateTally();};
+  q.children[2].onclick=()=>{qi.value=+qi.value+1;updateTally();};
+  const dup=document.createElement('button');dup.type='button';dup.className='rbtn';dup.title='Duplicate this row';dup.textContent='⧉';
+  dup.onclick=()=>addRow(sel.value,+qi.value);
+  const del=document.createElement('button');del.type='button';del.className='rbtn del';del.title='Remove row';del.textContent='✕';
+  del.onclick=()=>{if(wrap.children.length>1){row.remove();updateTally();}};
+  row.append(sel,q,dup,del);
+  wrap.appendChild(row);
+  updateTally();
+}
+function breakdown(){
+  const m={};
+  document.querySelectorAll('#size-rows .srow').forEach(r=>{
+    const s=r.querySelector('select').value,q=+r.querySelector('input').value;
+    m[s]=(m[s]||0)+q;
+  });
+  return m;
+}
+function updateTally(){
+  const total=+document.getElementById('total-qty').value;
+  const assigned=Object.values(breakdown()).reduce((a,b)=>a+b,0);
+  const t=document.getElementById('tally');
+  if(assigned===total){t.textContent='✓ '+assigned+' of '+total+' assigned';t.className='tally-ok';}
+  else if(assigned<total){t.textContent=assigned+' of '+total+' assigned — '+(total-assigned)+' to go';t.className='tally-off';}
+  else{t.textContent=assigned+' assigned but total says '+total+' — bump the total or trim a row';t.className='tally-off';}
+  updateSummary();
+}
+function pickSw(el){
+  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');state.color=el.dataset.c;updateSummary();
+}
+function placementChange(silent){
+  state.placement=document.getElementById('placement').value;
+  const both=state.placement==='both';
+  const up=document.getElementById('uploads');
+  up.classList.toggle('single',!both);
+  document.getElementById('up-back').classList.toggle('hidden',!both);
+  document.getElementById('tag-front').classList.toggle('hidden',!both);
+  document.getElementById('front-label').textContent=state.placement==='back'?'back':'front';
+  if(!silent)updateSummary();
+}
+function preview(input,boxId){
+  const box=document.getElementById(boxId);
+  if(input.files&&input.files[0]&&input.files[0].type.startsWith('image')){
+    const img=document.createElement('img');img.className='preview';
+    img.src=URL.createObjectURL(input.files[0]);
+    box.querySelectorAll('.big,.t,.s,img.preview').forEach(e=>e.remove());
+    box.insertBefore(img,input);box.classList.add('has');
+    const t=document.createElement('span');t.className='s';t.textContent=input.files[0].name+' — click to replace';
+    box.insertBefore(t,input);
+  }
+}
+function updateSummary(){
+  if(!state.cat)return;
+  const b=breakdown();
+  const q=Object.values(b).reduce((a,c)=>a+c,0);
+  const sizes=Object.entries(b).map(([s,n])=>`${n} ${s}`).join(', ');
+  const apparel=state.cat!=='mug';
+  const parts=[`<b>${q}×</b> ${NAMES[state.cat]}`];
+  if(apparel)parts.push(`<b>${state.color}</b>`);
+  parts.push(`sizes: <b>${sizes}</b>`);
+  if(apparel)parts.push(`print: <b>${state.placement==='both'?'front & back':state.placement}</b>`);
+  document.getElementById('summary-text').innerHTML='Your order: '+parts.join(' · ');
+}
+</script>
+</body>
+</html>

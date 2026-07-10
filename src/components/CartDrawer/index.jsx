@@ -13,6 +13,7 @@ const CartDrawer = () => {
     subtotal,
     removeItem,
     updateQty,
+    captureWhatsAppLead,
     closeDrawer,
     drawerOpen,
     checkout,
@@ -216,7 +217,7 @@ const CartDrawer = () => {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={closeDrawer}
+                onClick={() => { captureWhatsAppLead(); closeDrawer(); }}
                 className="w-full flex items-center justify-center gap-2 font-semibold py-2.5 px-4 rounded-lg transition-colors text-sm text-white"
                 style={{ backgroundColor: '#25D366' }}
               >

@@ -94,6 +94,29 @@ export const CartProvider = ({ children }) => {
   const clearCart = useCallback(() => setItems([]), []);
 
   /**
+   * Capture a WhatsApp order lead in Firestore before the customer opens
+   * the WhatsApp link. Errors are swallowed so they never block navigation.
+   */
+  const captureWhatsAppLead = useCallback(() => {
+    const saveWhatsAppLeadFn = httpsCallable(
+      firebaseFunctions,
+      'saveWhatsAppLead'
+    );
+    return saveWhatsAppLeadFn({
+      items: items.map((i) => ({
+        title: i.title,
+        price: i.price,
+        quantity: i.quantity,
+        variantLabel: i.variantLabel,
+      })),
+      subtotal,
+    }).catch((err) => {
+      // Intentionally silent — never block the WhatsApp link on a backend error
+      console.warn('WhatsApp lead capture failed (non-blocking):', err);
+    });
+  }, [items, subtotal]);
+
+  /**
    * Initiate Stripe Checkout.
    * Stores a cart snapshot in sessionStorage for the success page,
    * then calls the Firebase Cloud Function to create the session.
@@ -153,6 +176,7 @@ export const CartProvider = ({ children }) => {
         removeItem,
         updateQty,
         clearCart,
+        captureWhatsAppLead,
         drawerOpen,
         openDrawer,
         closeDrawer,

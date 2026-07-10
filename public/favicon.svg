@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- The CustomHub icon — ink tile, marigold monogram, rani spark -->
+  <rect width="512" height="512" rx="96" fill="#1A1423"/>
+  <!-- T monogram (drawn as paths so no font needed) -->
+  <g fill="#FFB627">
+    <rect x="96" y="128" width="320" height="72" rx="8"/>
+    <rect x="220" y="128" width="72" height="288" rx="8"/>
+  </g>
+  <!-- rani underline swipe -->
+  <rect x="150" y="428" width="212" height="26" rx="13" fill="#D81E5B" transform="rotate(-2 256 441)"/>
+  <!-- spark -->
+  <path d="M400 84 l10 32 32 10 -32 10 -10 32 -10 -32 -32 -10 32 -10 Z" fill="#D81E5B"/>
+</svg>

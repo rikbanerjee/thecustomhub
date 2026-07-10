@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Update #2 — Packaging RetailAgentOS for the Next Vendor</title>
+<style>
+  :root{
+    --brown:#2c1810; --tan:#c9a67c; --sage:#9caf88;
+    --ink:#241a14; --muted:#6b5d52; --line:#e7ded3;
+    --paper:#fbf7f1; --card:#ffffff;
+    --green:#3f7a4e; --green-bg:#eaf3ec;
+    --amber:#9a6a1c; --amber-bg:#f6eddb;
+    --violet:#6b4c78; --violet-bg:#eee7f0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Work Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px 80px;}
+  h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif; color:var(--brown); font-weight:600; line-height:1.15;}
+  code{background:#f0e8dc; padding:1px 6px; border-radius:5px; font-size:.9em; font-family:'SF Mono',ui-monospace,Menlo,monospace;}
+
+  .hero{
+    background:linear-gradient(135deg,#2c1810 0%,#3d2618 60%,#4a2f1d 100%);
+    color:#f4ece1; padding:60px 24px 52px; text-align:center;
+  }
+  .hero .inner{max-width:820px; margin:0 auto;}
+  .eyebrow{letter-spacing:.22em; text-transform:uppercase; font-size:12px; color:var(--tan); font-weight:600; margin-bottom:18px;}
+  .hero h1{color:#fff; font-size:48px; margin:0 0 18px;}
+  .hero p{font-size:18px; color:#e4d6c5; max-width:660px; margin:0 auto;}
+
+  section{margin-top:56px;}
+  h2{font-size:34px; margin:0 0 8px;}
+  .lede{color:var(--muted); font-size:17px; margin:0 0 26px; max-width:700px;}
+
+  /* recap strip */
+  .recap{
+    display:flex; gap:14px; align-items:center; justify-content:center;
+    background:#f3ebe0; border:1px solid var(--line); border-radius:14px;
+    padding:18px 24px; margin-top:34px; flex-wrap:wrap;
+  }
+  .recap .chk{color:var(--green); font-weight:700; font-size:18px;}
+  .recap span.t{font-size:15px; color:var(--brown);}
+
+  /* insight card */
+  .insight{
+    background:var(--card); border:1px solid var(--line); border-left:4px solid var(--tan);
+    border-radius:0 14px 14px 0; padding:24px 28px;
+  }
+  .insight strong{color:var(--brown);}
+
+  /* package anatomy */
+  .anatomy{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:6px;}
+  .part{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px 24px;}
+  .part .lbl{font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:600; margin-bottom:8px;}
+  .part.reuse .lbl{color:var(--green);}
+  .part.custom .lbl{color:var(--violet);}
+  .part h3{font-size:21px; margin:0 0 8px;}
+  .part p{margin:0 0 12px; font-size:14.5px; color:var(--muted);}
+  .part ul{margin:0; padding-left:18px; font-size:14px;}
+  .part li{margin-bottom:6px;}
+  .ratio{display:flex; height:12px; border-radius:8px; overflow:hidden; margin-top:22px; border:1px solid var(--line);}
+  .ratio .r{background:var(--green);} .ratio .c{background:var(--violet);}
+  .ratio-cap{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-top:8px;}
+
+  /* steps to onboard */
+  .flow{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+  .step{flex:1 1 150px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px;}
+  .step .k{font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--sage); font-weight:700;}
+  .step h4{margin:6px 0 4px; font-size:15px; color:var(--brown); font-family:'Work Sans',sans-serif; font-weight:600;}
+  .step p{margin:0; font-size:13px; color:var(--muted);}
+  .arrow{align-self:center; color:var(--tan); font-size:20px; font-weight:700;}
+
+  /* next-up callout */
+  .next{
+    background:linear-gradient(135deg,#f3ebe0,#efe4d3); border:1px solid var(--line);
+    border-radius:16px; padding:30px 32px; text-align:center;
+  }
+  .next .tagline{font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--tan); font-weight:600;}
+  .next h3{font-size:30px; margin:10px 0 12px;}
+  .next p{margin:0 auto; max-width:620px; color:var(--muted); font-size:16px;}
+  .goalrow{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:22px;}
+  .goal{background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 18px; font-size:14px; color:var(--brown);}
+
+  footer{margin-top:60px; padding-top:26px; border-top:1px solid var(--line); font-size:13px; color:var(--muted); text-align:center;}
+
+  @media(max-width:680px){
+    .hero h1{font-size:36px;} h2{font-size:28px;}
+    .anatomy{grid-template-columns:1fr;} .flow{flex-direction:column;} .arrow{transform:rotate(90deg);}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="inner">
+    <div class="eyebrow">Agentic Commerce · Build Update</div>
+    <h1>The integration package is ready for its first real boutique.</h1>
+    <p>Over the past few weeks I've been building a reusable package that makes an ordinary online store discoverable and transactable by AI shopping agents. It's now validated end-to-end against a reference build — and ready to integrate with a real boutique shop. Here's what's in it and how onboarding works.</p>
+    <div class="recap">
+      <span class="chk">✓</span><span class="t">Validated end-to-end on a reference store · ready for a live merchant</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <h2>The insight behind the package</h2>
+    <p class="lede">Making a store agent-ready isn't one big custom build. Almost all of it is a shared reasoning engine that any catalog can use. The only store-specific piece is a thin adapter mapping that store's products into the engine's model. Validating it on a reference build proved the split holds.</p>
+    <div class="insight">
+      <p style="margin:0"><strong>If the hard part is reusable, onboarding the next store shouldn't start from scratch.</strong> The eligibility, pricing, stock, and region reasoning — plus the agent manifest and structured-data output — are identical across merchants. What differs is only how each store shapes its own catalog. That's the seam I packaged around.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What I built: the integration package</h2>
+    <p class="lede">A prebuilt, deterministic engine (<code>@retailagentos/engine</code>) plus a small, well-documented adapter contract. Drop the engine in, write one adapter for the store's catalog, and the agent surface — manifest, offer evaluation, quotes, checkout hand-off — comes with it.</p>
+    <div class="anatomy">
+      <div class="part reuse">
+        <div class="lbl">Reused as-is · every vendor</div>
+        <h3>The engine + agent surface</h3>
+        <p>Pure, deterministic, zero-config. Import it and every evaluator self-registers.</p>
+        <ul>
+          <li>Eligibility, price, stock &amp; region reasoning</li>
+          <li>UCP capability manifest builder</li>
+          <li>schema.org <code>Product</code>/<code>Offer</code> output</li>
+          <li>Quote tokens + Stripe checkout hand-off pattern</li>
+        </ul>
+      </div>
+      <div class="part custom">
+        <div class="lbl">Written once · per vendor</div>
+        <h3>The catalog adapter</h3>
+        <p>The only bespoke code — maps a store's own product shape into the engine's model.</p>
+        <ul>
+          <li>Normalize catalog → variants</li>
+          <li>Declare merchant profile (regions, currency)</li>
+          <li>Wire checkout to the store's payment flow</li>
+          <li>~one file, following a fixed contract</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ratio"><div class="r" style="width:80%"></div><div class="c" style="width:20%"></div></div>
+    <div class="ratio-cap"><span>Shared package — reused</span><span>Per-vendor adapter</span></div>
+  </section>
+
+  <section>
+    <h2>How a new vendor comes online</h2>
+    <p class="lede">The onboarding path validated on the reference build, now reduced to four repeatable steps.</p>
+    <div class="flow">
+      <div class="step"><div class="k">01</div><h4>Install</h4><p>Add the engine package to the vendor's stack.</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">02</div><h4>Adapt</h4><p>Write one adapter mapping their catalog to the model.</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">03</div><h4>Expose</h4><p>Stand up the manifest, structured data, and MCP tools.</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">04</div><h4>Prove</h4><p>Run the 10-task agent set — find, quote, checkout.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Next up</h2>
+    <div class="next">
+      <div class="tagline">Proof of concept · First live merchant</div>
+      <h3>Integrating a real boutique shop</h3>
+      <p>A real store, its own catalog, its own checkout — the true test of whether the package holds outside a reference build. If a boutique can go agent-ready by writing just an adapter, the concept is real and repeatable.</p>
+      <div class="goalrow">
+        <div class="goal">Same engine, new adapter</div>
+        <div class="goal">Live agent find → quote → checkout</div>
+        <div class="goal">Decline-with-reason, out of the box</div>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:26px;">The goal isn't one clever store. It's a path any independent shop can walk to become something an AI shopping agent can actually buy from. The package is built and validated. Next is proving it on a real merchant.</p>
+  </section>
+
+  <footer>
+    RetailAgentOS · Agentic-commerce integration for independent retailers<br>
+    Package validated on a reference build · onboarding a live boutique next.
+  </footer>
+
+</div>
+</body>
+</html>
