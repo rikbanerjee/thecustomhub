@@ -164,6 +164,16 @@ const CartDrawer = () => {
         {/* Footer — subtotal + CTAs */}
         {items.length > 0 && (
           <div className="border-t border-gray-200 px-6 py-4 space-y-3">
+            {/* Payment system upgrade notice — online checkout temporarily disabled */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 flex items-start gap-2">
+              <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>
+                We&apos;re upgrading our online payment system. In the meantime, please order via WhatsApp below and we&apos;ll help you complete your purchase!
+              </span>
+            </div>
+
             {checkoutError && (
               <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-start gap-2">
                 <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
