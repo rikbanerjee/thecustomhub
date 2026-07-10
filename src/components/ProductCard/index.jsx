@@ -181,8 +181,10 @@ const ProductCard = ({ product, onQuickView }) => {
 
       {/* Product Info */}
       <div className="p-4 flex flex-col h-auto">
-        {/* Title */}
-        <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 min-h-[3.5rem]">
+        {/* Title — min-height must equal exactly 2 lines (font-size 1.125rem *
+            heading line-height 1.4 = 1.575rem/line) or -webkit-line-clamp
+            renders a sliver of a 3rd line into the leftover space. */}
+        <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 min-h-[3.15rem]">
           {product.title}
         </h3>
         
