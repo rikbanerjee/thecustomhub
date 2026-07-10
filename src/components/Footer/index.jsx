@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import emailjs from '@emailjs/browser';
-import emailjsConfig from '../../config/emailjs.config';
+import { httpsCallable } from 'firebase/functions';
+import { firebaseFunctions } from '../../lib/firebase';
 
 /**
  * Footer — "Desi Pop x Zine" footer (mockups/homepage-hybrid-mockup.html
@@ -23,18 +23,8 @@ const Footer = () => {
     setStatus(null);
 
     try {
-      if (emailjsConfig.serviceId && emailjsConfig.publicKey) {
-        await emailjs.send(
-          emailjsConfig.serviceId,
-          emailjsConfig.templateId || 'template_newsletter',
-          {
-            subscriber_email: email,
-            to_email: 'info@thecustomhub.com',
-            message: `New newsletter subscriber: ${email}`,
-          },
-          emailjsConfig.publicKey
-        );
-      }
+      const sendInquiryEmail = httpsCallable(firebaseFunctions, 'sendInquiryEmail');
+      await sendInquiryEmail({ type: 'newsletter', email });
       setStatus('success');
       setEmail('');
     } catch (error) {

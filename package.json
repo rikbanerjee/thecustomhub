@@ -26,7 +26,6 @@
     "raos:sync-functions": "node scripts/sync-raos-functions.js"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@retailagentos/engine": "file:vendor/retailagentos-engine-0.1.0.tgz",
     "@stripe/stripe-js": "^4.10.0",
     "@tailwindcss/postcss": "^4.1.17",

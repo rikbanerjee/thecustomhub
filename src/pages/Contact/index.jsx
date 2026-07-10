@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
+import { httpsCallable } from 'firebase/functions';
 import SEO from '../../components/SEO';
 import { getAllProducts, getProductById } from '../../utils/dataHelpers';
-import emailjsConfig from '../../config/emailjs.config';
+import { firebaseFunctions } from '../../lib/firebase';
 
 /**
  * Contact Page Component
@@ -177,11 +177,6 @@ const Contact = () => {
     setSubmitStatus(null);
 
     try {
-      // Check if EmailJS is configured
-      if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
-        throw new Error('EmailJS is not configured. Please set up environment variables.');
-      }
-
       // Get product title if product of interest is selected
       let productTitle = 'None';
       if (formData.productOfInterest) {
@@ -189,31 +184,21 @@ const Contact = () => {
         productTitle = product ? product.title : 'Unknown Product';
       }
 
-      // Prepare template parameters for EmailJS
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        phone: formData.phone || 'Not provided',
-        order_type: formData.orderType || 'Not specified',
-        quantity: formData.quantity || 'Not specified',
-        event_name: formData.eventName || 'Not provided',
-        design_idea: formData.designIdea || 'Not provided',
-        product_of_interest: productTitle,
+      const sendInquiryEmail = httpsCallable(firebaseFunctions, 'sendInquiryEmail');
+      await sendInquiryEmail({
+        type: 'contact',
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        orderType: formData.orderType,
+        quantity: formData.quantity,
+        eventName: formData.eventName,
+        designIdea: formData.designIdea,
+        productOfInterest: productTitle,
         message: formData.message,
-        timestamp: new Date().toISOString()
-      };
+      });
 
-      // Send email via EmailJS
-      await emailjs.send(
-        emailjsConfig.serviceId,
-        emailjsConfig.templateId,
-        templateParams,
-        emailjsConfig.publicKey
-      );
-      
       console.log('✅ Form submitted successfully:', formData);
-      console.log('✅ Email sent via EmailJS');
-      console.log('Timestamp:', new Date().toISOString());
       
       // Success!
       setSubmitStatus('success');

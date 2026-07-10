@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import emailjs from '@emailjs/browser';
-import emailjsConfig from '../../config/emailjs.config';
+import { httpsCallable } from 'firebase/functions';
+import { firebaseFunctions } from '../../lib/firebase';
 
 /**
  * CustomOrderForm — homepage "Got an idea? Bol daal." section
  * (mockups/homepage-hybrid-mockup.html `.order-form-wrap`). A lightweight
  * lead-capture form; the full stepper flow lives on /custom-orders.
  *
- * Wired identically to the Contact page's EmailJS pattern/config so it
- * shares the same service without introducing a second integration.
+ * Sends via the shared sendInquiryEmail Cloud Function (type: 'quick-lead'),
+ * same server-side path as every other lead form on the site.
  */
 const CustomOrderForm = () => {
   const [form, setForm] = useState({ name: '', email: '', type: 'T-Shirts', qty: 'Just 1', idea: '' });
@@ -32,23 +32,15 @@ const CustomOrderForm = () => {
     setStatus(null);
 
     try {
-      if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
-        throw new Error('EmailJS is not configured.');
-      }
-
-      await emailjs.send(
-        emailjsConfig.serviceId,
-        emailjsConfig.templateId,
-        {
-          from_name: form.name,
-          from_email: form.email,
-          order_type: form.type,
-          quantity: form.qty,
-          message: form.idea || 'No details provided yet — will follow up.',
-          timestamp: new Date().toISOString(),
-        },
-        emailjsConfig.publicKey
-      );
+      const sendInquiryEmail = httpsCallable(firebaseFunctions, 'sendInquiryEmail');
+      await sendInquiryEmail({
+        type: 'quick-lead',
+        name: form.name,
+        email: form.email,
+        orderType: form.type,
+        quantity: form.qty,
+        idea: form.idea,
+      });
 
       setStatus('success');
       setForm({ name: '', email: '', type: 'T-Shirts', qty: 'Just 1', idea: '' });

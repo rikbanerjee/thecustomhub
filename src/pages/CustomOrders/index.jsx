@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import emailjs from '@emailjs/browser';
+import { httpsCallable } from 'firebase/functions';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import SEO from '../../components/SEO';
-import { firebaseStorage } from '../../lib/firebase';
-import emailjsConfig from '../../config/emailjs.config';
+import { firebaseStorage, firebaseFunctions } from '../../lib/firebase';
 import { CATEGORIES, CATEGORY_NAMES, SIZES, COLORS, WHATSAPP_NUMBER } from './constants';
 
 /**
@@ -13,10 +12,11 @@ import { CATEGORIES, CATEGORY_NAMES, SIZES, COLORS, WHATSAPP_NUMBER } from './co
  * bulk builder -> placement-aware uploads -> notes/contact -> summary bar.
  *
  * File uploads go to Firebase Storage under `custom-uploads/{timestamp}/`
- * and the resulting URLs ride along in the EmailJS submission (EmailJS
- * itself can't carry file attachments). If Storage write rules block an
- * anonymous upload, we don't fail the whole submission — we still send the
- * text order and tell the customer to forward the design via WhatsApp.
+ * and the resulting URLs ride along in the sendInquiryEmail Cloud Function
+ * call (a plain email send can't carry file attachments). If Storage write
+ * rules block an anonymous upload, we don't fail the whole submission — we
+ * still send the text order and tell the customer to forward the design via
+ * WhatsApp.
  */
 const CustomOrders = () => {
   const rowIdRef = useRef(0);
@@ -134,33 +134,25 @@ const CustomOrders = () => {
     }
 
     try {
-      if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
-        throw new Error('EmailJS is not configured.');
-      }
-
       const sizesBreakdown = rows.map((r) => `${r.qty} ${r.size}`).join(', ');
       const uploadNote = storageBlocked
         ? "Customer's design file could not be auto-attached — follow up on WhatsApp for the file."
         : '';
 
-      await emailjs.send(
-        emailjsConfig.serviceId,
-        emailjsConfig.templateId,
-        {
-          from_name: name,
-          from_email: email,
-          order_type: CATEGORY_NAMES[cat],
-          color: isApparel ? color : 'N/A',
-          quantity: assignedQty,
-          sizes_breakdown: sizesBreakdown,
-          placement: isApparel ? placement : 'N/A',
-          design_front_url: frontUrl || 'Not uploaded',
-          design_back_url: backUrl || 'Not uploaded',
-          notes: [notes, uploadNote].filter(Boolean).join('\n\n') || 'None provided',
-          timestamp: new Date().toISOString(),
-        },
-        emailjsConfig.publicKey
-      );
+      const sendInquiryEmail = httpsCallable(firebaseFunctions, 'sendInquiryEmail');
+      await sendInquiryEmail({
+        type: 'custom-order',
+        name,
+        email,
+        orderType: CATEGORY_NAMES[cat],
+        color: isApparel ? color : 'N/A',
+        quantity: assignedQty,
+        sizesBreakdown,
+        placement: isApparel ? placement : 'N/A',
+        designFrontUrl: frontUrl || 'Not uploaded',
+        designBackUrl: backUrl || 'Not uploaded',
+        notes: [notes, uploadNote].filter(Boolean).join('\n\n') || 'None provided',
+      });
 
       setResult({ status: 'success', storageBlocked });
     } catch (err) {

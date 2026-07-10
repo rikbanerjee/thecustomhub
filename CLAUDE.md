@@ -61,7 +61,18 @@ utility classes under this project's PostCSS-based v4 setup — keep both files 
 
 ### Services & Config
 
-- **EmailJS** (`src/config/emailjs.config.js`): Contact form email sending. Keys loaded from `VITE_EMAILJS_*` env vars.
+- **Email sending** — all lead/inquiry forms (Contact, `/custom-orders` stepper, homepage
+  quick-lead form, newsletter signup in Footer) go through the `sendInquiryEmail` Cloud
+  Function (`functions/index.js`), which sends via **Resend** server-side using the
+  `RESEND_API_KEY` secret (`firebase functions:secrets:set RESEND_API_KEY`). Call it from
+  the frontend with `httpsCallable(firebaseFunctions, 'sendInquiryEmail')`, passing
+  `{ type: 'contact' | 'custom-order' | 'quick-lead' | 'newsletter', ...fields }`. There is
+  no client-side email service/key — EmailJS was retired in favor of this because a
+  client-shippable "public key" model still exposes the service to abuse and can't be
+  hidden, whereas Resend's key stays server-side in Secret Manager. Order-confirmation
+  emails (post-Stripe-checkout) use a separate internal helper, `sendOrderEmail`, in the
+  same file — same Resend client, different trigger (Stripe webhook / WhatsApp lead
+  capture, not a form submission).
 - **Firebase** (`src/config/firebase.config.js`): Storage for images + Hosting for deployment. Keys from `VITE_FIREBASE_*` env vars. Copy `.env.example` → `.env` to configure locally.
 
 ## Product Data Schema
