@@ -1,0 +1,26 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Product images — public read, no client writes (managed by hand).
+    match /images/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Custom Orders design uploads (src/pages/CustomOrders) — anonymous
+    // customers attach a design file before we have any auth system, so
+    // writes are open but capped to what the upload UI advertises: image
+    // or PDF, max 20MB.
+    match /custom-uploads/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 20 * 1024 * 1024
+                    && request.resource.contentType.matches('image/.*|application/pdf');
+    }
+
+    // Everything else — public read, no writes.
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

@@ -43,5 +43,8 @@
       "npm run build",
       "node scripts/sync-raos-functions.js"
     ]
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
