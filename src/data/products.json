@@ -8026,5 +8026,23 @@
       "CA"
     ],
     "callForPrice": false
+  },
+  {
+    "id": "sports-jersey-tryout-test",
+    "title": "Sports Jersey — Tryout Item (TEST)",
+    "vendor": "The CustomHub",
+    "category": "Apparel & Accessories > Clothing > Uniforms & Workwear > Sports Uniforms",
+    "type": "Sports Jerseys",
+    "price": 0.99,
+    "description": "Internal test product used to verify the payment/checkout flow end-to-end. Not a real product — do not fulfill orders for this item.",
+    "images": [
+      "https://firebasestorage.googleapis.com/v0/b/thecustomhub-efb8a.firebasestorage.app/o/images%2Fcricketjerseyfrontthecustomhub.jpg?alt=media"
+    ],
+    "tags": [
+      "test",
+      "internal"
+    ],
+    "inStock": true,
+    "marketplace": {}
   }
 ]
