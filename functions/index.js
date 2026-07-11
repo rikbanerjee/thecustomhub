@@ -225,7 +225,7 @@ async function sendOrderEmail(orderData, apiKey) {
   // domain is verified in your Resend dashboard at resend.com/domains.
   await resend.emails.send({
     from: "The CustomHub Orders <onboarding@resend.dev>",
-    to: "rikbanerjee007@gmail.com",
+    to: "personalizedbyrisa@gmail.com",
     subject: `[TheCustomHub] New ${
       status === "paid" ? "Order" : "Lead"
     } — ${sourceLabel} — ${totalDisplay}`,
@@ -361,7 +361,7 @@ async function sendInquiryEmail(data, apiKey) {
   // domain is verified in your Resend dashboard at resend.com/domains.
   await resend.emails.send({
     from: 'The CustomHub <onboarding@resend.dev>',
-    to: 'rikbanerjee007@gmail.com',
+    to: 'personalizedbyrisa@gmail.com',
     ...(data.email ? { reply_to: data.email } : {}),
     subject: `[TheCustomHub] ${title}${data.name ? ` — ${data.name}` : ''}`,
     html,
