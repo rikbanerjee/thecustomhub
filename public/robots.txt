@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Utility / checkout / search pages — no SEO value, keep out of the index
+Disallow: /cart
+Disallow: /search
+Disallow: /order-success
+Disallow: /order-cancelled
+Disallow: /quant-alpha/
+
+Sitemap: https://thecustomhub.com/sitemap.xml
