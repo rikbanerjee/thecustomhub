@@ -550,7 +550,13 @@ exports.stripeWebhook = onRequest(
         source: "stripe",
         status: "paid",
         stripeSessionId: fullSession.id,
-        customerEmail: fullSession.customer_email || null,
+        // customer_email is only populated when we pre-set it on the session;
+        // for Stripe-hosted Checkout the address the customer actually typed
+        // lands in customer_details.email, so fall back to that.
+        customerEmail:
+          fullSession.customer_email ||
+          fullSession.customer_details?.email ||
+          null,
         shippingAddress,
         items,
         subtotal: amountTotal,
