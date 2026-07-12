@@ -245,6 +245,169 @@ async function sendOrderEmail(orderData, apiKey) {
   });
 }
 
+// ─── sendCustomerReceipt (internal helper) ───────────────────────────────────
+/**
+ * Sends a customer-facing order receipt/confirmation via Resend.
+ *
+ * Unlike sendOrderEmail (which notifies the owner), this goes to the customer,
+ * so it MUST send from the verified thecustomhub.com domain — the shared
+ * onboarding@resend.dev sandbox sender can only deliver to the account owner.
+ * Replies land on orders@thecustomhub.com, which the inbound webhook forwards
+ * to the owner's Gmail.
+ *
+ * No-ops if there is no customer email on the order.
+ *
+ * @param {object} orderData
+ * @param {string} apiKey  Resend API key value
+ */
+async function sendCustomerReceipt(orderData, apiKey) {
+  const {
+    customerEmail,
+    shippingAddress,
+    items = [],
+    subtotal,
+    amountTotal,
+    stripeSessionId,
+  } = orderData;
+
+  if (!customerEmail) {
+    console.log("No customer email on order — skipping customer receipt.");
+    return;
+  }
+
+  const resend = new Resend(apiKey);
+
+  const totalDisplay =
+    amountTotal != null
+      ? `$${Number(amountTotal).toFixed(2)}`
+      : subtotal != null
+      ? `$${Number(subtotal).toFixed(2)}`
+      : "—";
+
+  // Short, human-friendly order reference from the Stripe session id.
+  const orderRef = stripeSessionId
+    ? stripeSessionId.slice(-8).toUpperCase()
+    : null;
+
+  const itemsRows = items
+    .map(
+      (item) =>
+        `<tr>
+          <td style="padding:10px 12px;border-bottom:1px solid #f0ede9;">
+            ${item.title}${
+          item.variantLabel
+            ? ` <span style="color:#9caf88;font-size:12px;">(${item.variantLabel})</span>`
+            : ""
+        }
+          </td>
+          <td style="padding:10px 12px;border-bottom:1px solid #f0ede9;text-align:center;">${
+            item.quantity
+          }</td>
+          <td style="padding:10px 12px;border-bottom:1px solid #f0ede9;text-align:right;">$${(
+            Number(item.price) * Number(item.quantity)
+          ).toFixed(2)}</td>
+        </tr>`
+    )
+    .join("");
+
+  const shippingBlock = shippingAddress
+    ? `<p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#2c1810;">Shipping to</p>
+       <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">
+         ${shippingAddress.name ? `${shippingAddress.name}<br>` : ""}
+         ${shippingAddress.line1 || ""}${
+        shippingAddress.line2 ? `, ${shippingAddress.line2}` : ""
+      }<br>
+         ${shippingAddress.city || ""}${
+        shippingAddress.state ? `, ${shippingAddress.state}` : ""
+      } ${shippingAddress.postalCode || ""}<br>
+         ${shippingAddress.country || ""}
+       </p>`
+    : "";
+
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Your CustomHub order</title></head>
+<body style="margin:0;padding:0;font-family:'Work Sans',Arial,sans-serif;background:#f7f5f2;color:#2c1810;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f5f2;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0"
+        style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(44,24,16,0.08);">
+
+        <!-- Header -->
+        <tr>
+          <td style="background:#2c1810;padding:24px 32px;">
+            <h1 style="margin:0;color:#c9a67c;font-size:22px;font-weight:700;letter-spacing:0.5px;">
+              The CustomHub
+            </h1>
+            <p style="margin:4px 0 0;color:#e8d5b7;font-size:13px;">Order Confirmation</p>
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <h2 style="margin:0 0 8px;font-size:20px;">Thank you for your order! 🎉</h2>
+            <p style="margin:0 0 20px;font-size:14px;color:#6b7280;line-height:1.6;">
+              We've received your payment and are getting to work. Here's a summary of your order${
+                orderRef ? ` <strong>#${orderRef}</strong>` : ""
+              }.
+            </p>
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #f0ede9;border-radius:8px;overflow:hidden;margin-bottom:20px;">
+              <thead>
+                <tr style="background:#faf7f2;">
+                  <th style="padding:10px 12px;text-align:left;font-size:12px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;">Item</th>
+                  <th style="padding:10px 12px;text-align:center;font-size:12px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;">Qty</th>
+                  <th style="padding:10px 12px;text-align:right;font-size:12px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsRows}
+                <tr>
+                  <td style="padding:12px;font-weight:700;" colspan="2">Total</td>
+                  <td style="padding:12px;text-align:right;font-weight:700;font-size:16px;color:#2c1810;">${totalDisplay}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            ${shippingBlock ? `<div style="margin-bottom:20px;">${shippingBlock}</div>` : ""}
+
+            <p style="margin:0 0 4px;font-size:14px;color:#6b7280;line-height:1.6;">
+              We'll be in touch as your order is prepared and shipped. If you have any
+              questions, just reply to this email and it'll reach us directly.
+            </p>
+            <p style="margin:16px 0 0;font-size:14px;color:#2c1810;">
+              With love,<br><strong>The CustomHub</strong>
+            </p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background:#faf7f2;padding:20px 32px;border-top:1px solid #f0ede9;">
+            <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">
+              The CustomHub — New England Design Studio<br>
+              Dual-lingo streetwear &amp; lifestyle goods
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  await resend.emails.send({
+    from: "The CustomHub <orders@thecustomhub.com>",
+    to: customerEmail,
+    subject: orderRef
+      ? `Your CustomHub order confirmation (#${orderRef})`
+      : "Your CustomHub order confirmation",
+    html,
+  });
+}
+
 // ─── sendInquiryEmail (internal helper) ──────────────────────────────────────
 /**
  * Builds and sends a customer inquiry notification to the store owner via
@@ -576,6 +739,7 @@ exports.stripeWebhook = onRequest(
         amountTotal,
         createdAt: FieldValue.serverTimestamp(),
         emailNotified: false,
+        receiptSent: false,
       };
 
       const db = getFirestore();
@@ -600,8 +764,18 @@ exports.stripeWebhook = onRequest(
         // trigger a Stripe retry (which would create duplicate Firestore docs).
       }
 
-      await docRef.update({ emailNotified }).catch((e) =>
-        console.error("Failed to update emailNotified flag:", e)
+      // Customer-facing receipt — independent of the owner notification so one
+      // failing doesn't suppress the other.
+      let receiptSent = false;
+      try {
+        await sendCustomerReceipt(orderDoc, resendApiKey.value());
+        receiptSent = true;
+      } catch (err) {
+        console.error("Customer receipt email failed:", err);
+      }
+
+      await docRef.update({ emailNotified, receiptSent }).catch((e) =>
+        console.error("Failed to update email flags:", e)
       );
     }
 
