@@ -98,7 +98,7 @@ const Footer = () => {
             <h4 className="font-bold mb-2 text-marigold">Info</h4>
             <ul className="space-y-1.5 text-[#cfc8dd]">
               <li><Link to="/return-policy" className="hover:text-white transition-colors">Return Policy</Link></li>
-              <li><a href="mailto:personalizedbyrisa@gmail.com" className="hover:text-white transition-colors">personalizedbyrisa@gmail.com</a></li>
+              <li><a href="mailto:info@thecustomhub.com" className="hover:text-white transition-colors">info@thecustomhub.com</a></li>
               <li><a href="tel:+15087334489" className="hover:text-white transition-colors">+1 (508) 733-4489</a></li>
             </ul>
           </div>
