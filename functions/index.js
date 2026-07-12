@@ -14,6 +14,11 @@
  *     firebase functions:secrets:set RESEND_API_KEY
  *     (paste your Resend API key from resend.com/api-keys)
  *
+ *   RESEND_WEBHOOK_SECRET  — new; set BEFORE deploying resendInboundWebhook
+ *     firebase functions:secrets:set RESEND_WEBHOOK_SECRET
+ *     (paste the whsec_... Signing secret from the Resend webhook endpoint
+ *      configured for the email.received event)
+ *
  * After setting new secrets: firebase deploy --only functions
  * ─────────────────────────────────────────────────────────────────────────
  */
@@ -24,6 +29,7 @@ const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const Stripe = require("stripe");
 const { Resend } = require("resend");
+const { Webhook } = require("svix");
 
 initializeApp();
 
@@ -34,6 +40,12 @@ Object.assign(exports, require("./raos"));
 const stripeSecretKey = defineSecret("STRIPE_SECRET_KEY");
 const stripeWebhookSecret = defineSecret("STRIPE_WEBHOOK_SECRET");
 const resendApiKey = defineSecret("RESEND_API_KEY");
+const resendWebhookSecret = defineSecret("RESEND_WEBHOOK_SECRET");
+
+// Where inbound mail to *@thecustomhub.com gets forwarded.
+const FORWARD_TO = "personalizedbyrisa@gmail.com";
+// Must be an address on a Resend-verified sending domain (thecustomhub.com).
+const FORWARD_FROM = "The CustomHub Mail <forward@thecustomhub.com>";
 
 // ─── sendOrderEmail (internal helper) ────────────────────────────────────────
 /**
@@ -644,5 +656,147 @@ exports.saveWhatsAppLead = onCall(
     );
 
     return { success: true };
+  }
+);
+
+// ─── resendInboundWebhook ─────────────────────────────────────────────────────
+/**
+ * HTTP function — receives Resend inbound-email webhooks and forwards any mail
+ * sent to *@thecustomhub.com on to the owner's Gmail (FORWARD_TO).
+ *
+ * Setup:
+ *   1) In Resend, verify thecustomhub.com for RECEIVING (add the MX records) so
+ *      mail to *@thecustomhub.com lands in Resend.
+ *   2) Resend → Webhooks → Add endpoint:
+ *        URL:   https://us-central1-thecustomhub-efb8a.cloudfunctions.net/resendInboundWebhook
+ *        Event: email.received
+ *   3) Copy that endpoint's Signing secret (whsec_...) and set it:
+ *        firebase functions:secrets:set RESEND_WEBHOOK_SECRET
+ *   4) firebase deploy --only functions:resendInboundWebhook
+ *
+ * The email.received payload carries metadata only (no body), so we verify the
+ * Svix signature, then fetch the full message from the Received Emails API and
+ * re-send it via Resend. reply_to is set to the original sender so replies from
+ * Gmail reach the real person.
+ */
+exports.resendInboundWebhook = onRequest(
+  { secrets: [resendApiKey, resendWebhookSecret] },
+  async (req, res) => {
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+
+    const signingSecret = resendWebhookSecret.value();
+    if (!signingSecret) {
+      console.error("RESEND_WEBHOOK_SECRET is not configured.");
+      res.status(500).send("Webhook secret not configured.");
+      return;
+    }
+
+    // Svix signature verification — req.rawBody is the exact bytes Resend signed.
+    let event;
+    try {
+      const wh = new Webhook(signingSecret);
+      event = wh.verify(req.rawBody, {
+        "svix-id": req.headers["svix-id"],
+        "svix-timestamp": req.headers["svix-timestamp"],
+        "svix-signature": req.headers["svix-signature"],
+      });
+    } catch (err) {
+      console.error("Resend webhook signature verification failed:", err.message);
+      res.status(400).send("Invalid signature");
+      return;
+    }
+
+    // Only inbound mail is actionable; ack everything else so Resend won't retry.
+    if (event.type !== "email.received") {
+      res.status(200).json({ received: true, ignored: event.type });
+      return;
+    }
+
+    const emailId = event.data?.email_id;
+    if (!emailId) {
+      console.error("email.received event missing email_id");
+      res.status(200).json({ received: true });
+      return;
+    }
+
+    try {
+      // The webhook has metadata only — fetch the full message (body + headers).
+      const apiKey = resendApiKey.value();
+      const resp = await fetch(
+        `https://api.resend.com/emails/receiving/${emailId}`,
+        { headers: { Authorization: `Bearer ${apiKey}` } }
+      );
+      if (!resp.ok) {
+        const body = await resp.text();
+        console.error(
+          `Failed to fetch received email ${emailId}: ${resp.status} ${body}`
+        );
+        // 200 so Resend doesn't hammer retries on a fetch that keeps failing.
+        res.status(200).json({ received: true, fetched: false });
+        return;
+      }
+      const mail = await resp.json();
+
+      const originalFrom = mail.from || "unknown sender";
+      const receivedFor =
+        (Array.isArray(mail.received_for) && mail.received_for.join(", ")) ||
+        (Array.isArray(event.data.received_for) &&
+          event.data.received_for.join(", ")) ||
+        (Array.isArray(mail.to) && mail.to.join(", ")) ||
+        "your domain";
+      const subject = mail.subject || "(no subject)";
+      const attachments = mail.attachments || [];
+      const attachmentNote =
+        attachments.length > 0
+          ? `<p style="margin:0 0 4px;color:#b45309;font-size:13px;">` +
+            `📎 ${attachments.length} attachment(s) not forwarded — view in Resend: ` +
+            attachments.map((a) => a.filename || "file").join(", ") +
+            `</p>`
+          : "";
+
+      const header =
+        `<div style="font-family:Arial,sans-serif;font-size:13px;color:#6b7280;` +
+        `border-bottom:1px solid #e5e7eb;padding-bottom:12px;margin-bottom:16px;">` +
+        `<p style="margin:0 0 4px;"><strong>From:</strong> ${originalFrom}</p>` +
+        `<p style="margin:0 0 4px;"><strong>To:</strong> ${receivedFor}</p>` +
+        `<p style="margin:0 0 4px;"><strong>Subject:</strong> ${subject}</p>` +
+        attachmentNote +
+        `<p style="margin:8px 0 0;color:#9ca3af;">Forwarded automatically from thecustomhub.com</p>` +
+        `</div>`;
+
+      const bodyHtml =
+        mail.html ||
+        (mail.text
+          ? `<pre style="white-space:pre-wrap;font-family:Arial,sans-serif;">${mail.text}</pre>`
+          : "<p>(empty message)</p>");
+
+      const resend = new Resend(apiKey);
+      const forward = await resend.emails.send({
+        from: FORWARD_FROM,
+        to: FORWARD_TO,
+        reply_to: originalFrom,
+        subject: `[${receivedFor}] ${subject}`,
+        html: header + bodyHtml,
+        text: mail.text || undefined,
+      });
+
+      if (forward.error) {
+        console.error("Forward send failed:", forward.error);
+        res.status(200).json({ received: true, forwarded: false });
+        return;
+      }
+
+      console.log(
+        `Forwarded inbound email ${emailId} (to ${receivedFor}) → ${FORWARD_TO}`
+      );
+      res.status(200).json({ received: true, forwarded: true });
+    } catch (err) {
+      console.error("Inbound forward failed:", err);
+      // 200 to avoid retry storms; the failure is logged for inspection.
+      res.status(200).json({ received: true, forwarded: false });
+    }
   }
 );
