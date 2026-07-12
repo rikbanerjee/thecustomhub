@@ -233,10 +233,8 @@ async function sendOrderEmail(orderData, apiKey) {
 </body>
 </html>`;
 
-  // TODO: Replace 'onboarding@resend.dev' with 'orders@thecustomhub.com' once the
-  // domain is verified in your Resend dashboard at resend.com/domains.
   await resend.emails.send({
-    from: "The CustomHub Orders <onboarding@resend.dev>",
+    from: "The CustomHub Orders <orders@thecustomhub.com>",
     to: "personalizedbyrisa@gmail.com",
     subject: `[TheCustomHub] New ${
       status === "paid" ? "Order" : "Lead"
@@ -532,10 +530,8 @@ async function sendInquiryEmail(data, apiKey) {
 </body>
 </html>`;
 
-  // TODO: Replace 'onboarding@resend.dev' with 'orders@thecustomhub.com' once the
-  // domain is verified in your Resend dashboard at resend.com/domains.
   await resend.emails.send({
-    from: 'The CustomHub <onboarding@resend.dev>',
+    from: 'The CustomHub <hello@thecustomhub.com>',
     to: 'personalizedbyrisa@gmail.com',
     ...(data.email ? { reply_to: data.email } : {}),
     subject: `[TheCustomHub] ${title}${data.name ? ` — ${data.name}` : ''}`,
